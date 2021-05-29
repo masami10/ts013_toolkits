@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
 from loguru import logger
 from tools.controller.AppController import AppController
+from store.store import StorageData
 import os
 import sys
 import traceback
@@ -12,6 +13,8 @@ logger.add("logs/curve_toolkit.log", rotation="1 days", level="INFO", encoding='
 logger.info('系统启动！！！')
 
 app_controller = AppController()
+
+glb_storage = StorageData()  # 单例模式
 
 
 def excepthook(exc_type, exc_value, exc_tb):
