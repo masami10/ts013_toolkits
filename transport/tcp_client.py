@@ -8,7 +8,7 @@ from loguru import logger
 class TcpClient(object):
     def __init__(self, ip: str = '127.0.0.1', port: int = 80, name='Dummy TCP Client', newline='\n'):
         self.started = False
-        self.connected = False
+        self.connected = False  # 是否连接
         self._name = name
         self._newline = newline
         self.thread: Optional[threading.Thread] = None
