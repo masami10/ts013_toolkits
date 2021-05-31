@@ -3,7 +3,7 @@ from PyQt5 import QtWidgets, QtCore  # import PyQt5 widgets
 from ui.toolkit import Ui_MainWindow
 from loguru import logger
 from typing import Dict, List, Any
-from tools.view import table, notify, InputGroup, ResultButton
+from tools.view import table, notify, InputGroup, ResultButton, StatusIndicator
 from transport.http_server import HttpDaemon
 
 demo_table_items = [["006R_1_1_1", "2", "3"], ["006R_1_1_2", "22", "342"]]
@@ -56,13 +56,37 @@ class ToolKitWindow(QtWidgets.QMainWindow):
             'name': self.ui.NameEdit,
             'specs': self.ui.SpecsEdit,
         })
-        self._FirstCheckResultButton = ResultButton.ResultButton(self.ui.FirstCheckResultButton, 'firstCheckResult')
-        self._RecheckResultButton = ResultButton.ResultButton(self.ui.RecheckResultButton, 'recheckResult')
+
+        self._config_input_group = InputGroup.InputGroup({
+            'orderUrl': self.ui.OrderUrlEdit,
+            'momUrl': self.ui.MOMUrlEdit,
+            'deviceIP': self.ui.DeviceIPEdit,
+            'devicePort': self.ui.DevicePortEdit,
+        })
+        self._DeviceConnStatusIndicator = StatusIndicator.StatusIndicator(
+            self.ui.DeviceConnStatusButton,
+            'DeviceConnStatus',
+            success_text='已连接',
+            fail_test='未连接',
+            disabled=True
+        )
+        self._FirstCheckResultButton = StatusIndicator.StatusIndicator(
+            self.ui.FirstCheckResultButton,
+            'firstCheckResult'
+        )
+        self._RecheckResultButton = StatusIndicator.StatusIndicator(
+            self.ui.RecheckResultButton,
+            'recheckResult'
+        )
         self.reset_button_handler()
 
     @property
     def input_group(self):
         return self._input_group
+
+    @property
+    def config_input_group(self):
+        return self._config_input_group
 
     @property
     def FirstCheckResultButton(self):
@@ -71,6 +95,10 @@ class ToolKitWindow(QtWidgets.QMainWindow):
     @property
     def RecheckResultButton(self):
         return self._RecheckResultButton
+
+    @property
+    def DeviceConnStatusIndicator(self):
+        return self._DeviceConnStatusIndicator
 
     def reset_button_handler(self):
         pass

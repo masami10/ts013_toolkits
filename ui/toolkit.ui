@@ -30,7 +30,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <property name="usesScrollButtons">
        <bool>true</bool>
@@ -539,7 +539,7 @@
                <item>
                 <layout class="QFormLayout" name="formLayout_10">
                  <item row="1" column="0">
-                  <widget class="QLabel" name="orderUrlLabel">
+                  <widget class="QLabel" name="OrderUrlLabel">
                    <property name="text">
                     <string>获取订单地址</string>
                    </property>
@@ -549,7 +549,17 @@
                   </widget>
                  </item>
                  <item row="1" column="1">
-                  <widget class="QLineEdit" name="orderUrlEdit"/>
+                  <widget class="QLineEdit" name="OrderUrlEdit">
+                   <property name="inputMethodHints">
+                    <set>Qt::ImhUrlCharactersOnly</set>
+                   </property>
+                   <property name="inputMask">
+                    <string notr="true"/>
+                   </property>
+                   <property name="clearButtonEnabled">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
                  </item>
                  <item row="2" column="0">
                   <widget class="QLabel" name="MOMUrlLabel">
@@ -562,7 +572,14 @@
                   </widget>
                  </item>
                  <item row="2" column="1">
-                  <widget class="QLineEdit" name="MOMUrlEdit"/>
+                  <widget class="QLineEdit" name="MOMUrlEdit">
+                   <property name="inputMethodHints">
+                    <set>Qt::ImhUrlCharactersOnly</set>
+                   </property>
+                   <property name="clearButtonEnabled">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
                  </item>
                 </layout>
                </item>
@@ -604,7 +621,11 @@
                   </widget>
                  </item>
                  <item row="0" column="1">
-                  <widget class="QLineEdit" name="DeviceIPEdit"/>
+                  <widget class="QLineEdit" name="DeviceIPEdit">
+                   <property name="clearButtonEnabled">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
                  </item>
                  <item row="1" column="0">
                   <widget class="QLabel" name="DevicePortLabel">
@@ -617,7 +638,11 @@
                   </widget>
                  </item>
                  <item row="1" column="1">
-                  <widget class="QLineEdit" name="DevicePortEdit"/>
+                  <widget class="QLineEdit" name="DevicePortEdit">
+                   <property name="clearButtonEnabled">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
                  </item>
                  <item row="2" column="0">
                   <widget class="QLabel" name="DeviceConnStatusLabel">
@@ -630,9 +655,9 @@
                   </widget>
                  </item>
                  <item row="2" column="1">
-                  <widget class="QLineEdit" name="DeviceConnStatusEdit">
-                   <property name="enabled">
-                    <bool>false</bool>
+                  <widget class="QPushButton" name="DeviceConnStatusButton">
+                   <property name="text">
+                    <string>    已连接</string>
                    </property>
                   </widget>
                  </item>
