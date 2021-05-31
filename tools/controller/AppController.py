@@ -4,6 +4,9 @@ from .GenTemplController import GenTemplController
 from PyQt5 import QtWidgets  # import PyQt5 widgets
 import sys
 import os
+from qasync import QEventLoop
+import asyncio
+from transport.http_server import HttpDaemon
 from qt_material import apply_stylesheet
 from ..view import window as main_window
 from .TemplateCompareController import TemplateCompareController
@@ -15,8 +18,11 @@ class AppController:
         # Create the application object
         self.app = QtWidgets.QApplication(sys.argv)
 
+        self._threads = []
+        self._http_server = HttpDaemon()
+
         # Create the form object
-        self.window = main_window.ToolKitWindow()
+        self.window = main_window.ToolKitWindow(self._http_server)
         self.init_controllers()
         self.connect_signals()
         self.apply_material_theme()
@@ -38,6 +44,8 @@ class AppController:
             self.app.setStyleSheet(stylesheet + file.read().format(**os.environ))
 
     def run_app(self):
+        loop = QEventLoop()
+        asyncio.set_event_loop(loop)
         # Show form
         self.window.show()
 

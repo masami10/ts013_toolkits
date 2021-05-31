@@ -1,6 +1,6 @@
 from PyQt5 import QtCore
-from aiohttp import web
 from http import HTTPStatus
+from aiohttp import web
 from loguru import logger
 
 logger.add("logs/curve_collection_agent.log", rotation="1 days", level="INFO", encoding='utf-8')  # 文件日誌
@@ -18,15 +18,19 @@ def create_web_app() -> web.Application:
     return ret
 
 
-class HttpDaemon(QtCore.QThread):
+class HttpDaemon(object):
     def __init__(self, port=9110, *args, **kwargs):
         super(HttpDaemon, self).__init__(*args, **kwargs)
         self._port = port
         self._app = create_web_app()
 
+    def start(self):
+        self.run()
+
     def run(self):
+        logger.info("Http Server Start")
         web.run_app(self._app, host='0.0.0.0', port=self._port, access_log=logger)
+        logger.info("Http Server Stop")
 
     def stop(self):
         self._app.shutdown()
-        self.wait()

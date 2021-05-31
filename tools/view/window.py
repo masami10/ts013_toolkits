@@ -4,6 +4,7 @@ from ui.toolkit import Ui_MainWindow
 from loguru import logger
 from typing import Dict, List, Any
 from tools.view import table, notify, InputGroup, ResultButton
+from transport.http_server import HttpDaemon
 
 demo_table_items = [["006R_1_1_1", "2", "3"], ["006R_1_1_2", "22", "342"]]
 
@@ -14,8 +15,18 @@ class ToolKitWindow(QtWidgets.QMainWindow):
     gen_tmpl_bolt_selected_signal = QtCore.pyqtSignal(str)
     gen_tmpl_params_data_changed_signal = QtCore.pyqtSignal(list)
 
-    def __init__(self, *args, **kwargs):
+    def show(self) -> None:
+        super(ToolKitWindow, self).show()
+        if self._http_server:
+            self._http_server.start()
+
+    def closeEvent(self, event):
+        if self._http_server:
+            self._http_server.stop()
+
+    def __init__(self, http_server: HttpDaemon, *args, **kwargs):
         super(ToolKitWindow, self).__init__(*args, **kwargs)
+        self._http_server: HttpDaemon = http_server
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         # self._gen_tmpl_items_table = table.ToolkitTable(self.ui.tableWidget_2)
