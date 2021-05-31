@@ -42,6 +42,7 @@ class ToolKitWindow(QtWidgets.QMainWindow):
             'targetTorque': self.ui.TargetTorqueEdit,
             'firstCheckCard': self.ui.FirstCheckCardEdit,
             'recheckCard': self.ui.RecheckCardEdit,
+            'FirstCheckName': self.ui.FirstCheckNameEdit,
             'recheckName': self.ui.RecheckNameEdit,
             'inspectionCode': self.ui.InspectionCodeEdit,
             'productCode': self.ui.ProductCodeEdit,
