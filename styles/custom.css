@@ -24,6 +24,12 @@ QLineEdit {{
   color: {QTMATERIAL_SECONDARYCOLOR};
 }}
 
+.resultButton{{
+  border-width: 1px;
+  border-radius: 3px;
+  color: {QTMATERIAL_SECONDARYCOLOR};
+}}
+
 .resultButton:active{{
   border-width: 1px;
   border-radius: 3px;
@@ -35,7 +41,17 @@ QLineEdit {{
   border-color: #66bb6a;
 }}
 
+.resultButtonSuccess:active{{
+  background-color: #66bb6a;
+  border-color: #66bb6a;
+}}
+
 .resultButtonFailed{{
+  background-color: #dc3545;
+  border-color: #dc3545;
+}}
+
+.resultButtonFailed:active{{
   background-color: #dc3545;
   border-color: #dc3545;
 }}

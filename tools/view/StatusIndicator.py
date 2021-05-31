@@ -25,7 +25,7 @@ class StatusIndicator(ToolKitMixin, QWidget):
         self._success = success
         text = self._success_text if success else self._fail_test
         self.qt_instance.setProperty('text', text)
-        class_name = 'success resultButton resultButtonSuccess' if success else 'danger resultButton resultButtonFailed'
+        class_name = 'resultButton resultButtonSuccess' if success else 'resultButton resultButtonFailed'
         self.qt_instance.setProperty('class', class_name)
         self.qt_instance.style().polish(self.qt_instance)
 
