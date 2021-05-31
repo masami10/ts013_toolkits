@@ -20,7 +20,7 @@ class ToolKitWindow(QtWidgets.QMainWindow):
         self.ui.setupUi(self)
         # self._gen_tmpl_items_table = table.ToolkitTable(self.ui.tableWidget_2)
         # self._params_table = table.ToolkitTable(self.ui.tableParams_2)
-        # self._notifyBox = notify.ToolkitNotify(self.ui.textLog_2)
+        self._notifyBox = notify.ToolkitNotify(self.ui.textLog_2)
         # self.set_mock_table_data()
         self.ui.tableWidget.setProperty('class', 'bgLight')
         self.ui.tableWidget_2.setProperty('class', 'bgLight')
