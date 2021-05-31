@@ -1,1 +1,2 @@
 pyinstaller
+faker==8.4.0

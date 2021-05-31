@@ -7,6 +7,7 @@ from distutils.util import strtobool
 from requests import Response
 from http import HTTPStatus
 from lxml.etree import tostring
+import sqlite3
 
 ENV_DEBUG_WSDL_REQ = strtobool(os.getenv('ENV_DEBUG_WSDL_REQ', 'false'))
 
@@ -18,7 +19,15 @@ class WSDLClient(object):
     def __init__(self, wsdl, wsdl_setting=_settings):
         self._wsdl = wsdl
         self._setting = wsdl_setting
+        self._sqlite_conn = sqlite3.connect('./x_conn.db')
         self._client = Client(self._wsdl, settings=self._setting, transport=Transport(cache=self._cache))
+
+    def init_sqlite_db(self):
+        if self._sqlite_conn:
+            cr = self._sqlite_conn.cursor()
+            cr.execute('''CREATE TABLE ts013_wsdl(id INTEGER PRIMARY KEY AUTOINCREMENT, time TIMESTAMP
+  DEFAULT CURRENT_TIMESTAMP, orders TEXT)''')
+            self._sqlite_conn.commit()
 
     def __setattr__(self, key, value):
         if key == '_cache':  # cache不允许被赋值

@@ -1,29 +1,7 @@
-# -*- coding: utf-8 -*-
-
-from datetime import datetime
+from store.contants import TS013_TZ, DEFAULT_DATETIME_FORMAT, request_body
 import pytz
-import os
 from copy import deepcopy
-
-TS013_TZ = pytz.timezone('Asia/Shanghai')
-
-ENV_SYSTEM_TYPE = os.getenv('ENV_SYSTEM_TYPE', '101')
-
-request_body = {
-    "esbInfo": {
-        "instId": "",
-        "requestTime": "",
-        "attr1": "",
-        "attr2": "",
-        "attr3": ""
-    },
-    "requestInfo": {
-        "SystemType": ENV_SYSTEM_TYPE,
-        "UpdateDate": "2021-03-15",
-    }
-}
-
-DEFAULT_DATETIME_FORMAT = '%Y-%m-%d %H:%M:%S'
+from datetime import datetime
 
 
 def now():
