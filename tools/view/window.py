@@ -3,7 +3,7 @@ from PyQt5 import QtWidgets, QtCore  # import PyQt5 widgets
 from ui.toolkit import Ui_MainWindow
 from loguru import logger
 from typing import Dict, List, Any
-from tools.view import table, notify
+from tools.view import table, notify, InputGroup
 
 demo_table_items = [["006R_1_1_1", "2", "3"], ["006R_1_1_2", "22", "342"]]
 
@@ -30,9 +30,28 @@ class ToolKitWindow(QtWidgets.QMainWindow):
         self.ui.load_order_btn.setProperty('class', 'primaryButton')
         self.ui.submit_btn.setProperty('class', 'primaryButton')
         self.ui.FirstCheckResultButton.setProperty('class', 'success resultButton resultButtonSuccess')
-        self.ui.RecheckResultButton.setProperty('class', 'success resultButton resultButtonSuccess') # danger resultButton resultButtonFailed
+        self.ui.RecheckResultButton.setProperty('class',
+                                                'success resultButton resultButtonSuccess')  # danger resultButton resultButtonFailed
         self._compare_file = None
+
+        self._input_group = InputGroup.InputGroup({
+            'orderCode': self.ui.OrderCodeEdit,
+            'targetTorque': self.ui.TargetTorqueEdit,
+            'firstCheckCard': self.ui.FirstCheckCardEdit,
+            'recheckCard': self.ui.RecheckCardEdit,
+            'recheckName': self.ui.RecheckNameEdit,
+            'inspectionCode': self.ui.InspectionCodeEdit,
+            'productCode': self.ui.ProductCodeEdit,
+            'RFIDEdit': self.ui.RFIDEdit,
+            'classificationCode': self.ui.ClassificationCodeEdit,
+            'name': self.ui.NameEdit,
+            'specs': self.ui.SpecsEdit,
+        })
         self.reset_button_handler()
+
+    @property
+    def input_group(self):
+        return self._input_group
 
     def reset_button_handler(self):
         pass

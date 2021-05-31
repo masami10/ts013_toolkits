@@ -58,7 +58,7 @@ class AppController:
         ### tab 1 曲线对比
         ui.load_order_btn.clicked.connect(self.template_compare_controller.load_bolt_list)
         ui.submit_btn.clicked.connect(self.template_compare_controller.load_online_template)
-        #
-        # window.template_bolt_selected_signal.connect(self.template_compare_controller.set_viewing_template)
-        # window.gen_tmpl_bolt_selected_signal.connect(self.gen_tmpl_controller.set_viewing_template)
-        # window.gen_tmpl_params_data_changed_signal.connect(self.gen_tmpl_controller.params_data_changed)
+        window.input_group.inputChanged.connect(self.on_input)
+
+    def on_input(self, key, value):
+        self.window.notify_box.info('字段输入：{}，{}'.format(key, value))
