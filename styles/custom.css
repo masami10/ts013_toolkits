@@ -1,5 +1,41 @@
-QPushButton {{
+.primaryButton {{
   color: {QTMATERIAL_SECONDARYCOLOR};
   text-transform: none;
   background-color: {QTMATERIAL_PRIMARYCOLOR};
 }}
+
+
+QLineEdit {{
+  /*color: {QTMATERIAL_SECONDARYCOLOR};*/
+  /*text-transform: none;*/
+  /*background-color: {QTMATERIAL_PRIMARYCOLOR};*/
+  border-width: 1px;
+  border-radius: 3px;
+}}
+
+
+.bgLight {{
+  background-color: {QTMATERIAL_SECONDARYCOLOR};
+}}
+
+.resultButton{{
+  border-width: 1px;
+  border-radius: 3px;
+}}
+
+.resultButton:active{{
+  border-width: 1px;
+  border-radius: 3px;
+  color: {QTMATERIAL_SECONDARYCOLOR};
+}}
+
+.resultButtonSuccess{{
+  background-color: #66bb6a;
+  border-color: #66bb6a;
+}}
+
+.resultButtonFailed{{
+  background-color: #dc3545;
+  border-color: #dc3545;
+}}
+

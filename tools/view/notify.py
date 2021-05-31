@@ -16,7 +16,7 @@ class ToolkitNotify(ToolKitMixin):
         if not self.textBrowser_instance:
             return
         ss = "<span style=\" font-size:16pt; font-weight:600; color:#{};\" > {} </span>".format(color, content)
-        self.textBrowser_instance.setHtml(ss)
+        self.textBrowser_instance.append(ss)
 
     def error(self, content: str):
         color = 'e33371'

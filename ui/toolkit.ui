@@ -26,8 +26,11 @@
       <property name="tabPosition">
        <enum>QTabWidget::West</enum>
       </property>
+      <property name="tabShape">
+       <enum>QTabWidget::Rounded</enum>
+      </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <property name="usesScrollButtons">
        <bool>true</bool>
@@ -37,110 +40,470 @@
       </property>
       <widget class="QWidget" name="operation_tab">
        <attribute name="title">
-        <string>模板生成</string>
+        <string>标定</string>
        </attribute>
        <layout class="QHBoxLayout" name="horizontalLayout_17">
+        <property name="spacing">
+         <number>3</number>
+        </property>
+        <property name="leftMargin">
+         <number>3</number>
+        </property>
+        <property name="topMargin">
+         <number>3</number>
+        </property>
+        <property name="rightMargin">
+         <number>3</number>
+        </property>
+        <property name="bottomMargin">
+         <number>3</number>
+        </property>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_8" stretch="0,1,4">
+         <layout class="QHBoxLayout" name="horizontalLayout_8" stretch="1,1,3">
           <property name="sizeConstraint">
            <enum>QLayout::SetDefaultConstraint</enum>
           </property>
           <item>
            <layout class="QVBoxLayout" name="left3">
+            <property name="spacing">
+             <number>3</number>
+            </property>
             <property name="sizeConstraint">
              <enum>QLayout::SetFixedSize</enum>
             </property>
             <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_7"/>
-            </item>
-            <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_6"/>
+             <widget class="QGroupBox" name="groupBox">
+              <property name="title">
+               <string> 当日订单</string>
+              </property>
+              <layout class="QVBoxLayout" name="verticalLayout_5">
+               <property name="spacing">
+                <number>3</number>
+               </property>
+               <property name="leftMargin">
+                <number>0</number>
+               </property>
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="rightMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
+               <item>
+                <widget class="QTableWidget" name="tableWidget"/>
+               </item>
+               <item>
+                <widget class="QPushButton" name="load_order_btn">
+                 <property name="text">
+                  <string>同步当日订单</string>
+                 </property>
+                 <property name="flat">
+                  <bool>false</bool>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
             </item>
            </layout>
           </item>
           <item>
-           <layout class="QVBoxLayout" name="Left_2" stretch="0,0,0">
+           <layout class="QVBoxLayout" name="Left_2" stretch="0">
+            <property name="spacing">
+             <number>3</number>
+            </property>
             <property name="sizeConstraint">
              <enum>QLayout::SetFixedSize</enum>
             </property>
             <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_9">
-              <item>
-               <widget class="QPushButton" name="load_order_btn">
-                <property name="text">
-                 <string>加载当日订单</string>
-                </property>
-                <property name="flat">
-                 <bool>false</bool>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QPushButton" name="submit_btn">
-                <property name="text">
-                 <string>上送结果(MOM)</string>
-                </property>
-               </widget>
-              </item>
-             </layout>
+             <widget class="QGroupBox" name="groupBox_3">
+              <property name="title">
+               <string>选择工具</string>
+              </property>
+              <layout class="QVBoxLayout" name="verticalLayout_7">
+               <property name="spacing">
+                <number>3</number>
+               </property>
+               <property name="leftMargin">
+                <number>0</number>
+               </property>
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="rightMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
+               <item>
+                <widget class="QTableWidget" name="tableWidget_2"/>
+               </item>
+              </layout>
+             </widget>
             </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QVBoxLayout" name="Right_2" stretch="0,0,0,0,0,2,0,1">
+            <property name="spacing">
+             <number>3</number>
+            </property>
             <item>
-             <widget class="QTableWidget" name="tableWidget_2">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
+             <widget class="QLabel" name="timeLabel">
+              <property name="styleSheet">
+               <string notr="true">font: 20pt &quot;Arial&quot;;</string>
               </property>
-              <property name="sortingEnabled">
-               <bool>true</bool>
+              <property name="text">
+               <string>00-00-00 00:00:00</string>
               </property>
-              <attribute name="horizontalHeaderCascadingSectionResizes">
-               <bool>true</bool>
-              </attribute>
+              <property name="scaledContents">
+               <bool>false</bool>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+              </property>
              </widget>
             </item>
             <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_12">
-              <item>
-               <widget class="QPushButton" name="add_row_2">
-                <property name="text">
-                 <string>增加一行</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QPushButton" name="del_row_2">
-                <property name="text">
-                 <string>删除一行</string>
-                </property>
-               </widget>
-              </item>
-             </layout>
+             <widget class="QGroupBox" name="groupBox_4">
+              <property name="title">
+               <string/>
+              </property>
+              <property name="flat">
+               <bool>true</bool>
+              </property>
+              <layout class="QHBoxLayout" name="horizontalLayout_7">
+               <property name="leftMargin">
+                <number>0</number>
+               </property>
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="rightMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
+               <item>
+                <layout class="QFormLayout" name="formLayout_3">
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="OrderCodeLabel">
+                   <property name="text">
+                    <string>订单号    </string>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QLineEdit" name="OrderCodeEdit"/>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QFormLayout" name="formLayout_2">
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="TargetTorqueLabel">
+                   <property name="text">
+                    <string>标准扭矩值</string>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QLineEdit" name="TargetTorqueEdit"/>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+             </widget>
             </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QVBoxLayout" name="Right_2" stretch="8,1">
             <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_13" stretch="1">
-              <item>
-               <layout class="QVBoxLayout" name="verticalLayout_3">
-                <item>
-                 <widget class="QGroupBox" name="groupBox_2">
-                  <property name="title">
-                   <string>标定结果</string>
-                  </property>
-                  <layout class="QVBoxLayout" name="verticalLayout_10">
-                   <item>
-                    <widget class="QTableWidget" name="tableParams_2"/>
-                   </item>
-                  </layout>
-                 </widget>
-                </item>
-               </layout>
-              </item>
-             </layout>
+             <widget class="QGroupBox" name="groupBox_6">
+              <property name="title">
+               <string>人员信息</string>
+              </property>
+              <property name="flat">
+               <bool>true</bool>
+              </property>
+              <layout class="QHBoxLayout" name="horizontalLayout_10">
+               <property name="leftMargin">
+                <number>0</number>
+               </property>
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="rightMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
+               <item>
+                <layout class="QFormLayout" name="formLayout_6">
+                 <property name="fieldGrowthPolicy">
+                  <enum>QFormLayout::ExpandingFieldsGrow</enum>
+                 </property>
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="FirstCheckCardLabel">
+                   <property name="text">
+                    <string>初检人卡号</string>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QLineEdit" name="FirstCheckCardEdit"/>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="RecheckCardLabel">
+                   <property name="text">
+                    <string>复检人卡号</string>
+                   </property>
+                   <property name="scaledContents">
+                    <bool>false</bool>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QLineEdit" name="RecheckCardEdit"/>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QFormLayout" name="formLayout_7">
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="FirstCheckNameLabel">
+                   <property name="text">
+                    <string>初检人姓名</string>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QLineEdit" name="FirstCheckNameEdit"/>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="RecheckNameLabel">
+                   <property name="text">
+                    <string>复检人姓名</string>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QLineEdit" name="RecheckNameEdit"/>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QGroupBox" name="groupBox_5">
+              <property name="title">
+               <string> 工具信息</string>
+              </property>
+              <property name="flat">
+               <bool>true</bool>
+              </property>
+              <layout class="QHBoxLayout" name="horizontalLayout_9">
+               <property name="leftMargin">
+                <number>0</number>
+               </property>
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="rightMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
+               <item>
+                <layout class="QFormLayout" name="formLayout_5">
+                 <property name="fieldGrowthPolicy">
+                  <enum>QFormLayout::ExpandingFieldsGrow</enum>
+                 </property>
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="InspectionCodeLabel">
+                   <property name="text">
+                    <string>定检编号  </string>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QLineEdit" name="InspectionCodeEdit"/>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="ProductCodeLabel">
+                   <property name="text">
+                    <string>物料号</string>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QLineEdit" name="ProductCodeEdit"/>
+                 </item>
+                 <item row="2" column="0">
+                  <widget class="QLabel" name="RFIDLabel">
+                   <property name="text">
+                    <string>工具RFID</string>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="1">
+                  <widget class="QLineEdit" name="RFIDEdit"/>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QFormLayout" name="formLayout_4">
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="ClassificationCodeLabel">
+                   <property name="text">
+                    <string>分类号    </string>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QLineEdit" name="ClassificationCodeEdit"/>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="NameLabel">
+                   <property name="text">
+                    <string>名称</string>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QLineEdit" name="NameEdit"/>
+                 </item>
+                 <item row="2" column="0">
+                  <widget class="QLabel" name="SpecsLabel">
+                   <property name="text">
+                    <string>规格</string>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="1">
+                  <widget class="QLineEdit" name="SpecsEdit"/>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QGroupBox" name="groupBox_7">
+              <property name="title">
+               <string/>
+              </property>
+              <property name="flat">
+               <bool>true</bool>
+              </property>
+              <layout class="QHBoxLayout" name="horizontalLayout_11">
+               <property name="leftMargin">
+                <number>0</number>
+               </property>
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="rightMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
+               <item>
+                <layout class="QFormLayout" name="formLayout_8">
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="FirstCheckResultLabel">
+                   <property name="text">
+                    <string>初检结果  </string>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QPushButton" name="FirstCheckResultButton">
+                   <property name="text">
+                    <string>成功</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QFormLayout" name="formLayout_9">
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="RecheckResultLabel">
+                   <property name="text">
+                    <string>复检结果  </string>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QPushButton" name="RecheckResultButton">
+                   <property name="text">
+                    <string>成功</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QTableWidget" name="tableWidget_3"/>
+            </item>
+            <item>
+             <widget class="QPushButton" name="submit_btn">
+              <property name="text">
+               <string>提交</string>
+              </property>
+             </widget>
             </item>
             <item>
              <widget class="QTextBrowser" name="textLog_2">

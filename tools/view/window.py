@@ -3,8 +3,8 @@ from PyQt5 import QtWidgets, QtCore  # import PyQt5 widgets
 from ui.toolkit import Ui_MainWindow
 from loguru import logger
 from typing import Dict, List, Any
-from tools.view import table, notify
 from transport.http_server import HttpDaemon
+from tools.view import table, notify, InputGroup
 
 demo_table_items = [["006R_1_1_1", "2", "3"], ["006R_1_1_2", "22", "342"]]
 
@@ -29,18 +29,47 @@ class ToolKitWindow(QtWidgets.QMainWindow):
         self._http_server: HttpDaemon = http_server
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
-        self._gen_tmpl_items_table = table.ToolkitTable(self.ui.tableWidget_2)
-        self._params_table = table.ToolkitTable(self.ui.tableParams_2)
+        # self._gen_tmpl_items_table = table.ToolkitTable(self.ui.tableWidget_2)
+        # self._params_table = table.ToolkitTable(self.ui.tableParams_2)
         self._notifyBox = notify.ToolkitNotify(self.ui.textLog_2)
         # self.set_mock_table_data()
+        self.ui.tableWidget.setProperty('class', 'bgLight')
+        self.ui.tableWidget_2.setProperty('class', 'bgLight')
+        self.ui.tableWidget_3.setProperty('class', 'bgLight')
+        self.ui.timeLabel.setProperty('class', 'bgLight')
+        self.ui.OrderCodeLabel.setProperty('class', 'height20')
+        self.ui.load_order_btn.setProperty('class', 'primaryButton')
+        self.ui.submit_btn.setProperty('class', 'primaryButton')
+        self.ui.FirstCheckResultButton.setProperty('class', 'success resultButton resultButtonSuccess')
+        self.ui.RecheckResultButton.setProperty('class',
+                                                'success resultButton resultButtonSuccess')  # danger resultButton resultButtonFailed
         self._compare_file = None
+
+        self._input_group = InputGroup.InputGroup({
+            'orderCode': self.ui.OrderCodeEdit,
+            'targetTorque': self.ui.TargetTorqueEdit,
+            'firstCheckCard': self.ui.FirstCheckCardEdit,
+            'recheckCard': self.ui.RecheckCardEdit,
+            'recheckName': self.ui.RecheckNameEdit,
+            'inspectionCode': self.ui.InspectionCodeEdit,
+            'productCode': self.ui.ProductCodeEdit,
+            'RFIDEdit': self.ui.RFIDEdit,
+            'classificationCode': self.ui.ClassificationCodeEdit,
+            'name': self.ui.NameEdit,
+            'specs': self.ui.SpecsEdit,
+        })
         self.reset_button_handler()
 
+    @property
+    def input_group(self):
+        return self._input_group
+
     def reset_button_handler(self):
-        self.ui.add_row_2.clicked.connect(self.add_new_row)
-        self.ui.del_row_2.clicked.connect(self.del_last_row)
-        self.gen_tmpl_items_table.table_instance.itemClicked.connect(
-            self.on_gen_tmpl_item_table_row_clicked)
+        pass
+        # self.ui.add_row_2.clicked.connect(self.add_new_row)
+        # self.ui.del_row_2.clicked.connect(self.del_last_row)
+        # self.gen_tmpl_items_table.table_instance.itemClicked.connect(
+        #     self.on_gen_tmpl_item_table_row_clicked)
 
     @staticmethod
     def get_table_item_data(table: table.ToolkitTable,
