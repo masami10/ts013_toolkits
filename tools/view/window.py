@@ -39,6 +39,8 @@ class ToolKitWindow(QtWidgets.QMainWindow):
         self.ui.timeLabel.setProperty('class', 'bgLight')
         self.ui.load_order_btn.setProperty('class', 'primaryButton')
         self.ui.submit_btn.setProperty('class', 'primaryButton')
+        self.ui.DeviceConnectButton.setProperty('class', 'primaryButton')
+        self.ui.DeviceDisconnectButton.setProperty('class', 'primaryButton')
         self._compare_file = None
 
         self._input_group = InputGroup.InputGroup({
