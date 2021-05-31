@@ -85,8 +85,10 @@ class AppController:
         self.window.notify_box.info('正在连接标定设备...')
         # todo: 实现设备连接
         self.window.DeviceConnStatusIndicator.set_success(True)
+        self.window.HomeDeviceConnStatusIndicator.set_success(True)
 
     def device_disconnect(self):
         self.window.notify_box.info('正在断开标定设备...')
         # todo: 实现设备断开
         self.window.DeviceConnStatusIndicator.set_success(False)
+        self.window.HomeDeviceConnStatusIndicator.set_success(False)

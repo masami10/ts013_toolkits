@@ -34,6 +34,7 @@ class ToolKitWindow(QtWidgets.QMainWindow):
         self._notifyBox = notify.ToolkitNotify(self.ui.textLog_2)
         # self.set_mock_table_data()
         self.ui.tableWidget.setProperty('class', 'bgLight')
+        self.ui.HomeDeviceConnStatusWidget.setProperty('class', 'bgLight')
         self.ui.tableWidget_2.setProperty('class', 'bgLight')
         self.ui.tableWidget_3.setProperty('class', 'bgLight')
         self.ui.timeLabel.setProperty('class', 'bgLight')
@@ -63,6 +64,14 @@ class ToolKitWindow(QtWidgets.QMainWindow):
             'deviceIP': self.ui.DeviceIPEdit,
             'devicePort': self.ui.DevicePortEdit,
         })
+
+        self._HomeDeviceConnStatusIndicator = StatusIndicator.StatusIndicator(
+            self.ui.HomeDeviceConnStatusButton,
+            'DeviceConnStatus',
+            success_text='已连接',
+            fail_test='未连接',
+            disabled=True
+        )
         self._DeviceConnStatusIndicator = StatusIndicator.StatusIndicator(
             self.ui.DeviceConnStatusButton,
             'DeviceConnStatus',
@@ -99,6 +108,10 @@ class ToolKitWindow(QtWidgets.QMainWindow):
     @property
     def DeviceConnStatusIndicator(self):
         return self._DeviceConnStatusIndicator
+
+    @property
+    def HomeDeviceConnStatusIndicator(self):
+        return self._HomeDeviceConnStatusIndicator
 
     def reset_button_handler(self):
         pass

@@ -30,7 +30,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <property name="usesScrollButtons">
        <bool>true</bool>
@@ -153,20 +153,48 @@
              <number>3</number>
             </property>
             <item>
-             <widget class="QLabel" name="timeLabel">
-              <property name="styleSheet">
-               <string notr="true">font: 20pt &quot;Arial&quot;;</string>
-              </property>
-              <property name="text">
-               <string>00-00-00 00:00:00</string>
-              </property>
-              <property name="scaledContents">
-               <bool>false</bool>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-              </property>
-             </widget>
+             <layout class="QHBoxLayout" name="horizontalLayout_5">
+              <item>
+               <layout class="QHBoxLayout" name="HomeDeviceConnStatusLayout">
+                <item>
+                 <widget class="QWidget" name="HomeDeviceConnStatusWidget" native="true">
+                  <layout class="QHBoxLayout" name="horizontalLayout_6">
+                   <item>
+                    <widget class="QLabel" name="HomeDeviceConnStatusLabel">
+                     <property name="text">
+                      <string> 标定设备连接状态</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QPushButton" name="HomeDeviceConnStatusButton">
+                     <property name="text">
+                      <string>已连接</string>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <widget class="QLabel" name="timeLabel">
+                <property name="styleSheet">
+                 <string notr="true">font: 20pt &quot;Arial&quot;;</string>
+                </property>
+                <property name="text">
+                 <string>00-00-00 00:00:00</string>
+                </property>
+                <property name="scaledContents">
+                 <bool>false</bool>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </item>
             <item>
              <widget class="QGroupBox" name="groupBox_4">
