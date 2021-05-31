@@ -3,8 +3,8 @@ from PyQt5 import QtWidgets, QtCore  # import PyQt5 widgets
 from ui.toolkit import Ui_MainWindow
 from loguru import logger
 from typing import Dict, List, Any
+from tools.view import table, notify, InputGroup, ResultButton, StatusIndicator
 from transport.http_server import HttpDaemon
-from tools.view import table, notify, InputGroup
 
 demo_table_items = [["006R_1_1_1", "2", "3"], ["006R_1_1_2", "22", "342"]]
 
@@ -34,15 +34,14 @@ class ToolKitWindow(QtWidgets.QMainWindow):
         self._notifyBox = notify.ToolkitNotify(self.ui.textLog_2)
         # self.set_mock_table_data()
         self.ui.tableWidget.setProperty('class', 'bgLight')
+        self.ui.HomeDeviceConnStatusWidget.setProperty('class', 'bgLight')
         self.ui.tableWidget_2.setProperty('class', 'bgLight')
         self.ui.tableWidget_3.setProperty('class', 'bgLight')
         self.ui.timeLabel.setProperty('class', 'bgLight')
-        self.ui.OrderCodeLabel.setProperty('class', 'height20')
         self.ui.load_order_btn.setProperty('class', 'primaryButton')
         self.ui.submit_btn.setProperty('class', 'primaryButton')
-        self.ui.FirstCheckResultButton.setProperty('class', 'success resultButton resultButtonSuccess')
-        self.ui.RecheckResultButton.setProperty('class',
-                                                'success resultButton resultButtonSuccess')  # danger resultButton resultButtonFailed
+        self.ui.DeviceConnectButton.setProperty('class', 'primaryButton')
+        self.ui.DeviceDisconnectButton.setProperty('class', 'primaryButton')
         self._compare_file = None
 
         self._input_group = InputGroup.InputGroup({
@@ -58,11 +57,61 @@ class ToolKitWindow(QtWidgets.QMainWindow):
             'name': self.ui.NameEdit,
             'specs': self.ui.SpecsEdit,
         })
+
+        self._config_input_group = InputGroup.InputGroup({
+            'orderUrl': self.ui.OrderUrlEdit,
+            'momUrl': self.ui.MOMUrlEdit,
+            'deviceIP': self.ui.DeviceIPEdit,
+            'devicePort': self.ui.DevicePortEdit,
+        })
+
+        self._HomeDeviceConnStatusIndicator = StatusIndicator.StatusIndicator(
+            self.ui.HomeDeviceConnStatusButton,
+            'DeviceConnStatus',
+            success_text='已连接',
+            fail_test='未连接',
+            disabled=True
+        )
+        self._DeviceConnStatusIndicator = StatusIndicator.StatusIndicator(
+            self.ui.DeviceConnStatusButton,
+            'DeviceConnStatus',
+            success_text='已连接',
+            fail_test='未连接',
+            disabled=True
+        )
+        self._FirstCheckResultButton = StatusIndicator.StatusIndicator(
+            self.ui.FirstCheckResultButton,
+            'firstCheckResult'
+        )
+        self._RecheckResultButton = StatusIndicator.StatusIndicator(
+            self.ui.RecheckResultButton,
+            'recheckResult'
+        )
         self.reset_button_handler()
 
     @property
     def input_group(self):
         return self._input_group
+
+    @property
+    def config_input_group(self):
+        return self._config_input_group
+
+    @property
+    def FirstCheckResultButton(self):
+        return self._FirstCheckResultButton
+
+    @property
+    def RecheckResultButton(self):
+        return self._RecheckResultButton
+
+    @property
+    def DeviceConnStatusIndicator(self):
+        return self._DeviceConnStatusIndicator
+
+    @property
+    def HomeDeviceConnStatusIndicator(self):
+        return self._HomeDeviceConnStatusIndicator
 
     def reset_button_handler(self):
         pass
