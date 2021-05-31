@@ -22,7 +22,6 @@ class AppController:
         self.apply_material_theme()
 
     def apply_material_theme(self):
-
         extra = {
             # Button colors
             'danger': '#dc3545',
@@ -59,6 +58,11 @@ class AppController:
         ui.load_order_btn.clicked.connect(self.template_compare_controller.load_bolt_list)
         ui.submit_btn.clicked.connect(self.template_compare_controller.load_online_template)
         window.input_group.inputChanged.connect(self.on_input)
+        window.FirstCheckResultButton.successChanged.connect(self.on_result_success_changed)
+        window.RecheckResultButton.successChanged.connect(self.on_result_success_changed)
 
     def on_input(self, key, value):
         self.window.notify_box.info('字段输入：{}，{}'.format(key, value))
+
+    def on_result_success_changed(self, result_key, success):
+        self.window.notify_box.info('结果变化：{}，{}'.format(result_key, success))

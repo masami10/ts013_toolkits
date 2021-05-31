@@ -3,7 +3,7 @@ from PyQt5 import QtWidgets, QtCore  # import PyQt5 widgets
 from ui.toolkit import Ui_MainWindow
 from loguru import logger
 from typing import Dict, List, Any
-from tools.view import table, notify, InputGroup
+from tools.view import table, notify, InputGroup, ResultButton
 
 demo_table_items = [["006R_1_1_1", "2", "3"], ["006R_1_1_2", "22", "342"]]
 
@@ -26,12 +26,8 @@ class ToolKitWindow(QtWidgets.QMainWindow):
         self.ui.tableWidget_2.setProperty('class', 'bgLight')
         self.ui.tableWidget_3.setProperty('class', 'bgLight')
         self.ui.timeLabel.setProperty('class', 'bgLight')
-        self.ui.OrderCodeLabel.setProperty('class', 'height20')
         self.ui.load_order_btn.setProperty('class', 'primaryButton')
         self.ui.submit_btn.setProperty('class', 'primaryButton')
-        self.ui.FirstCheckResultButton.setProperty('class', 'success resultButton resultButtonSuccess')
-        self.ui.RecheckResultButton.setProperty('class',
-                                                'success resultButton resultButtonSuccess')  # danger resultButton resultButtonFailed
         self._compare_file = None
 
         self._input_group = InputGroup.InputGroup({
@@ -47,11 +43,21 @@ class ToolKitWindow(QtWidgets.QMainWindow):
             'name': self.ui.NameEdit,
             'specs': self.ui.SpecsEdit,
         })
+        self._FirstCheckResultButton = ResultButton.ResultButton(self.ui.FirstCheckResultButton, 'firstCheckResult')
+        self._RecheckResultButton = ResultButton.ResultButton(self.ui.RecheckResultButton, 'recheckResult')
         self.reset_button_handler()
 
     @property
     def input_group(self):
         return self._input_group
+
+    @property
+    def FirstCheckResultButton(self):
+        return self._FirstCheckResultButton
+
+    @property
+    def RecheckResultButton(self):
+        return self._RecheckResultButton
 
     def reset_button_handler(self):
         pass

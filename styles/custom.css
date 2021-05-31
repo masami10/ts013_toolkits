@@ -21,6 +21,7 @@ QLineEdit {{
 .resultButton{{
   border-width: 1px;
   border-radius: 3px;
+  color: {QTMATERIAL_SECONDARYCOLOR};
 }}
 
 .resultButton:active{{
