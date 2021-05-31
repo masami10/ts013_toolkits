@@ -22,7 +22,18 @@ class AppController:
         self.apply_material_theme()
 
     def apply_material_theme(self):
-        apply_stylesheet(self.app, theme='light_blue.xml', invert_secondary=True)
+
+        extra = {
+            # Button colors
+            'danger': '#dc3545',
+            'warning': '#ffc107',
+            'success': '#66bb6a',
+
+            # Font
+            'font-family': 'Roboto',
+        }
+
+        apply_stylesheet(self.app, theme='light_blue.xml', extra=extra)
         stylesheet = self.app.styleSheet()
         with open('styles/custom.css') as file:
             self.app.setStyleSheet(stylesheet + file.read().format(**os.environ))

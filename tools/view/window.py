@@ -22,6 +22,15 @@ class ToolKitWindow(QtWidgets.QMainWindow):
         # self._params_table = table.ToolkitTable(self.ui.tableParams_2)
         # self._notifyBox = notify.ToolkitNotify(self.ui.textLog_2)
         # self.set_mock_table_data()
+        self.ui.tableWidget.setProperty('class', 'bgLight')
+        self.ui.tableWidget_2.setProperty('class', 'bgLight')
+        self.ui.tableWidget_3.setProperty('class', 'bgLight')
+        self.ui.timeLabel.setProperty('class', 'bgLight')
+        self.ui.OrderCodeLabel.setProperty('class', 'height20')
+        self.ui.load_order_btn.setProperty('class', 'primaryButton')
+        self.ui.submit_btn.setProperty('class', 'primaryButton')
+        self.ui.FirstCheckResultButton.setProperty('class', 'success resultButton resultButtonSuccess')
+        self.ui.RecheckResultButton.setProperty('class', 'success resultButton resultButtonSuccess') # danger resultButton resultButtonFailed
         self._compare_file = None
         self.reset_button_handler()
 
