@@ -18,18 +18,19 @@ class ToolKitWindow(QtWidgets.QMainWindow):
         super(ToolKitWindow, self).__init__(*args, **kwargs)
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
-        self._gen_tmpl_items_table = table.ToolkitTable(self.ui.tableWidget_2)
-        self._params_table = table.ToolkitTable(self.ui.tableParams_2)
-        self._notifyBox = notify.ToolkitNotify(self.ui.textLog_2)
+        # self._gen_tmpl_items_table = table.ToolkitTable(self.ui.tableWidget_2)
+        # self._params_table = table.ToolkitTable(self.ui.tableParams_2)
+        # self._notifyBox = notify.ToolkitNotify(self.ui.textLog_2)
         # self.set_mock_table_data()
         self._compare_file = None
         self.reset_button_handler()
 
     def reset_button_handler(self):
-        self.ui.add_row_2.clicked.connect(self.add_new_row)
-        self.ui.del_row_2.clicked.connect(self.del_last_row)
-        self.gen_tmpl_items_table.table_instance.itemClicked.connect(
-            self.on_gen_tmpl_item_table_row_clicked)
+        pass
+        # self.ui.add_row_2.clicked.connect(self.add_new_row)
+        # self.ui.del_row_2.clicked.connect(self.del_last_row)
+        # self.gen_tmpl_items_table.table_instance.itemClicked.connect(
+        #     self.on_gen_tmpl_item_table_row_clicked)
 
     @staticmethod
     def get_table_item_data(table: table.ToolkitTable,
