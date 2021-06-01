@@ -68,7 +68,7 @@ class ToolsController:
             'RFID': list(self.content['RFID']),
             '动作': list(map(lambda tool: remove_tool_button(tool, self.notify.info), tools))
         })
-        self.window.tools_config_table.render(content)
+        self.window.tools_config_table.render_table(content)
         table: QTableWidget = self.window.tools_config_table
         for row in range(len(tools)):
             table.setRowHeight(row, 50)
@@ -79,7 +79,7 @@ class ToolsController:
             '定检编号': tools,
             '选中': list(map(lambda tool: select_tool_radio(tool, self.render_tool_detail), tools))
         })
-        self.window.tools_table.render(content)
+        self.window.tools_table.render_table(content)
 
     def render(self):
         self.render_tools_config_table()

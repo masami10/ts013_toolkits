@@ -51,7 +51,7 @@ class OrderController:
             '订单号': orders,
             '选中': list(map(lambda o: select_tool_checkbox(o, self.on_order_clicked), orders))
         })
-        self.window.order_table.render(content)
+        self.window.order_table.render_table(content)
 
     def on_order_clicked(self, order):
         if order in self._selected_orders:

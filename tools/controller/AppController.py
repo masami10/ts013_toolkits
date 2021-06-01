@@ -18,6 +18,18 @@ from store.store import StorageData
 from store.contants import TS013_DB_NAME
 import sqlite3
 
+TRANSLATION_MAP = {
+    'recheckResult': '复检结果',
+    'firstCheckResult': '检验结果',
+    'True': '成功',
+    'False': '失败',
+}
+
+
+def get_translation(v: str):
+    default = v
+    return TRANSLATION_MAP.get(v, default)
+
 
 class AppController:
 
@@ -95,5 +107,9 @@ class AppController:
     def on_config_input(self, key, value):
         self.notify.info('配置输入：{}，{}'.format(key, value))
 
-    def on_result_success_changed(self, result_key, success):
-        self.notify.info('结果变化：{}，{}'.format(result_key, success))
+    def on_result_success_changed(self, result_key: str, success: bool):
+        lvl = 'info'
+        if not success:
+            lvl = 'error'
+        m = getattr(self.notify, lvl, self.notify.info)
+        m('结果变化：{}，{}'.format(get_translation(result_key), get_translation(str(success))))

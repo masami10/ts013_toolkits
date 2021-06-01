@@ -139,7 +139,7 @@ class ToolkitTable(ToolKitMixin, QWidget):
         header.setSectionResizeMode(QHeaderView.Stretch)  # 均分显示
         header.setVisible(True)
 
-    def render(self, table_content: pd.DataFrame):
+    def render_table(self, table_content: pd.DataFrame):
         tTable = self.table_instance
         tTable.clearContents()
         self._headers = table_content.keys()
