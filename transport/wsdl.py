@@ -25,8 +25,10 @@ class WSDLClient(object):
     def init_sqlite_db(self):
         if self._sqlite_conn:
             cr = self._sqlite_conn.cursor()
-            cr.execute('''CREATE TABLE ts013_wsdl(id INTEGER PRIMARY KEY AUTOINCREMENT, time TIMESTAMP
+            cr.execute('''CREATE TABLE IF NOT EXISTS ts013_wsdl(id INTEGER PRIMARY KEY AUTOINCREMENT, time TIMESTAMP
   DEFAULT CURRENT_TIMESTAMP, orders TEXT)''')
+            cr.execute('''CREATE TABLE IF NOT EXISTS ts013_orders(id INTEGER PRIMARY KEY AUTOINCREMENT, time TIMESTAMP
+              DEFAULT CURRENT_TIMESTAMP, schedule_date TIMESTAMP,order_no TEXT, order_type TEXT, finished_product_no TEXT)''')
             self._sqlite_conn.commit()
 
     def __setattr__(self, key, value):

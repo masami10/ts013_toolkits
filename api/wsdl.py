@@ -4,7 +4,8 @@ from utils.tools import serialize_obj_2_json
 from typing import List
 from store.types import MOMOrder, ToolsInfo
 from transport.constants import now
-from sqlite3 import Connection, Cursor
+from sqlite3 import Connection
+from store.sql import query_calibration_id_via_identity, insert_ts013_tool_calibration_item
 
 ENV_MOM_WSDL_USER = os.getenv('ENV_MOM_WSDL_USER', 'mtdl001')
 ENV_MOM_WSDL_PWD = os.getenv('ENV_MOM_WSDL_PWD', '123456')
@@ -94,21 +95,15 @@ def publish_calibration_payload(conn: Connection, rid: int, orders: List[MOMOrde
                  "recheckResult": 1, "momOrders": serialize_obj_2_json(orders)}}}}
 
 
-def insert_into_tool_calibration_item(cr: Cursor, identity: str) -> int:
-    cr.execute("insert into ts013_wsdl (orders) values (?)", identity)
-    return cr.lastrowid
-
-
 def publish_calibration_value_2_mom_wsdl(conn: Connection, tool_sn: str, orders: List[MOMOrder]):
     ss = [o.wipOrderNo for o in orders]
     str_orders = ",".join(ss)
     identity = f"{tool_sn}@{str_orders}"
     cr = conn.cursor()
-    cr.execute("SELECT id from ts013_wsdl where orders = ?", identity)
-    result = cr.fetchone()
-    if not result:
-        rid = insert_into_tool_calibration_item(cr, identity)
+    c_id = query_calibration_id_via_identity(cr, identity)
+    if not c_id:
+        rid = insert_ts013_tool_calibration_item(cr, identity)
     else:
-        rid = result[0]
+        rid = c_id
     conn.commit()
     payload = publish_calibration_payload(rid)
