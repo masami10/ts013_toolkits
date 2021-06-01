@@ -70,9 +70,11 @@ class ToolKitWindow(ToolKitMixin, QtWidgets.QWidget):
 
         self._config_input_group = InputGroup.InputGroup({
             'orderUrl': self.ui.OrderUrlEdit,
-            'momUrl': self.ui.MOMUrlEdit,
-            'deviceIP': self.ui.DeviceIPEdit,
-            'devicePort': self.ui.DevicePortEdit,
+            'momUrl': self.ui.MOMUrlEdit
+        })
+        self._device_config_group = InputGroup.InputGroup({
+            'ip': self.ui.DeviceIPEdit,
+            'port': self.ui.DevicePortEdit,
         })
 
         self._HomeDeviceConnStatusIndicator = StatusIndicator.StatusIndicator(
@@ -133,6 +135,10 @@ class ToolKitWindow(ToolKitMixin, QtWidgets.QWidget):
     @property
     def config_input_group(self):
         return self._config_input_group
+
+    @property
+    def device_config_group(self):
+        return self._device_config_group
 
     @property
     def FirstCheckResultButton(self):

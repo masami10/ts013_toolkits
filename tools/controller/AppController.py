@@ -12,6 +12,7 @@ from ..view import window as main_window
 import pandas as pd
 from loguru import logger
 from .ToolsController import ToolsController
+from .DeviceController import DeviceController
 from store.store import StorageData
 
 
@@ -30,30 +31,11 @@ class AppController:
         self.window = main_window.ToolKitWindow(self._http_server)
         self.notify = self.window.notify_box
         self._tools_controller = ToolsController(self.window)
+        self._device_controller = DeviceController(self.window)
 
         self.connect_signals()
         self.apply_material_theme()
         self.render_results()  # fixme: 移动到产生结果的地方
-
-    # 0004 10/02/21 08:34:54 21.9    0.00     A
-    def client_log(self, msg):
-        dd = msg.split(' ')
-        data = list(filter(lambda d: d != '', dd))
-        count, date, time, torque, angle, result = data
-        logger.info(f'接收到标定数据: {count} {date}, {time}, {torque}, {angle}, {result} ')
-        self.notify.info(msg)
-
-    def start_client(self):
-        try:
-            client = TcpClient(
-                ip='192.168.3.100',
-                port=7000,
-                newline='\r\n'
-            )
-            client.set_handler(self.client_log)
-            client.start()
-        except Exception as e:
-            self.notify.error(repr(e))
 
     def apply_material_theme(self):
         extra = {
@@ -88,8 +70,6 @@ class AppController:
         window.config_input_group.inputChanged.connect(self.on_config_input)
         window.FirstCheckResultButton.successChanged.connect(self.on_result_success_changed)
         window.RecheckResultButton.successChanged.connect(self.on_result_success_changed)
-        ui.DeviceConnectButton.clicked.connect(self.device_connect)
-        ui.DeviceDisconnectButton.clicked.connect(self.device_disconnect)
         ui.load_order_btn.clicked.connect(self.load_orders)
         ui.ToolsConfigAddButton.clicked.connect(self._tools_controller.add_tool)
 
@@ -101,18 +81,6 @@ class AppController:
 
     def on_result_success_changed(self, result_key, success):
         self.notify.info('结果变化：{}，{}'.format(result_key, success))
-
-    def device_connect(self):
-        self.notify.info('正在连接标定设备...')
-        # todo: 实现设备连接
-        self.window.DeviceConnStatusIndicator.set_success(True)
-        self.window.HomeDeviceConnStatusIndicator.set_success(True)
-
-    def device_disconnect(self):
-        self.notify.info('正在断开标定设备...')
-        # todo: 实现设备断开
-        self.window.DeviceConnStatusIndicator.set_success(False)
-        self.window.HomeDeviceConnStatusIndicator.set_success(False)
 
     def load_orders(self):
         self.render_orders()

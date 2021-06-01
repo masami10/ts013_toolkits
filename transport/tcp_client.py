@@ -54,16 +54,18 @@ class TcpClient(object):
                 self.handler(line)
         f.close()
 
-    def start(self):
+    async def start(self, on_start):
         self.connect()
         self.started = True
         self.thread = threading.Thread(target=self.run, name=self._name)
         self.thread.setDaemon(True)
         self.thread.start()
         logger.info("TCP 客户端线程打开")
+        on_start()
 
     def stop(self):
         self.started = False
         self.disconnect()
-        self.thread.join()
+        if self.thread:
+            self.thread.join()
         logger.info("TCP 客户端线程关闭")
