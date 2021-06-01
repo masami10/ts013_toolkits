@@ -13,6 +13,7 @@ import pandas as pd
 from loguru import logger
 from .ToolsController import ToolsController
 from .DeviceController import DeviceController
+from .OrderController import OrderController
 from store.store import StorageData
 
 
@@ -32,6 +33,7 @@ class AppController:
         self.notify = self.window.notify_box
         self._tools_controller = ToolsController(self.window)
         self._device_controller = DeviceController(self.window)
+        self._order_controller = OrderController(self.window)
 
         self.connect_signals()
         self.apply_material_theme()
@@ -70,7 +72,6 @@ class AppController:
         window.config_input_group.inputChanged.connect(self.on_config_input)
         window.FirstCheckResultButton.successChanged.connect(self.on_result_success_changed)
         window.RecheckResultButton.successChanged.connect(self.on_result_success_changed)
-        ui.load_order_btn.clicked.connect(self.load_orders)
         ui.ToolsConfigAddButton.clicked.connect(self._tools_controller.add_tool)
 
     def on_input(self, key, value):
@@ -84,13 +85,6 @@ class AppController:
 
     def load_orders(self):
         self.render_orders()
-
-    def render_orders(self):
-        content = pd.DataFrame({
-            '订单号': ['1', '2'],
-            '已选择': ['a', 'b']
-        })
-        self.window.order_table.render(content)
 
     def render_results(self):
         content = pd.DataFrame({
