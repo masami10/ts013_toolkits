@@ -11,3 +11,5 @@ requests==2.25.1
 pytz==2021.1
 aiohttp==3.7.4.post0
 qasync==0.16.0
+pandas==1.2.3
+numpy==1.20.2

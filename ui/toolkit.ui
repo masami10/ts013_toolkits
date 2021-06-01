@@ -30,7 +30,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <property name="usesScrollButtons">
        <bool>true</bool>
@@ -93,7 +93,36 @@
                 <number>0</number>
                </property>
                <item>
-                <widget class="QTableWidget" name="tableWidget"/>
+                <widget class="QTableWidget" name="OrderTable">
+                 <attribute name="horizontalHeaderVisible">
+                  <bool>false</bool>
+                 </attribute>
+                 <attribute name="horizontalHeaderCascadingSectionResizes">
+                  <bool>true</bool>
+                 </attribute>
+                 <attribute name="horizontalHeaderDefaultSectionSize">
+                  <number>120</number>
+                 </attribute>
+                 <attribute name="horizontalHeaderStretchLastSection">
+                  <bool>true</bool>
+                 </attribute>
+                 <attribute name="verticalHeaderVisible">
+                  <bool>false</bool>
+                 </attribute>
+                 <attribute name="verticalHeaderStretchLastSection">
+                  <bool>false</bool>
+                 </attribute>
+                 <column>
+                  <property name="text">
+                   <string>订单号</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>已选择</string>
+                  </property>
+                 </column>
+                </widget>
                </item>
                <item>
                 <widget class="QPushButton" name="load_order_btn">
@@ -140,7 +169,30 @@
                 <number>0</number>
                </property>
                <item>
-                <widget class="QTableWidget" name="tableWidget_2"/>
+                <widget class="QTableWidget" name="ToolsTable">
+                 <attribute name="horizontalHeaderCascadingSectionResizes">
+                  <bool>true</bool>
+                 </attribute>
+                 <attribute name="horizontalHeaderDefaultSectionSize">
+                  <number>120</number>
+                 </attribute>
+                 <attribute name="horizontalHeaderStretchLastSection">
+                  <bool>true</bool>
+                 </attribute>
+                 <attribute name="verticalHeaderVisible">
+                  <bool>false</bool>
+                 </attribute>
+                 <column>
+                  <property name="text">
+                   <string>工具序列号</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>已选择</string>
+                  </property>
+                 </column>
+                </widget>
                </item>
               </layout>
              </widget>
@@ -524,7 +576,27 @@
              </widget>
             </item>
             <item>
-             <widget class="QTableWidget" name="tableWidget_3"/>
+             <widget class="QTableWidget" name="ResultTable">
+              <attribute name="horizontalHeaderCascadingSectionResizes">
+               <bool>true</bool>
+              </attribute>
+              <attribute name="horizontalHeaderDefaultSectionSize">
+               <number>200</number>
+              </attribute>
+              <attribute name="horizontalHeaderStretchLastSection">
+               <bool>true</bool>
+              </attribute>
+              <column>
+               <property name="text">
+                <string>时间</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>扭矩值</string>
+               </property>
+              </column>
+             </widget>
             </item>
             <item>
              <widget class="QPushButton" name="submit_btn">
@@ -621,11 +693,7 @@
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_6">
                <item>
-                <widget class="QListView" name="listView">
-                 <property name="modelColumn">
-                  <number>0</number>
-                 </property>
-                </widget>
+                <widget class="QListWidget" name="toolsConfigList"/>
                </item>
               </layout>
              </widget>

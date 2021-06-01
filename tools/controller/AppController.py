@@ -10,6 +10,7 @@ from transport.http_server import HttpDaemon
 from qt_material import apply_stylesheet
 from ..view import window as main_window
 from .TemplateCompareController import TemplateCompareController
+import pandas as pd
 
 
 class AppController:
@@ -26,6 +27,8 @@ class AppController:
         self.init_controllers()
         self.connect_signals()
         self.apply_material_theme()
+        self.render_tools()
+        self.render_results() # fixme: 移动到产生结果的地方
 
     def apply_material_theme(self):
         extra = {
@@ -63,7 +66,6 @@ class AppController:
         window = self.window
         ui = window.ui
         ### tab 1 曲线对比
-        ui.load_order_btn.clicked.connect(self.template_compare_controller.load_bolt_list)
         ui.submit_btn.clicked.connect(self.template_compare_controller.load_online_template)
         window.input_group.inputChanged.connect(self.on_input)
         window.config_input_group.inputChanged.connect(self.on_config_input)
@@ -71,6 +73,7 @@ class AppController:
         window.RecheckResultButton.successChanged.connect(self.on_result_success_changed)
         ui.DeviceConnectButton.clicked.connect(self.device_connect)
         ui.DeviceDisconnectButton.clicked.connect(self.device_disconnect)
+        ui.load_order_btn.clicked.connect(self.load_orders)
 
     def on_input(self, key, value):
         self.window.notify_box.info('字段输入：{}，{}'.format(key, value))
@@ -92,3 +95,28 @@ class AppController:
         # todo: 实现设备断开
         self.window.DeviceConnStatusIndicator.set_success(False)
         self.window.HomeDeviceConnStatusIndicator.set_success(False)
+
+    def load_orders(self):
+        self.render_orders()
+
+    def render_orders(self):
+        content = pd.DataFrame({
+            '订单号': ['1', '2'],
+            '已选择': ['a', 'b']
+        })
+        self.window.order_table.render(content)
+
+    def render_tools(self):
+        content = pd.DataFrame({
+            '工具序列号': ['1', '2'],
+            '已选择': ['a', 'b']
+        })
+        self.window.tools_table.render(content)
+
+    def render_results(self):
+        content = pd.DataFrame({
+            '时间': ['2021年5月31日17:35:18', '2021年5月31日17:35:21'],
+            '扭矩值': ['12.5', '14.6']
+        })
+        self.window.result_table.set_inactive()
+        self.window.result_table.render(content)

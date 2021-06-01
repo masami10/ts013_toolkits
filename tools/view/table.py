@@ -4,17 +4,49 @@ from typing import Dict, List, Any, Union
 from PyQt5.QtCore import Qt
 from tools.view.mixin import ToolKitMixin
 from loguru import logger
+import numpy as np
+import pandas as pd
+from PyQt5 import QtCore
 
-table_headers = ["编号", "对比结果"]
+table_headers = ["编号", "选择"]
 empty_row_data = ["", ""]
 
 
-class ToolkitTable(ToolKitMixin):
+class ToolkitTable(ToolKitMixin, QWidget):
+    cell_edited_signal = QtCore.pyqtSignal(list, int, int)
+    row_clicked_signal = QtCore.pyqtSignal(str)
 
     def __init__(self, instance: QTableWidget, headers: List[str] = table_headers):
-        super(ToolkitTable, self).__init__(instance)
+        ToolKitMixin.__init__(self, instance)
+        QWidget.__init__(self)
         self._headers = headers
-        self._actived= False
+        self._active = False
+        self.table_instance.cellDoubleClicked.connect(self.set_active)
+        self.table_instance.cellChanged.connect(self.on_cell_changed)
+        self.table_instance.itemClicked.connect(self.on_item_clicked)
+
+    def set_active(self):
+        self._active = True
+
+    def set_inactive(self):
+        self._active = False
+
+    def on_cell_changed(self, row: int, col: int):
+        if not self.active:
+            return
+        logger.debug("行: {} , 列: {} 数据发生变化".format(row, col))
+        data = self.get_row_data(row)
+        self.cell_edited_signal.emit(data, row, col)
+        self.set_inactive()
+
+    def on_item_clicked(self, item):
+        row = item.row()
+        row_header = self.get_row_header(row)
+        self.row_clicked_signal.emit(row_header)
+
+    @property
+    def active(self):
+        return self._active
 
     @property
     def table_instance(self) -> QTableWidget:
@@ -25,7 +57,7 @@ class ToolkitTable(ToolKitMixin):
         data = t.item(row, 0).text()
         return data
 
-    def get_row_data(self, row: int) -> List: 
+    def get_row_data(self, row: int) -> List:
         t = self.table_instance
         cols = t.columnCount() + 1
         ret = []
@@ -39,7 +71,6 @@ class ToolkitTable(ToolKitMixin):
                 'value': cell.text()
             })
         return ret
-        
 
     def add_new_row(self):
         t = self.table_instance
@@ -80,7 +111,6 @@ class ToolkitTable(ToolKitMixin):
         item = QTableWidgetItem(ss)
         tTable.setItem(row, col, item)
 
-
     def get_table_item(self, row: int, col: int) -> QTableWidgetItem:
         tTable = self.table_instance
         return tTable.item(row, col)
@@ -109,14 +139,16 @@ class ToolkitTable(ToolKitMixin):
         header.setSectionResizeMode(QHeaderView.Stretch)  # 均分显示
         header.setVisible(True)
 
-    def render(self, table_content):
+    def render(self, table_content: pd.DataFrame):
         tTable = self.table_instance
         tTable.clearContents()
         self._headers = table_content.keys()
         self.init_table_headers()
-        # if not render_list:
-        #     return
-        # ll = len(render_list)
-        # tTable.setRowCount(ll)
-        # for row, dd in enumerate(render_list):
-        #     self.set_table_row_item(row, dd)
+        d: np.ndarray = table_content.to_numpy()
+        render_list = d.tolist()
+        if not render_list:
+            return
+        ll = len(render_list)
+        tTable.setRowCount(ll)
+        for row, dd in enumerate(render_list):
+            self.set_table_row_item(row, dd)
