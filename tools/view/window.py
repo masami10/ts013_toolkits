@@ -37,6 +37,7 @@ class ToolKitWindow(ToolKitMixin, QtWidgets.QWidget):
         self._http_server: HttpDaemon = http_server
         self._notifyBox = notify.ToolkitNotify(self.ui.textLog_2)
         self.ui.HomeDeviceConnStatusWidget.setProperty('class', 'bgLight')
+        self.ui.ToolsConfigTable.setProperty('class', 'bgLight')
         self.ui.OrderTable.setProperty('class', 'bgLight')
         self.ui.ToolsTable.setProperty('class', 'bgLight')
         self.ui.ResultTable.setProperty('class', 'bgLight')
@@ -45,6 +46,7 @@ class ToolKitWindow(ToolKitMixin, QtWidgets.QWidget):
         self.ui.submit_btn.setProperty('class', 'primaryButton')
         self.ui.DeviceConnectButton.setProperty('class', 'primaryButton')
         self.ui.DeviceDisconnectButton.setProperty('class', 'primaryButton')
+        self.ui.ToolsConfigAddButton.setProperty('class', 'primaryButton')
         self._compare_file = None
 
         self.timer = QTimer()
@@ -68,9 +70,11 @@ class ToolKitWindow(ToolKitMixin, QtWidgets.QWidget):
 
         self._config_input_group = InputGroup.InputGroup({
             'orderUrl': self.ui.OrderUrlEdit,
-            'momUrl': self.ui.MOMUrlEdit,
-            'deviceIP': self.ui.DeviceIPEdit,
-            'devicePort': self.ui.DevicePortEdit,
+            'momUrl': self.ui.MOMUrlEdit
+        })
+        self._device_config_group = InputGroup.InputGroup({
+            'ip': self.ui.DeviceIPEdit,
+            'port': self.ui.DevicePortEdit,
         })
 
         self._HomeDeviceConnStatusIndicator = StatusIndicator.StatusIndicator(
@@ -98,6 +102,7 @@ class ToolKitWindow(ToolKitMixin, QtWidgets.QWidget):
         self._OrderTable = table.ToolkitTable(self.ui.OrderTable)
         self._ToolsTable = table.ToolkitTable(self.ui.ToolsTable)
         self._ResultTable = table.ToolkitTable(self.ui.ResultTable)
+        self._ToolsConfigTable = table.ToolkitTable(self.ui.ToolsConfigTable)
 
     def showTime(self):
         # 获取系统当前时间
@@ -116,6 +121,10 @@ class ToolKitWindow(ToolKitMixin, QtWidgets.QWidget):
         return self._ToolsTable
 
     @property
+    def tools_config_table(self):
+        return self._ToolsConfigTable
+
+    @property
     def result_table(self):
         return self._ResultTable
 
@@ -126,6 +135,10 @@ class ToolKitWindow(ToolKitMixin, QtWidgets.QWidget):
     @property
     def config_input_group(self):
         return self._config_input_group
+
+    @property
+    def device_config_group(self):
+        return self._device_config_group
 
     @property
     def FirstCheckResultButton(self):

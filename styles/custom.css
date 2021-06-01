@@ -4,6 +4,12 @@
   background-color: {QTMATERIAL_PRIMARYCOLOR};
 }}
 
+.smallButton {{
+  height:10px;
+  padding: 0px;
+  margin: 0px;
+  /*width: 50px;*/
+}}
 
 QLineEdit {{
   /*color: {QTMATERIAL_SECONDARYCOLOR};*/
