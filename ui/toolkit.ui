@@ -602,6 +602,11 @@
                 <string>扭矩值</string>
                </property>
               </column>
+              <column>
+               <property name="text">
+                <string>角度值</string>
+               </property>
+              </column>
              </widget>
             </item>
             <item>

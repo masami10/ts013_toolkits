@@ -1,33 +1,36 @@
 # -*- coding:utf-8 -*-
-
-from PyQt5 import QtWidgets  # import PyQt5 widgets
-import sys
-import os
-from qasync import QEventLoop
-import asyncio
-from transport.http_server import HttpDaemon
 from transport.tcp_client import TcpClient
-from qt_material import apply_stylesheet
-from PyQt5.QtWidgets import QPushButton, QRadioButton, QTableWidget
-
 from ..view import window as main_window
 import pandas as pd
 from loguru import logger
 
 
 def is_config_valid(config):
+    if config.get('ip', None) is None:
+        raise Exception('ip未指定')
+    if config.get('port', None) is None:
+        raise Exception('端口未指定')
     return True
 
 
 class DeviceController:
     _client: TcpClient
     _config: dict
+    _results: pd.DataFrame
 
     def __init__(self, window: main_window.ToolKitWindow):
         self.window = window
         self.notify = self.window.notify_box
         self._config = {}
         ui = self.window.ui
+        self._results = pd.DataFrame({
+            'count': [],
+            'date': [],
+            'time': [],
+            'torque': [],
+            'angle': [],
+            'result': []
+        })
         ui.DeviceConnectButton.clicked.connect(self.device_connect)
         ui.DeviceDisconnectButton.clicked.connect(self.device_disconnect)
         self.window.device_config_group.inputChanged.connect(self.on_config_input)
@@ -40,12 +43,22 @@ class DeviceController:
         })
 
     # 0004 10/02/21 08:34:54 21.9    0.00     A
-    def client_log(self, msg):
+    def handle_result(self, msg):
+        self.notify.info('收到标定结果')
+        self.notify.info(msg)
         dd = msg.split(' ')
         data = list(filter(lambda d: d != '', dd))
         count, date, time, torque, angle, result = data
         logger.info(f'接收到标定数据: {count} {date}, {time}, {torque}, {angle}, {result} ')
-        self.notify.info(msg)
+        self._results = self._results.append(pd.DataFrame({
+            'count': [count],
+            'date': [date],
+            'time': [time],
+            'torque': [torque],
+            'angle': [angle],
+            'result': [result]
+        }), ignore_index=True)
+        self.render_results()
 
     def get_client_config(self):
         return {
@@ -58,7 +71,7 @@ class DeviceController:
         if not is_config_valid(config):
             raise Exception('TCP配置错误')
         self._client = TcpClient(**config)
-        self._client.set_handler(self.client_log)
+        self._client.set_handler(self.handle_result)
         self._client.start(self.on_client_start)
 
     def on_client_start(self):
@@ -78,10 +91,17 @@ class DeviceController:
 
     def device_disconnect(self):
         self.notify.info('正在断开标定设备...')
-        # todo: 实现设备断开
         self._stop_client()
         self.render(False)
 
     def render(self, status: bool):
         self.window.DeviceConnStatusIndicator.set_success(status)
         self.window.HomeDeviceConnStatusIndicator.set_success(status)
+
+    def render_results(self):
+        content = pd.DataFrame({
+            '时间': list(self._results['time']),
+            '扭矩值': list(self._results['torque']),
+            '角度值': list(self._results['angle'])
+        })
+        self.window.result_table.render(content)
