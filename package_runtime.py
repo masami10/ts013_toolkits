@@ -1,7 +1,7 @@
 import os
 import shutil
 from loguru import logger
-os.environ['ENV_RUNTIME'] = 'prod'
+os.environ['ENV_RUNTIME_ENV'] = 'prod'
 try:
     if not os.path.exists('resources'):
         src = os.path.join(os.getcwd(), 'PyQt5', 'Qt', 'resources')

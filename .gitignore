@@ -360,3 +360,6 @@ build/
 dist/
 
 *.db
+
+# Ignore dynaconf secret files
+.secrets.*

@@ -4,7 +4,7 @@ block_cipher = None
 
 a = Analysis(['main.py'],
              binaries=[],
-             datas=[('.\\styles', 'styles\\.')],
+             datas=[('.\\styles', 'styles\\.'), ('settings.toml', '.'), ('.secrets.toml', '.')],
              hiddenimports=[],
              hookspath=[],
              runtime_hooks=['package_runtime.py'],
