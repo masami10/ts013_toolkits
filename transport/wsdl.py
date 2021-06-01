@@ -8,6 +8,7 @@ from requests import Response
 from http import HTTPStatus
 from lxml.etree import tostring
 import sqlite3
+from store.contants import TS013_DB_NAME
 
 ENV_DEBUG_WSDL_REQ = strtobool(os.getenv('ENV_DEBUG_WSDL_REQ', 'false'))
 
@@ -19,7 +20,7 @@ class WSDLClient(object):
     def __init__(self, wsdl, wsdl_setting=_settings):
         self._wsdl = wsdl
         self._setting = wsdl_setting
-        self._sqlite_conn = sqlite3.connect('./x_conn.db')
+        self._sqlite_conn = sqlite3.connect(TS013_DB_NAME)
         self._client = Client(self._wsdl, settings=self._setting, transport=Transport(cache=self._cache))
 
     def init_sqlite_db(self):

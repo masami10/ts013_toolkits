@@ -3,6 +3,7 @@ import time
 from transport.http_server import HttpDaemon, create_web_app
 from aiohttp.test_utils import AioHTTPTestCase, unittest_run_loop
 import http
+import json
 
 
 class TestHttpDaemon(AioHTTPTestCase):
@@ -23,6 +24,14 @@ class TestHttpDaemon(AioHTTPTestCase):
     async def test_healthz_check_handler(self):
         resp = await self.client.request("GET", "/healthz")
         assert resp.status == http.HTTPStatus.NO_CONTENT
+
+    @unittest_run_loop
+    async def test_post_order_handler(self):
+        with open('mock_order.json', encoding='utf-8') as f:
+            body = json.load(f)
+
+        resp = await self.client.request("POST", "/orders", json=body)
+        assert resp.status == http.HTTPStatus.CREATED
 
     def test_run(self):
         self._server.run()
