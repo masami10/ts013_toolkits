@@ -43,7 +43,6 @@ class AppController:
 
         self.connect_signals()
         self.apply_material_theme()
-        self.render_results()  # fixme: 移动到产生结果的地方
 
     def init_sqlite_db(self):
         if self._db_connect:
@@ -98,14 +97,3 @@ class AppController:
 
     def on_result_success_changed(self, result_key, success):
         self.notify.info('结果变化：{}，{}'.format(result_key, success))
-
-    def load_orders(self):
-        self.render_orders()
-
-    def render_results(self):
-        content = pd.DataFrame({
-            '时间': ['2021年5月31日17:35:18', '2021年5月31日17:35:21'],
-            '扭矩值': ['12.5', '14.6']
-        })
-        self.window.result_table.set_inactive()
-        self.window.result_table.render(content)
