@@ -5,7 +5,7 @@ import sys
 import os
 from qasync import QEventLoop
 import asyncio
-from transport.http_server import HttpDaemon
+from transport.http_server import HttpServer
 from transport.tcp_client import TcpClient
 from qt_material import apply_stylesheet
 from PyQt5.QtWidgets import QPushButton, QRadioButton, QTableWidget

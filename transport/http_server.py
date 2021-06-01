@@ -17,24 +17,23 @@ async def postOrderHandler(req):
     payload = await req.json()
     app = req.app
     if not app.get('database'):
-        app['database'] = sqlite3.connect('test.db')
+        app['database'] = sqlite3.connect(TS013_DB_NAME)
     try:
         db: Connection = app['database']
         if not db:
             raise Exception('请初始化数据库接口')
-        cr = db.cursor()
         entry = payload.get('resultInfo') or payload.get('requestInfo')
         if not entry:
             raise Exception('没有找到订单数据入口')
         orderinfo = entry.get('MOMWIPORDER')
         ordername = orderinfo.get('WIPORDERNO')
         schedule_date_time = local_datetime_from_str(orderinfo.get('SCHEDULEDSTARTDATE'))
-        rid = insert_ts013_order_item(cr, ordername, orderinfo.get('WIPORDERTYPE'),
+        rid = insert_ts013_order_item(db, ordername, orderinfo.get('WIPORDERTYPE'),
                                       schedule_date_time,
                                       orderinfo.get('PRODUCTNO'))
         if rid < 0:
             raise Exception('订单插入数据库错误')
-        logger.info(f'订单: {ordername}插入数据库成功')
+        logger.info(f'订单: {ordername} 插入数据库成功')
         db.commit()
         return web.Response(status=HTTPStatus.CREATED)
     except Exception as e:
@@ -53,9 +52,9 @@ def create_web_app() -> web.Application:
     return ret
 
 
-class HttpDaemon(object):
+class HttpServer(object):
     def __init__(self, port=9110, *args, **kwargs):
-        super(HttpDaemon, self).__init__(*args, **kwargs)
+        super(HttpServer, self).__init__(*args, **kwargs)
         self._port = port
         self._app = create_web_app()
 

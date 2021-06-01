@@ -100,10 +100,10 @@ def publish_calibration_value_2_mom_wsdl(conn: Connection, tool_sn: str, orders:
     str_orders = ",".join(ss)
     identity = f"{tool_sn}@{str_orders}"
     cr = conn.cursor()
-    c_id = query_calibration_id_via_identity(cr, identity)
+    c_id = query_calibration_id_via_identity(conn, identity)
     if not c_id:
-        rid = insert_ts013_tool_calibration_item(cr, identity)
+        rid = insert_ts013_tool_calibration_item(conn, identity)
+        conn.commit()
     else:
         rid = c_id
-    conn.commit()
     payload = publish_calibration_payload(rid)

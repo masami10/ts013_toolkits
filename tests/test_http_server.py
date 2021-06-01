@@ -1,6 +1,6 @@
 from unittest import TestCase
 import time
-from transport.http_server import HttpDaemon, create_web_app
+from transport.http_server import HttpServer, create_web_app
 from aiohttp.test_utils import AioHTTPTestCase, unittest_run_loop
 import http
 import json
@@ -18,7 +18,7 @@ class TestHttpDaemon(AioHTTPTestCase):
 
     def setUp(self) -> None:
         super(TestHttpDaemon, self).setUp()
-        self._server = HttpDaemon()
+        self._server = HttpServer()
 
     @unittest_run_loop
     async def test_healthz_check_handler(self):

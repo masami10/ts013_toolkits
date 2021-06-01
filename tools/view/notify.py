@@ -23,6 +23,12 @@ class ToolkitNotify(ToolKitMixin):
         self._notify(color, content)
         logger.error(content)
 
+    @staticmethod
+    def debug(content: str):
+        # color = 'e33371'
+        # self._notify(color, content)
+        logger.debug(content)
+
     def info(self, content: str):
         color = '81c784'
         self._notify(color, content)
