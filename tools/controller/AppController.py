@@ -1,16 +1,16 @@
 # -*- coding:utf-8 -*-
 
-from .GenTemplController import GenTemplController
 from PyQt5 import QtWidgets  # import PyQt5 widgets
 import sys
 import os
 from qasync import QEventLoop
 import asyncio
 from transport.http_server import HttpDaemon
+from transport.tcp_client import TcpClient
 from qt_material import apply_stylesheet
 from ..view import window as main_window
-from .TemplateCompareController import TemplateCompareController
 import pandas as pd
+from loguru import logger
 
 
 class AppController:
@@ -24,11 +24,31 @@ class AppController:
 
         # Create the form object
         self.window = main_window.ToolKitWindow(self._http_server)
-        self.init_controllers()
         self.connect_signals()
         self.apply_material_theme()
         self.render_tools()
-        self.render_results() # fixme: 移动到产生结果的地方
+        self.render_results()  # fixme: 移动到产生结果的地方
+
+
+    # 0004 10/02/21 08:34:54 21.9    0.00     A
+    def client_log(self, msg):
+        dd = msg.split(' ')
+        data = list(filter(lambda d: d != '', dd))
+        count, date, time, torque, angle, result = data
+        logger.info(f'接收到标定数据: {count} {date}, {time}, {torque}, {angle}, {result} ')
+        self.window.notify_box.info(msg)
+
+    def start_client(self):
+        try:
+            client = TcpClient(
+                ip='192.168.3.100',
+                port=7000,
+                newline='\r\n'
+            )
+            client.set_handler(self.client_log)
+            client.start()
+        except Exception as e:
+            self.window.notify_box.error(repr(e))
 
     def apply_material_theme(self):
         extra = {
@@ -50,23 +70,15 @@ class AppController:
         loop = QEventLoop()
         asyncio.set_event_loop(loop)
         # Show form
-        self.window.show()
+        self.window.qt_instance.show()
 
         # Run the program
         sys.exit(self.app.exec())
-
-    template_compare_controller: TemplateCompareController = None
-    gen_tmpl_controller: GenTemplController = None
-
-    def init_controllers(self):
-        self.template_compare_controller = TemplateCompareController(self.window)
-        self.gen_tmpl_controller = GenTemplController(self.window)
 
     def connect_signals(self):
         window = self.window
         ui = window.ui
         ### tab 1 曲线对比
-        ui.submit_btn.clicked.connect(self.template_compare_controller.load_online_template)
         window.input_group.inputChanged.connect(self.on_input)
         window.config_input_group.inputChanged.connect(self.on_config_input)
         window.FirstCheckResultButton.successChanged.connect(self.on_result_success_changed)

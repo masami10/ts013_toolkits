@@ -3,13 +3,18 @@ from PyQt5 import QtWidgets, QtCore  # import PyQt5 widgets
 from ui.toolkit import Ui_MainWindow
 from loguru import logger
 from typing import Dict, List, Any
+from .mixin import ToolKitMixin
 from tools.view import table, notify, InputGroup, ResultButton, StatusIndicator
 from transport.http_server import HttpDaemon
 
 demo_table_items = [["006R_1_1_1", "2", "3"], ["006R_1_1_2", "22", "342"]]
 
 
-class ToolKitWindow(QtWidgets.QMainWindow):
+
+
+
+class ToolKitWindow(ToolKitMixin, QtWidgets.QWidget):
+    resized = QtCore.pyqtSignal()
 
     def show(self) -> None:
         super(ToolKitWindow, self).show()
@@ -21,10 +26,13 @@ class ToolKitWindow(QtWidgets.QMainWindow):
             self._http_server.stop()
 
     def __init__(self, http_server: HttpDaemon, *args, **kwargs):
-        super(ToolKitWindow, self).__init__(*args, **kwargs)
-        self._http_server: HttpDaemon = http_server
+        main_window = QtWidgets.QMainWindow(*args, **kwargs)
+        ToolKitMixin.__init__(self, main_window)
+        QtWidgets.QWidget.__init__(self)
         self.ui = Ui_MainWindow()
-        self.ui.setupUi(self)
+
+        self.ui.setupUi(self.qt_instance)
+        self._http_server: HttpDaemon = http_server
         self._notifyBox = notify.ToolkitNotify(self.ui.textLog_2)
         self.ui.HomeDeviceConnStatusWidget.setProperty('class', 'bgLight')
         self.ui.OrderTable.setProperty('class', 'bgLight')
