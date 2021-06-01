@@ -35,6 +35,7 @@ class ToolKitWindow(ToolKitMixin, QtWidgets.QWidget):
         self._http_server: HttpDaemon = http_server
         self._notifyBox = notify.ToolkitNotify(self.ui.textLog_2)
         self.ui.HomeDeviceConnStatusWidget.setProperty('class', 'bgLight')
+        self.ui.ToolsConfigTable.setProperty('class', 'bgLight')
         self.ui.OrderTable.setProperty('class', 'bgLight')
         self.ui.ToolsTable.setProperty('class', 'bgLight')
         self.ui.ResultTable.setProperty('class', 'bgLight')
@@ -43,6 +44,7 @@ class ToolKitWindow(ToolKitMixin, QtWidgets.QWidget):
         self.ui.submit_btn.setProperty('class', 'primaryButton')
         self.ui.DeviceConnectButton.setProperty('class', 'primaryButton')
         self.ui.DeviceDisconnectButton.setProperty('class', 'primaryButton')
+        self.ui.ToolsConfigAddButton.setProperty('class', 'primaryButton')
         self._compare_file = None
 
         self._input_group = InputGroup.InputGroup({
@@ -92,6 +94,7 @@ class ToolKitWindow(ToolKitMixin, QtWidgets.QWidget):
         self._OrderTable = table.ToolkitTable(self.ui.OrderTable)
         self._ToolsTable = table.ToolkitTable(self.ui.ToolsTable)
         self._ResultTable = table.ToolkitTable(self.ui.ResultTable)
+        self._ToolsConfigTable = table.ToolkitTable(self.ui.ToolsConfigTable)
 
     @property
     def order_table(self):
@@ -100,6 +103,10 @@ class ToolKitWindow(ToolKitMixin, QtWidgets.QWidget):
     @property
     def tools_table(self):
         return self._ToolsTable
+
+    @property
+    def tools_config_table(self):
+        return self._ToolsConfigTable
 
     @property
     def result_table(self):

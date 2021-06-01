@@ -105,7 +105,7 @@ class ToolkitTable(ToolKitMixin, QWidget):
             return
         if isinstance(content, int) or isinstance(content, float):
             ss = str(content)
-        if isinstance(content, QPushButton) or isinstance(content, QToolButton):
+        if isinstance(content, QWidget):
             tTable.setCellWidget(row, col, content)
             return
         item = QTableWidgetItem(ss)
