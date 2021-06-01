@@ -12,6 +12,7 @@ from ..view import window as main_window
 import pandas as pd
 from loguru import logger
 from .ToolsController import ToolsController
+from store.store import StorageData
 
 
 class AppController:
@@ -22,6 +23,8 @@ class AppController:
 
         self._threads = []
         self._http_server = HttpDaemon()
+
+        self.glb_storage = StorageData()  # 单例模式
 
         # Create the form object
         self.window = main_window.ToolKitWindow(self._http_server)
@@ -72,7 +75,7 @@ class AppController:
         loop = QEventLoop()
         asyncio.set_event_loop(loop)
         # Show form
-        self.window.qt_instance.show()
+        self.window.show()
 
         # Run the program
         sys.exit(self.app.exec())

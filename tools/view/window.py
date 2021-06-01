@@ -3,6 +3,7 @@ from PyQt5 import QtWidgets, QtCore  # import PyQt5 widgets
 from ui.toolkit import Ui_MainWindow
 from loguru import logger
 from typing import Dict, List, Any
+from PyQt5.QtCore import QTimer, QDateTime
 from .mixin import ToolKitMixin
 from tools.view import table, notify, InputGroup, ResultButton, StatusIndicator
 from transport.http_server import HttpDaemon
@@ -10,18 +11,19 @@ from transport.http_server import HttpDaemon
 demo_table_items = [["006R_1_1_1", "2", "3"], ["006R_1_1_2", "22", "342"]]
 
 
-
-
-
 class ToolKitWindow(ToolKitMixin, QtWidgets.QWidget):
     resized = QtCore.pyqtSignal()
 
     def show(self) -> None:
-        super(ToolKitWindow, self).show()
+        self.qt_instance.show()
+        if self.timer:
+            self.timer.start(1000)  # 定时器为1秒
         if self._http_server:
             self._http_server.start()
 
     def closeEvent(self, event):
+        if self.timer:
+            self.timer.stop()
         if self._http_server:
             self._http_server.stop()
 
@@ -46,6 +48,10 @@ class ToolKitWindow(ToolKitMixin, QtWidgets.QWidget):
         self.ui.DeviceDisconnectButton.setProperty('class', 'primaryButton')
         self.ui.ToolsConfigAddButton.setProperty('class', 'primaryButton')
         self._compare_file = None
+
+        self.timer = QTimer()
+        # 定时器结束，触发showTime方法
+        self.timer.timeout.connect(self.showTime)
 
         self._input_group = InputGroup.InputGroup({
             'orderCode': self.ui.OrderCodeEdit,
@@ -95,6 +101,14 @@ class ToolKitWindow(ToolKitMixin, QtWidgets.QWidget):
         self._ToolsTable = table.ToolkitTable(self.ui.ToolsTable)
         self._ResultTable = table.ToolkitTable(self.ui.ResultTable)
         self._ToolsConfigTable = table.ToolkitTable(self.ui.ToolsConfigTable)
+
+    def showTime(self):
+        # 获取系统当前时间
+        time = QDateTime.currentDateTime()
+        # 设置系统时间的显示格式
+        timeDisplay = time.toString('yyyy-MM-dd hh:mm:ss dddd')
+        # 在标签上显示时间
+        self.ui.timeLabel.setText(timeDisplay)
 
     @property
     def order_table(self):
