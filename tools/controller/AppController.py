@@ -11,6 +11,7 @@ from qt_material import apply_stylesheet
 from ..view import window as main_window
 import pandas as pd
 from loguru import logger
+from store.store import StorageData
 
 
 class AppController:
@@ -22,13 +23,14 @@ class AppController:
         self._threads = []
         self._http_server = HttpDaemon()
 
+        self.glb_storage = StorageData()  # 单例模式
+
         # Create the form object
         self.window = main_window.ToolKitWindow(self._http_server)
         self.connect_signals()
         self.apply_material_theme()
         self.render_tools()
         self.render_results()  # fixme: 移动到产生结果的地方
-
 
     # 0004 10/02/21 08:34:54 21.9    0.00     A
     def client_log(self, msg):
@@ -70,7 +72,7 @@ class AppController:
         loop = QEventLoop()
         asyncio.set_event_loop(loop)
         # Show form
-        self.window.qt_instance.show()
+        self.window.show()
 
         # Run the program
         sys.exit(self.app.exec())

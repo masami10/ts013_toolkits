@@ -5,9 +5,9 @@ from typing import List
 
 class MOMOrder(object):
     def __init__(self, orderNo: str, orderType: str, partNo: str):
-        self.wipOrderNo = orderNo
-        self.wipOrderType = orderType
-        self.partName = partNo
+        self.wipOrderNo = orderNo  # 订单号
+        self.wipOrderType = orderType  # 订单类型
+        self.partName = partNo  # 产成品料号
 
 
 class ToolsInfo(object):
