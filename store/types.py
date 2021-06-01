@@ -26,6 +26,8 @@ class checkValue(object):
         self.checkValue = target
         self.measure_values: List[float] = []
         self.remeasure_values: List[float] = []
+        self._checkResult = 0
+        self._recheckResult = 0
 
     def update_measure(self, val: float, opt: str = 'measure_values'):
         entry: List[float] = getattr(self, opt)
@@ -52,13 +54,27 @@ class checkValue(object):
             return 0.0
         return self.measure_values[1]
 
+    @staticmethod
+    def validCheckResult(result: bool) -> int:
+        if result:
+            return 1
+        return 0
+
+    def setCheckResult(self, result: bool):
+        val = self.validCheckResult(result)
+        self._checkResult = val
+
+    def setReCheckResult(self, result: bool):
+        val = self.validCheckResult(result)
+        self._recheckResult = val
+
     @property
     def checkResult(self) -> int:
-        return 1
+        return self._checkResult
 
     @property
     def recheckResult(self) -> int:
-        return 1
+        return self._recheckResult
 
     @property
     def checkValue3(self):

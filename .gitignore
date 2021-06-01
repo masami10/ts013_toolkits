@@ -358,3 +358,5 @@ logs/
 build/
 
 dist/
+
+*.db
