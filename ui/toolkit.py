@@ -57,7 +57,7 @@ class Ui_MainWindow(object):
         self.OrderTable.setHorizontalHeaderItem(0, item)
         item = QtWidgets.QTableWidgetItem()
         self.OrderTable.setHorizontalHeaderItem(1, item)
-        self.OrderTable.horizontalHeader().setVisible(True)
+        self.OrderTable.horizontalHeader().setVisible(False)
         self.OrderTable.horizontalHeader().setCascadingSectionResizes(True)
         self.OrderTable.horizontalHeader().setDefaultSectionSize(120)
         self.OrderTable.horizontalHeader().setStretchLastSection(True)
@@ -346,10 +346,9 @@ class Ui_MainWindow(object):
         self.groupBox_10.setObjectName("groupBox_10")
         self.verticalLayout_6 = QtWidgets.QVBoxLayout(self.groupBox_10)
         self.verticalLayout_6.setObjectName("verticalLayout_6")
-        self.listView = QtWidgets.QListView(self.groupBox_10)
-        self.listView.setModelColumn(0)
-        self.listView.setObjectName("listView")
-        self.verticalLayout_6.addWidget(self.listView)
+        self.toolsConfigList = QtWidgets.QListWidget(self.groupBox_10)
+        self.toolsConfigList.setObjectName("toolsConfigList")
+        self.verticalLayout_6.addWidget(self.toolsConfigList)
         self.verticalLayout.addWidget(self.groupBox_10)
         self.groupBox_2 = QtWidgets.QGroupBox(self.setting_tab)
         self.groupBox_2.setObjectName("groupBox_2")
@@ -409,7 +408,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
-        self.tabWidget_2.setCurrentIndex(0)
+        self.tabWidget_2.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
