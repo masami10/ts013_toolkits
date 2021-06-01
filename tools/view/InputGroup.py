@@ -19,7 +19,7 @@ class InputGroup(QWidget):
     def on_input_changed(self, key, value):
         self.inputChanged.emit(key, value)
 
-    def set_text(self, key, text, properties):
+    def set_text(self, key, text):
         input = self._inputs.get(key, None)
         if not input:
             raise Exception('不存在输入框：{}'.format(key))

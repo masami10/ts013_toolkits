@@ -77,7 +77,7 @@ class ToolsController:
         tools = list(self.content['定检编号'])
         content = pd.DataFrame({
             '定检编号': tools,
-            '选中': list(map(lambda tool: select_tool_radio(tool, self.notify.info), tools))
+            '选中': list(map(lambda tool: select_tool_radio(tool, self.render_tool_detail), tools))
         })
         self.window.tools_table.render(content)
 
@@ -92,3 +92,17 @@ class ToolsController:
     def tool_content_edit(self, tool, key, value):
         # todo: do edit
         self.render()
+
+    def render_tool_detail(self, tool):
+        self.notify.info(tool)
+        tools = self.content
+        tools = tools.set_index('定检编号')
+        self.notify.info(tools)
+        tool_selected = tools.loc[tool]
+        self.window.input_group.set_text('inspectionCode', tool)
+        self.window.input_group.set_text('classificationCode', tool_selected.get('分类号', ''))
+        self.window.input_group.set_text('productCode', tool_selected.get('物料号', None))
+        self.window.input_group.set_text('name', tool_selected.get('名称', None))
+        self.window.input_group.set_text('specs', tool_selected.get('规格', None))
+        self.window.input_group.set_text('RFIDEdit', tool_selected.get('RFID', None))
+        return
