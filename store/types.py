@@ -1,6 +1,7 @@
 import json
 from loguru import logger
 from typing import List
+import pandas as pd
 
 
 class MOMOrder(object):
@@ -18,14 +19,30 @@ class MOMOrder(object):
 
 
 class ToolsInfo(object):
-    def __init__(self, toolFixedInspectionCode: str, toolClassificationCode: str, toolMaterialCode: str,
-                 toolRfid: str, toolName: str, toolSpecificationType: str):
+    def __init__(self, toolFixedInspectionCode: str = '', toolClassificationCode: str = '', toolMaterialCode: str = '',
+                 toolRfid: str = '', toolName: str = '', toolSpecificationType: str = ''):
         self.toolName = toolName
         self.toolClassificationCode = toolClassificationCode
         self.toolFixedInspectionCode = toolFixedInspectionCode
         self.toolMaterialCode = toolMaterialCode
         self.toolRfid = toolRfid
         self.toolSpecificationType = toolSpecificationType
+
+    @property
+    def to_dict(self):
+        return {
+            'toolName': self.toolName,
+            'toolClassificationCode': self.toolClassificationCode,
+            'toolFixedInspectionCode': self.toolFixedInspectionCode,
+            'toolMaterialCode': self.toolMaterialCode,
+            'toolRfid': self.toolRfid,
+            'toolSpecificationType': self.toolSpecificationType,
+        }
+
+    def update(self, tools_info: dict):
+        for key, value in tools_info.items():
+            if hasattr(self, key):
+                setattr(self, key, value)
 
 
 class checkValue(object):

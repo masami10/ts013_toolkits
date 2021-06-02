@@ -59,12 +59,12 @@ class ToolKitWindow(ToolKitMixin, QtWidgets.QWidget):
             'recheckCard': self.ui.RecheckCardEdit,
             'FirstCheckName': self.ui.FirstCheckNameEdit,
             'recheckName': self.ui.RecheckNameEdit,
-            'inspectionCode': self.ui.InspectionCodeEdit,
-            'productCode': self.ui.ProductCodeEdit,
-            'RFIDEdit': self.ui.RFIDEdit,
-            'classificationCode': self.ui.ClassificationCodeEdit,
-            'name': self.ui.NameEdit,
-            'specs': self.ui.SpecsEdit,
+            'toolFixedInspectionCode': self.ui.InspectionCodeEdit,
+            'toolMaterialCode': self.ui.ProductCodeEdit,
+            'toolRfid': self.ui.RFIDEdit,
+            'toolClassificationCode': self.ui.ClassificationCodeEdit,
+            'toolName': self.ui.NameEdit,
+            'toolSpecificationType': self.ui.SpecsEdit,
         })
 
         self._config_input_group = InputGroup.InputGroup({

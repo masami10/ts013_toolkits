@@ -1,4 +1,4 @@
-from typing import Any, List
+from typing import Any, Dict
 from py_singleton import singleton
 from store.types import ToolsInfo
 from loguru import logger
@@ -29,7 +29,18 @@ class StorageData(object):
         except Exception as e:
             logger.error(f'未发现工具: {toolFixedInspectionCode}')
 
-    def get_tools(self) -> List[ToolsInfo]:
+    def edit_tool(self, tool_data: dict):
+        logger.info('编辑工具')
+        logger.info(repr(tool_data))
+        ins_code = tool_data.get('toolFixedInspectionCode', None)
+        if ins_code is None:
+            raise Exception('没有指定定检编号')
+        tool_info = ToolsInfo(**tool_data)
+        self._data.get('tools', {}).update({
+            ins_code: tool_info
+        })
+
+    def get_tools(self) -> Dict[str, ToolsInfo]:
         return self._data.get('tools', {})
 
     def __str__(self):

@@ -19,10 +19,10 @@ class ToolsAppendWindow(ToolKitMixin, QtWidgets.QWidget):
         self.ui.SaveButton.setProperty('class', 'primaryButton')
         self.ui.CancelButton.setProperty('class', 'danger')
         self.input_group = InputGroup.InputGroup({
-            'inspectionCode': self.ui.InspectionCodeEdit,
-            'productCode': self.ui.ProductCodeEdit,
-            'RFIDEdit': self.ui.RFIDEdit,
-            'classificationCode': self.ui.ClassificationCodeEdit,
-            'name': self.ui.NameEdit,
-            'specs': self.ui.SpecsEdit,
+            'toolFixedInspectionCode': self.ui.InspectionCodeEdit,
+            'toolMaterialCode': self.ui.ProductCodeEdit,
+            'toolRfid': self.ui.RFIDEdit,
+            'toolClassificationCode': self.ui.ClassificationCodeEdit,
+            'toolName': self.ui.NameEdit,
+            'toolSpecificationType': self.ui.SpecsEdit,
         })
