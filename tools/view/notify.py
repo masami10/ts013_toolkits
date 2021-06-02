@@ -1,22 +1,25 @@
 # -*- coding: utf-8 -*-
 from PyQt5.QtWidgets import QTextBrowser
+from typing import List
+
 from tools.view.mixin import ToolKitMixin
 from loguru import logger
 
 
-class ToolkitNotify(ToolKitMixin):
-    def __init__(self, instance: QTextBrowser):
-        super(ToolkitNotify, self).__init__(instance)
+class ToolkitNotify:
+    qt_instances: List[QTextBrowser]
 
-    @property
-    def textBrowser_instance(self) -> QTextBrowser:
-        return self.qt_instance
+    def __init__(self, instances: List[QTextBrowser]):
+        self.qt_instances = []
+        for instance in instances:
+            self.qt_instances.append(instance)
 
     def _notify(self, color: str, content: str):
-        if not self.textBrowser_instance:
+        if not self.qt_instances or len(self.qt_instances) == 0:
             return
         ss = "<span style=\" font-size:16pt; font-weight:600; color:#{};\" > {} </span>".format(color, content)
-        self.textBrowser_instance.append(ss)
+        for instance in self.qt_instances:
+            instance.append(ss)
 
     def error(self, content: str):
         color = 'e33371'

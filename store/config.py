@@ -4,10 +4,12 @@ from dynaconf import loaders
 from dynaconf.utils.boxing import DynaBox
 import os
 import pathlib
+from py_singleton import singleton
 
 ENV_RUNTIME_ENV = os.getenv('ENV_RUNTIME_ENV', 'test')
 
 
+@singleton
 class Config(object):
     def __init__(self):
         self._settings: Dynaconf = settings
