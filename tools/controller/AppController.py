@@ -6,11 +6,9 @@ import os
 from qasync import QEventLoop
 import asyncio
 from transport.http_server import HttpServer
-from transport.tcp_client import TcpClient
+from store.config import Config
 from qt_material import apply_stylesheet
 from ..view import window as main_window
-import pandas as pd
-from loguru import logger
 from .ToolsController import ToolsController
 from .DeviceController import DeviceController
 from .OrderController import OrderController
@@ -25,6 +23,7 @@ TRANSLATION_MAP = {
     'True': '成功',
     'False': '失败',
 }
+
 
 def get_translation(v: str):
     default = v
@@ -44,13 +43,15 @@ class AppController:
 
         self.glb_storage = StorageData()  # 单例模式
 
+        self.glb_config = Config()
+
         # Create the form object
         self.window = main_window.ToolKitWindow(self._http_server)
         self.notify = self.window.notify_box
-        self._tools_controller = ToolsController(self.window)
+        self._tools_controller = ToolsController(self.window, self.glb_config)
         self._device_controller = DeviceController(self.window)
         self._order_controller = OrderController(self.window, self._db_connect)
-        self._connection_controller = ConnectionController(self.window)
+        self._connection_controller = ConnectionController(self.window, self.glb_config)
 
         self.init_sqlite_db()
 
@@ -103,6 +104,7 @@ class AppController:
 
     def on_input(self, key, value):
         self.notify.debug('字段输入：{}，{}'.format(key, value))
+        self.glb_storage.update_inputs_data(key, value)
 
     def on_result_success_changed(self, result_key: str, success: bool):
         lvl = 'info'
@@ -110,3 +112,4 @@ class AppController:
             lvl = 'error'
         m = getattr(self.notify, lvl, self.notify.info)
         m('结果变化：{}，{}'.format(get_translation(result_key), get_translation(str(success))))
+        self.glb_storage.update_check_result_data(result_key, success)  # 更新存储的数据

@@ -45,38 +45,59 @@ class ToolsInfo(object):
                 setattr(self, key, value)
 
 
+class Person(object):
+    _name = ''
+    _number = ''
+
+    def set_name(self, name: str = ''):
+        self._name = name
+
+    def set_number(self, number: str = ''):
+        self._number = number
+
+    @property
+    def name(self):
+        return self._name
+
+    @property
+    def number(self):
+        return self._number
+
+
 class checkValue(object):
     def __init__(self, target: float):
-        self.checkValue = target
-        self.measure_values: List[float] = []
-        self.remeasure_values: List[float] = []
+        self.targetValue = target
+        self.measure_torque_values: List[float] = []
+        self.remeasure_torque_values: List[float] = []
         self._checkResult = 0
         self._recheckResult = 0
+        self.checkPerson = Person()
+        self.recheckPerson = Person()
 
-    def update_measure(self, val: float, opt: str = 'measure_values'):
+    def update_measure(self, val: float, opt: str = 'measure_torque_values'):
         entry: List[float] = getattr(self, opt)
         ll = len(entry)
         if ll < 3:
             entry.append(val)
         entry[2] = val
 
-    def update_measures(self, vals: List[float], opt: str = 'measure_values'):
+    def update_measures(self, vals: List[float], opt: str = 'measure_torque_values'):
         entry: List[float] = getattr(self, opt)
         entry = vals
 
     @property
     def checkValue1(self):
-        ll = len(self.measure_values)
+        ll = len(self.measure_torque_values)
         if ll == 0:
             return 0.0
-        return self.measure_values[0]
+        return self.measure_torque_values[0]
 
     @property
     def checkValue2(self):
-        ll = len(self.measure_values)
+        ll = len(self.measure_torque_values)
         if ll <= 1:
             return 0.0
-        return self.measure_values[1]
+        return self.measure_torque_values[1]
 
     @staticmethod
     def validCheckResult(result: bool) -> int:
@@ -102,38 +123,38 @@ class checkValue(object):
 
     @property
     def checkValue3(self):
-        ll = len(self.measure_values)
+        ll = len(self.measure_torque_values)
         if ll <= 2:
             return 0.0
-        return self.measure_values[2]
+        return self.measure_torque_values[2]
 
     @property
     def maxCheckValue(self) -> float:
-        ll = len(self.measure_values)
+        ll = len(self.measure_torque_values)
         if ll == 0:
             return 0.0
-        return max(self.measure_values)
+        return max(self.measure_torque_values)
 
     @property
     def minCheckValue(self) -> float:
-        ll = len(self.measure_values)
+        ll = len(self.measure_torque_values)
         if ll == 0:
             return 0.0
-        return min(self.measure_values)
+        return min(self.measure_torque_values)
 
     @property
     def maxRecheckValue(self) -> float:
-        ll = len(self.remeasure_values)
+        ll = len(self.remeasure_torque_values)
         if ll == 0:
             return 0.0
-        return max(self.remeasure_values)
+        return max(self.remeasure_torque_values)
 
     @property
     def minReCheckValue(self) -> float:
-        ll = len(self.remeasure_values)
+        ll = len(self.remeasure_torque_values)
         if ll == 0:
             return 0.0
-        return min(self.remeasure_values)
+        return min(self.remeasure_torque_values)
 
 
 class checkInfoParams(object):

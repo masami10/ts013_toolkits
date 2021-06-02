@@ -25,6 +25,10 @@ class Config(object):
         setattr(self._settings, key, value)
         self.save_config()
 
+    def set_tools_config(self, value):
+        setattr(self._settings, 'tools', value)
+        self.save_config()
+
     def get_config(self, key):
         try:
             return getattr(self._settings, key)

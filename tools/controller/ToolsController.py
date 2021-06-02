@@ -1,11 +1,13 @@
 # -*- coding:utf-8 -*-
 
 from PyQt5.QtWidgets import QPushButton, QRadioButton, QTableWidget
-
+from typing import Dict
 from ..view import window as main_window
 import pandas as pd
 from .ToolsAppendController import ToolsAppendController
 from store.store import StorageData
+from store.config import Config
+from store.types import ToolsInfo
 
 store = StorageData()
 
@@ -36,9 +38,10 @@ def select_tool_radio(tool_sn, on_select):
 class ToolsController:
     append_controller: ToolsAppendController
 
-    def __init__(self, window: main_window.ToolKitWindow):
+    def __init__(self, window: main_window.ToolKitWindow, config: Config):
         self.window = window
         self.notify = self.window.notify_box
+        self._config = config
         self.append_controller = ToolsAppendController(self.window, self.save_tool)
         self.window.tools_config_table.row_clicked_signal.connect(self.edit_tool)
         self.render()
@@ -58,9 +61,10 @@ class ToolsController:
             tdf = tdf.append(value.to_dict, ignore_index=True)
         return tdf
 
-    def save_tool(self, tool_data):
-        store.edit_tool(tool_data)
-
+    def save_tool(self, tool_data: Dict):
+        data: Dict[str, ToolsInfo] = store.edit_tool(tool_data)
+        dd = [tool.__dict__ for tool in data.values()]
+        self._config.set_tools_config(dd)
         self.render()
 
     def edit_tool(self, tool):

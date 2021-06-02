@@ -1,2 +1,10 @@
-ORDERURL = ""
-MOMURL = ""
+ORDERURL = "http://192.168.3.23"
+MOMURL = "http://10.220.29.136/Apriso/WebServices/Public/MOM_PeripheralSystem_InspectionInfo.svc?wsdl"
+[[TOOLS]]
+toolName = "234"
+toolClassificationCode = "13123"
+toolFixedInspectionCode = "342"
+toolMaterialCode = "345345"
+toolRfid = "345"
+toolSpecificationType = "243"
+

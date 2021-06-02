@@ -2,7 +2,7 @@ import os
 import json
 from utils.tools import serialize_obj_2_json
 from typing import List
-from store.types import MOMOrder, ToolsInfo
+from store.types import MOMOrder, ToolsInfo, checkValue
 from transport.constants import now
 from sqlite3 import Connection
 from store.sql import query_calibration_id_via_identity, insert_ts013_tool_calibration_item
@@ -77,22 +77,24 @@ http://172.31.120.56/Apriso/WebServices/Public/MOM_PeripheralSystem_InspectionIn
 '''
 
 
-def publish_calibration_payload(conn: Connection, rid: int, orders: List[MOMOrder], tool_info: ToolsInfo):
+def publish_calibration_payload(rid: int, orders: List[MOMOrder], tool_info: ToolsInfo, check: checkValue):
     return {
         "Parameter": {
             {"MethodName": "TorqueCheckInfo", "Parameter":
                 {"id": rid, "toolFixedInspectionCode": tool_info.toolFixedInspectionCode,
                  "toolClassificationCode": tool_info.toolClassificationCode,
-                 "toolMaterialCode": "000000001800000181",
-                 "toolRfid": "315110040000000000000224", "toolName": tool_info.toolName,
-                 "toolSpecificationType": "扭矩范围(4-20)N.m", "checkValue": 55.0,
-                 "maxCheckValue": 56.37, "minCheckValue": 53.63, "maxRecheckValue": 57.75,
-                 "minRecheckValue": 52.25, "checkTime": "2020-04-2416:27:30",
-                 "checkValue1": 55.0, "checkValue2": 55.1, "checkValue3": 55.2,
-                 "checkEmployeeNo": "65595", "checkEmployeeName": "朱亚征", "checkResult": 1,
-                 "recheckTime": now(), "recheckValue": 55.0,
-                 "recheckEmployeeNo": "65595", "recheckEmployeeName": "朱亚征",
-                 "recheckResult": 1, "momOrders": serialize_obj_2_json(orders)}}}}
+                 "toolMaterialCode": tool_info.toolMaterialCode,
+                 "toolRfid": tool_info.toolRfid, "toolName": tool_info.toolName,
+                 "toolSpecificationType": tool_info.toolSpecificationType, "checkValue": check.targetValue,
+                 "maxCheckValue": check.maxCheckValue, "minCheckValue": check.minCheckValue,
+                 "maxRecheckValue": check.maxRecheckValue,
+                 "minRecheckValue": check.minCheckValue, "checkTime": now(),
+                 "checkValue1": check.checkValue1, "checkValue2": check.checkValue2, "checkValue3": check.checkValue3,
+                 "checkEmployeeNo": check.checkPerson.number, "checkEmployeeName": check.checkPerson.name,
+                 "checkResult": check.checkResult,
+                 "recheckTime": now(), "recheckValue": 0.0,
+                 "recheckEmployeeNo": check.recheckPerson.number, "recheckEmployeeName": check.recheckPerson.name,
+                 "recheckResult": check.recheckResult, "momOrders": serialize_obj_2_json(orders)}}}}
 
 
 def publish_calibration_value_2_mom_wsdl(conn: Connection, tool_sn: str, orders: List[MOMOrder]):
