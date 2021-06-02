@@ -6,9 +6,11 @@ from loguru import logger
 
 
 class TcpClient(object):
+
     def __init__(self, ip: str = '127.0.0.1', port: int = 80, name='Dummy TCP Client', newline='\n'):
         self.started = False
         self.connected = False  # 是否连接
+        self.start_task = None
         self._name = name
         self._newline = newline
         self.thread: Optional[threading.Thread] = None
@@ -54,7 +56,7 @@ class TcpClient(object):
                 self.handler(line)
         f.close()
 
-    async def start(self, on_start):
+    async def _do_start(self, on_start):
         self.connect()
         self.started = True
         self.thread = threading.Thread(target=self.run, name=self._name)
@@ -63,7 +65,15 @@ class TcpClient(object):
         logger.info("TCP 客户端线程打开")
         on_start()
 
+    def start(self, on_start):
+        if self.start_task:
+            self.start_task.close()
+        self.start_task = self._do_start(on_start)
+        return
+
     def stop(self):
+        if self.start_task:
+            self.start_task.close()
         self.started = False
         self.disconnect()
         if self.thread:
