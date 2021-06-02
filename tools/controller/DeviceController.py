@@ -1,4 +1,5 @@
 # -*- coding:utf-8 -*-
+
 from transport.tcp_client import TcpClient
 from ..view import window as main_window
 import pandas as pd
@@ -82,12 +83,16 @@ class DeviceController:
 
     def device_connect(self):
         try:
+            ip = self._config.get('ip', '')
+            port = self._config.get('port', '')
+            if not ip or not port:
+                raise Exception('未设置标定设备IP或端口!!!')
             self.notify.info(
-                '正在连接标定设备(tcp://{}:{})...'.format(self._config.get('ip', ''), self._config.get('port', '')))
+                f'正在连接标定设备(tcp://{ip}:{port})...')
             self._start_client()
         except Exception as e:
             self.notify.error('连接标定设备失败：')
-            self.notify.error(repr(e))
+            self.notify.error(str(e))
 
     def device_disconnect(self):
         self.notify.info('正在断开标定设备...')
@@ -104,4 +109,4 @@ class DeviceController:
             '扭矩值': list(self._results['torque']),
             '角度值': list(self._results['angle'])
         })
-        self.window.result_table.render(content)
+        self.window.result_table.render_table(content)

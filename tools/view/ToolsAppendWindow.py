@@ -5,7 +5,6 @@ from ui.tools_append_window import Ui_ToolsAppendWindow
 from PyQt5.QtCore import QTimer, QDateTime
 from .mixin import ToolKitMixin
 from tools.view import table, notify, InputGroup, StatusIndicator
-from transport.http_server import HttpDaemon
 
 
 class ToolsAppendWindow(ToolKitMixin, QtWidgets.QWidget):

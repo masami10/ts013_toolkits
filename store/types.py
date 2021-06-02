@@ -9,6 +9,13 @@ class MOMOrder(object):
         self.wipOrderType = orderType  # 订单类型
         self.partName = partNo  # 产成品料号
 
+    def as_dict(self):
+        return {
+            '订单号': self.wipOrderNo,
+            '订单类型': self.wipOrderType,
+            '产成品': self.partName
+        }
+
 
 class ToolsInfo(object):
     def __init__(self, toolFixedInspectionCode: str, toolClassificationCode: str, toolMaterialCode: str,

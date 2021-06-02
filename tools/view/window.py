@@ -1,12 +1,13 @@
 # -*- coding:utf-8 -*-
 from PyQt5 import QtWidgets, QtCore  # import PyQt5 widgets
 from ui.toolkit import Ui_MainWindow
-from ui.tools_append_window import Ui_ToolsAppendWindow
+from PyQt5.QtWidgets import QHeaderView
 from PyQt5.QtCore import QTimer, QDateTime
 from .mixin import ToolKitMixin
+from transport.http_server import HttpServer
 from tools.view import table, notify, InputGroup, StatusIndicator
-from transport.http_server import HttpDaemon
 from .ToolsAppendWindow import ToolsAppendWindow
+
 
 class ToolKitWindow(ToolKitMixin, QtWidgets.QWidget):
     resized = QtCore.pyqtSignal()
@@ -24,19 +25,21 @@ class ToolKitWindow(ToolKitMixin, QtWidgets.QWidget):
         if self._http_server:
             self._http_server.stop()
 
-    def __init__(self, http_server: HttpDaemon, *args, **kwargs):
+    def __init__(self, http_server: HttpServer, *args, **kwargs):
         main_window = QtWidgets.QMainWindow(*args, **kwargs)
         ToolKitMixin.__init__(self, main_window)
         QtWidgets.QWidget.__init__(self)
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self.qt_instance)
         self.tools_append_window = ToolsAppendWindow()
-        self._http_server: HttpDaemon = http_server
+        main_window.resize(1920, 1080)  # 重新设定为1920 * 1080
+        self._http_server: HttpServer = http_server
         self._notifyBox = notify.ToolkitNotify(self.ui.textLog_2)
         self.ui.HomeDeviceConnStatusWidget.setProperty('class', 'bgLight')
         self.ui.ToolsConfigTable.setProperty('class', 'bgLight')
         self.ui.OrderTable.setProperty('class', 'bgLight')
         self.ui.ToolsTable.setProperty('class', 'bgLight')
+        self.ui.ToolsTable.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.ui.ResultTable.setProperty('class', 'bgLight')
         self.ui.timeLabel.setProperty('class', 'bgLight')
         self.ui.load_order_btn.setProperty('class', 'primaryButton')
@@ -44,7 +47,6 @@ class ToolKitWindow(ToolKitMixin, QtWidgets.QWidget):
         self.ui.DeviceConnectButton.setProperty('class', 'primaryButton')
         self.ui.DeviceDisconnectButton.setProperty('class', 'primaryButton')
         self.ui.ToolsConfigAddButton.setProperty('class', 'primaryButton')
-        self._compare_file = None
 
         self.timer = QTimer()
         # 定时器结束，触发showTime方法

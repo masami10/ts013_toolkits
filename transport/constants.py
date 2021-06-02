@@ -7,8 +7,11 @@ from datetime import datetime, date, timedelta
 DATE_LENGTH = len(date.today().strftime(DEFAULT_DATE_FORMAT))
 
 
-def local_datetime_from_str(ss: str) -> datetime:
-    if len(ss) == DATE_LENGTH:
+def local_datetime_from_str(ss: str = '') -> datetime:
+    ll = len(ss)
+    if ll < DATE_LENGTH:
+        d = datetime.now()
+    elif len(ss) == DATE_LENGTH:
         d = datetime.strptime(ss, DEFAULT_DATE_FORMAT)
     else:
         d = datetime.strptime(ss, DEFAULT_DATETIME_FORMAT)

@@ -8,6 +8,8 @@ from requests import Response
 from http import HTTPStatus
 from lxml.etree import tostring
 import sqlite3
+from sqlite3 import Connection
+from store.contants import TS013_DB_NAME
 
 ENV_DEBUG_WSDL_REQ = strtobool(os.getenv('ENV_DEBUG_WSDL_REQ', 'false'))
 
@@ -16,20 +18,11 @@ class WSDLClient(object):
     _cache = SqliteCache(path='wsdl_cache.db', timeout=30)
     _settings = Settings(strict=False, xml_huge_tree=True, raw_response=True)
 
-    def __init__(self, wsdl, wsdl_setting=_settings):
+    def __init__(self, db_connect: Connection, wsdl, wsdl_setting=_settings):
         self._wsdl = wsdl
         self._setting = wsdl_setting
-        self._sqlite_conn = sqlite3.connect('./x_conn.db')
+        self._sqlite_conn = db_connect
         self._client = Client(self._wsdl, settings=self._setting, transport=Transport(cache=self._cache))
-
-    def init_sqlite_db(self):
-        if self._sqlite_conn:
-            cr = self._sqlite_conn.cursor()
-            cr.execute('''CREATE TABLE IF NOT EXISTS ts013_wsdl(id INTEGER PRIMARY KEY AUTOINCREMENT, time TIMESTAMP
-  DEFAULT CURRENT_TIMESTAMP, orders TEXT)''')
-            cr.execute('''CREATE TABLE IF NOT EXISTS ts013_orders(id INTEGER PRIMARY KEY AUTOINCREMENT, time TIMESTAMP
-              DEFAULT CURRENT_TIMESTAMP, schedule_date TIMESTAMP,order_no TEXT, order_type TEXT, finished_product_no TEXT)''')
-            self._sqlite_conn.commit()
 
     def __setattr__(self, key, value):
         if key == '_cache':  # cache不允许被赋值

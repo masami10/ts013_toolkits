@@ -3,6 +3,8 @@ from typing import List
 
 from ..view import window as main_window
 from PyQt5.QtWidgets import QCheckBox
+from sqlite3 import Connection
+from store.sql import query_ts013_today_orders
 
 
 def select_tool_checkbox(order, on_select):
@@ -20,8 +22,9 @@ class OrderController:
     _content: pd.DataFrame
     _selected_orders: List[str]
 
-    def __init__(self, window: main_window.ToolKitWindow):
+    def __init__(self, window: main_window.ToolKitWindow, db_connect: Connection):
         self.window = window
+        self._db_connect = db_connect
         self.notify = self.window.notify_box
         self._content = pd.DataFrame({
             '订单号': [],
@@ -33,9 +36,10 @@ class OrderController:
         self.render()
 
     def load_orders(self):
+        orders = query_ts013_today_orders(self._db_connect)
+        order_no_list = [o.wipOrderNo for o in orders]
         self._content = pd.DataFrame({
-            '订单号': ['1', '2'],
-            '已选择': ['a', 'b']
+            '订单号': order_no_list,
         })
         self.render()
 
@@ -47,7 +51,7 @@ class OrderController:
             '订单号': orders,
             '选中': list(map(lambda o: select_tool_checkbox(o, self.on_order_clicked), orders))
         })
-        self.window.order_table.render(content)
+        self.window.order_table.render_table(content)
 
     def on_order_clicked(self, order):
         if order in self._selected_orders:
