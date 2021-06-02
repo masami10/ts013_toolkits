@@ -40,14 +40,28 @@ def query_ts013_today_orders(conn: Connection) -> List[MOMOrder]:
     return results
 
 
-def query_ts013_order_via_schedule_date(conn: Connection, prev: datetime, next: datetime) -> List[MOMOrder]:
-    cr = conn.cursor()
-    cr.execute("select * from ts013_orders where schedule_date between ? AND ?", (prev, next), )
+def ts013_model_2_order_obj(cr: Cursor) -> List[MOMOrder]:
     results = cr.fetchall()
-    cr.close()
     ret = []
     for r in results:
         rid, create_at, schedule_time, order_no, order_type, finished_product_no = r
         m = MOMOrder(order_no, order_type, finished_product_no)
         ret.append(m)
+    return ret
+
+
+def query_ts013_order_via_codes(conn: Connection, orders: List[str]) -> List[MOMOrder]:
+    cr = conn.cursor()
+    query = f"SELECT * FROM ts013_orders WHERE order_no in ({','.join(['?'] * len(orders))})"
+    cr.execute(query, orders)
+    ret = ts013_model_2_order_obj(cr)
+    cr.close()
+    return ret
+
+
+def query_ts013_order_via_schedule_date(conn: Connection, prev: datetime, next: datetime) -> List[MOMOrder]:
+    cr = conn.cursor()
+    cr.execute("select * from ts013_orders where schedule_date between ? AND ?", (prev, next), )
+    ret = ts013_model_2_order_obj(cr)
+    cr.close()
     return ret

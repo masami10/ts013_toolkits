@@ -1,20 +1,32 @@
 from typing import Any, Dict, Optional
 from py_singleton import singleton
 from store.types import ToolsInfo, checkValue
+from store.sql import query_ts013_order_via_codes
 from loguru import logger
 from typing import Dict
+from sqlite3 import Connection
 
 
 @singleton
 class StorageData(object):
-    def __init__(self):
-        self._data = {'tools': {}, 'checkResult': checkValue(0.0), 'selected_tool': {}}
+    def __init__(self, conn: Connection):
+        self._data = {'tools': {}, 'checkResult': checkValue(0.0), 'selected_tool': {}, 'selected_orders': []}
+        self._connect = conn
 
     def _update_data(self, key: str, value: Any):
-        self._data.update({key, value})
+        self._data.update({key: value})
+
+    def update_selected_orders(self, orders_str: str):
+        orders = []
+        if orders_str == "":
+            self._data.update({'selected_orders': []})
+        else:
+            order_codes = orders_str.split(',')
+            orders = query_ts013_order_via_codes(self._connect, order_codes)
+        self._data.update({'selected_orders': orders})
 
     def update_inputs_data(self, key: str, val: Any):
-        self._data.get('inputs', {}).update({key, val})
+        self._data.get('inputs', {}).update({key: val})
         if key == 'targetTorque':
             self.checkResult.targetValue = float(val)
             return

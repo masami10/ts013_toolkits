@@ -41,7 +41,7 @@ class AppController:
         self._threads = []
         self._http_server = HttpServer()
 
-        self.glb_storage = StorageData()  # 单例模式
+        self.glb_storage = StorageData(self._db_connect)  # 单例模式
 
         self.glb_config = Config()
 
