@@ -14,6 +14,7 @@ from loguru import logger
 from .ToolsController import ToolsController
 from .DeviceController import DeviceController
 from .OrderController import OrderController
+from .ConnectionController import ConnectionController
 from store.store import StorageData
 from store.contants import TS013_DB_NAME
 import sqlite3
@@ -24,7 +25,6 @@ TRANSLATION_MAP = {
     'True': '成功',
     'False': '失败',
 }
-
 
 def get_translation(v: str):
     default = v
@@ -50,6 +50,7 @@ class AppController:
         self._tools_controller = ToolsController(self.window)
         self._device_controller = DeviceController(self.window)
         self._order_controller = OrderController(self.window, self._db_connect)
+        self._connection_controller = ConnectionController(self.window)
 
         self.init_sqlite_db()
 
@@ -96,16 +97,12 @@ class AppController:
         ui = window.ui
         ### tab 1 曲线对比
         window.input_group.inputChanged.connect(self.on_input)
-        window.config_input_group.inputChanged.connect(self.on_config_input)
         window.FirstCheckResultButton.successChanged.connect(self.on_result_success_changed)
         window.RecheckResultButton.successChanged.connect(self.on_result_success_changed)
         ui.ToolsConfigAddButton.clicked.connect(self._tools_controller.add_tool)
 
     def on_input(self, key, value):
         self.notify.debug('字段输入：{}，{}'.format(key, value))
-
-    def on_config_input(self, key, value):
-        self.notify.info('配置输入：{}，{}'.format(key, value))
 
     def on_result_success_changed(self, result_key: str, success: bool):
         lvl = 'info'

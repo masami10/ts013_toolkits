@@ -20,3 +20,13 @@ class Config(object):
     def save_config(self):
         data = self._settings.as_dict()
         loaders.write(str(self._filename), DynaBox(data).to_dict())
+
+    def set_config(self, key, value):
+        setattr(self._settings, key, value)
+        self.save_config()
+
+    def get_config(self, key):
+        try:
+            return getattr(self._settings, key)
+        except Exception as e:
+            return None

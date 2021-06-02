@@ -46,7 +46,6 @@ class ToolsController:
     @property
     def content(self) -> pd.DataFrame:
         tools = store.get_tools()
-        self.notify.info(repr(tools))
         tdf = pd.DataFrame({
             'toolFixedInspectionCode': [],
             'toolMaterialCode': [],
@@ -61,6 +60,7 @@ class ToolsController:
 
     def save_tool(self, tool_data):
         store.edit_tool(tool_data)
+
         self.render()
 
     def edit_tool(self, tool):
@@ -110,10 +110,8 @@ class ToolsController:
         self.render()
 
     def render_tool_detail(self, tool):
-        self.notify.info(tool)
         tools = self.content
         tools = tools.set_index('toolFixedInspectionCode')
-        self.notify.info(tools)
         tool_selected = dict(tools.loc[tool])
         self.window.input_group.set_texts({
             **tool_selected,
