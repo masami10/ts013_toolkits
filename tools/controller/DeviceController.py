@@ -4,6 +4,9 @@ from transport.tcp_client import TcpClient
 from ..view import window as main_window
 import pandas as pd
 from loguru import logger
+from store.config import Config
+
+global_config = Config()
 
 
 def is_config_valid(config):
@@ -16,13 +19,16 @@ def is_config_valid(config):
 
 class DeviceController:
     _client: TcpClient
-    _config: dict
     _results: pd.DataFrame
+
+    _config_key_map = {
+        'ip': 'device_ip',
+        'port': 'device_port'
+    }
 
     def __init__(self, window: main_window.ToolKitWindow):
         self.window = window
         self.notify = self.window.notify_box
-        self._config = {}
         ui = self.window.ui
         self._results = pd.DataFrame({
             'count': [],
@@ -38,10 +44,22 @@ class DeviceController:
         self.render(False)
         self.device_connect()
 
+    @property
+    def config(self):
+        config = {}
+        for key, value in self._config_key_map.items():
+            config.update({
+                key: global_config.get_config(value)
+            })
+        return config
+
     def on_config_input(self, key, value):
-        self._config.update({
-            key: value
-        })
+        if self.config.get(key, None) == value:
+            return
+        config_key = self._config_key_map.get(key, None)
+        if config_key is None:
+            raise Exception('无效的配置{}'.format(key))
+        global_config.set_config(config_key, value)
 
     # 0004 10/02/21 08:34:54 21.9    0.00     A
     def handle_result(self, msg):
@@ -63,7 +81,7 @@ class DeviceController:
 
     def get_client_config(self):
         return {
-            **self._config,
+            **self.config,
             'newline': '\r\n'
         }
 
@@ -83,8 +101,8 @@ class DeviceController:
 
     def device_connect(self):
         try:
-            ip = self._config.get('ip', '')
-            port = self._config.get('port', '')
+            ip = self.config.get('ip', '')
+            port = self.config.get('port', '')
             if not ip or not port:
                 raise Exception('未设置标定设备IP或端口!!!')
             self.notify.info(
@@ -94,12 +112,16 @@ class DeviceController:
             self.notify.error('连接标定设备失败：')
             self.notify.error(str(e))
 
+    def render_config(self):
+        self.window.device_config_group.set_texts(self.config)
+
     def device_disconnect(self):
         self.notify.info('正在断开标定设备...')
         self._stop_client()
         self.render(False)
 
     def render(self, status: bool):
+        self.render_config()
         self.window.DeviceConnStatusIndicator.set_success(status)
         self.window.HomeDeviceConnStatusIndicator.set_success(status)
 
