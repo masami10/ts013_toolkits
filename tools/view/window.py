@@ -1,15 +1,12 @@
 # -*- coding:utf-8 -*-
 from PyQt5 import QtWidgets, QtCore  # import PyQt5 widgets
 from ui.toolkit import Ui_MainWindow
-from loguru import logger
-from typing import Dict, List, Any
+from ui.tools_append_window import Ui_ToolsAppendWindow
 from PyQt5.QtCore import QTimer, QDateTime
 from .mixin import ToolKitMixin
-from tools.view import table, notify, InputGroup, ResultButton, StatusIndicator
+from tools.view import table, notify, InputGroup, StatusIndicator
 from transport.http_server import HttpDaemon
-
-demo_table_items = [["006R_1_1_1", "2", "3"], ["006R_1_1_2", "22", "342"]]
-
+from .ToolsAppendWindow import ToolsAppendWindow
 
 class ToolKitWindow(ToolKitMixin, QtWidgets.QWidget):
     resized = QtCore.pyqtSignal()
@@ -32,8 +29,8 @@ class ToolKitWindow(ToolKitMixin, QtWidgets.QWidget):
         ToolKitMixin.__init__(self, main_window)
         QtWidgets.QWidget.__init__(self)
         self.ui = Ui_MainWindow()
-
         self.ui.setupUi(self.qt_instance)
+        self.tools_append_window = ToolsAppendWindow()
         self._http_server: HttpDaemon = http_server
         self._notifyBox = notify.ToolkitNotify(self.ui.textLog_2)
         self.ui.HomeDeviceConnStatusWidget.setProperty('class', 'bgLight')

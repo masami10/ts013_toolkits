@@ -24,3 +24,7 @@ class InputGroup(QWidget):
         if not input:
             raise Exception('不存在输入框：{}'.format(key))
         input.setText(text)
+
+    def set_texts(self, texts: dict):
+        for key, value in texts.items():
+            self.set_text(key, value)

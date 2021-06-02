@@ -8,11 +8,13 @@ import asyncio
 from transport.http_server import HttpDaemon
 from transport.tcp_client import TcpClient
 from qt_material import apply_stylesheet
-from PyQt5.QtWidgets import QPushButton, QRadioButton, QTableWidget
+from PyQt5.QtWidgets import QPushButton, QRadioButton, QTableWidget, QMainWindow
 
 from ..view import window as main_window
+from ..view.ToolsAppendWindow import ToolsAppendWindow
 import pandas as pd
 from loguru import logger
+from .ToolsAppendController import ToolsAppendController
 
 
 def remove_tool_button(tool_sn, on_click):
@@ -39,10 +41,13 @@ def select_tool_radio(tool_sn, on_select):
 
 
 class ToolsController:
+    append_controller: ToolsAppendController
 
     def __init__(self, window: main_window.ToolKitWindow):
         self.window = window
         self.notify = self.window.notify_box
+        self.append_controller = ToolsAppendController(self.window)
+        self.window.tools_config_table.row_clicked_signal.connect(self.edit_tool)
         self.content = pd.DataFrame({
             '定检编号': ['tool1', 'tool2'],
             '分类号': ['code1', 'code2'],
@@ -53,8 +58,21 @@ class ToolsController:
         })  # fixme
         self.render()
 
+    def edit_tool(self, tool):
+        content = self.content.set_index('定检编号')
+        tool_data = content.loc[tool]
+        self.append_controller.edit({
+            'inspectionCode': tool,
+            'productCode': tool_data.get('物料号', ''),
+            'RFIDEdit': tool_data.get('RFID', ''),
+            'classificationCode': tool_data.get('分类号', ''),
+            'name': tool_data.get('名称', ''),
+            'specs': tool_data.get('规格', ''),
+        })
+
     def add_tool(self):
         self.notify.info('新增工具')
+        self.append_controller.create()
         self.render()
 
     def render_tools_config_table(self):
@@ -101,8 +119,8 @@ class ToolsController:
         tool_selected = tools.loc[tool]
         self.window.input_group.set_text('inspectionCode', tool)
         self.window.input_group.set_text('classificationCode', tool_selected.get('分类号', ''))
-        self.window.input_group.set_text('productCode', tool_selected.get('物料号', None))
-        self.window.input_group.set_text('name', tool_selected.get('名称', None))
-        self.window.input_group.set_text('specs', tool_selected.get('规格', None))
-        self.window.input_group.set_text('RFIDEdit', tool_selected.get('RFID', None))
+        self.window.input_group.set_text('productCode', tool_selected.get('物料号', ''))
+        self.window.input_group.set_text('name', tool_selected.get('名称', ''))
+        self.window.input_group.set_text('specs', tool_selected.get('规格', ''))
+        self.window.input_group.set_text('RFIDEdit', tool_selected.get('RFID', ''))
         return
