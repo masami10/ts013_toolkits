@@ -97,15 +97,15 @@ def publish_calibration_payload(rid: int, orders: List[MOMOrder], tool_info: Too
                  "recheckResult": check.recheckResult, "momOrders": serialize_obj_2_json(orders)}}}}
 
 
-def publish_calibration_value_2_mom_wsdl(conn: Connection, tool_sn: str, orders: List[MOMOrder]):
+def publish_calibration_value_2_mom_wsdl(conn: Connection, tool_sn: str, orders: List[MOMOrder], tool_info: ToolsInfo,
+                                         check: checkValue):
     ss = [o.wipOrderNo for o in orders]
     str_orders = ",".join(ss)
     identity = f"{tool_sn}@{str_orders}"
-    cr = conn.cursor()
     c_id = query_calibration_id_via_identity(conn, identity)
     if not c_id:
         rid = insert_ts013_tool_calibration_item(conn, identity)
         conn.commit()
     else:
         rid = c_id
-    payload = publish_calibration_payload(rid)
+    payload = publish_calibration_payload(rid, orders, tool_info, check)

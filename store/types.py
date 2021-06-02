@@ -69,8 +69,8 @@ class checkValue(object):
         self.targetValue = target
         self.measure_torque_values: List[float] = []
         self.remeasure_torque_values: List[float] = []
-        self._checkResult = 0
-        self._recheckResult = 0
+        self._checkResult = 1  # 默认是成功
+        self._recheckResult = 1  # 默认是成功
         self.checkPerson = Person()
         self.recheckPerson = Person()
 

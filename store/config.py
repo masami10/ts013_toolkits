@@ -27,9 +27,18 @@ class Config(object):
         setattr(self._settings, key, value)
         self.save_config()
 
-    def set_tools_config(self, value):
+    def set_tools_config(self, value: dict):
         setattr(self._settings, 'tools', value)
         self.save_config()
+
+    def del_tool_config(self, tool_inspect_code: str):
+        tool_config = self.tools_config
+        v = list(filter(lambda c: c.toolFixedInspectionCode != tool_inspect_code, tool_config))
+        self.set_tools_config(v)
+
+    @property
+    def tools_config(self):
+        return getattr(self._settings, 'tools')
 
     def get_config(self, key):
         try:

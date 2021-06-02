@@ -5,10 +5,16 @@ from store.sql import query_ts013_order_via_codes
 from loguru import logger
 from typing import Dict
 from sqlite3 import Connection
+from store.config import Config
 
 
 @singleton
 class StorageData(object):
+
+    def init_tools(self, setting: Config):
+        tools_config = setting.tools_config
+        for c in tools_config:
+            self.add_tool(**c)
 
     def set_connection(self, conn: Connection):
         self._connect = conn
@@ -50,10 +56,16 @@ class StorageData(object):
             t = self.get_tool_via_inspect_code(val)
             if not t:
                 return
-            self.set_selected_tool(t)
 
-    def set_selected_tool(self, tool: ToolsInfo):
-        self._data.update({'selected_tool': tool})
+    def set_selected_tool(self, tool_inspect_code: str):
+        t = self.get_tool_via_inspect_code(tool_inspect_code)
+        if not t:
+            return
+        self._data.update({'selected_tool': t})
+
+    @property
+    def selected_orders(self):
+        return self._data.get('selected_orders')
 
     @property
     def selected_tool(self) -> Optional[ToolsInfo]:

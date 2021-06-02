@@ -107,9 +107,9 @@ class ToolsController:
         self.render_tools_config_table()
         self.render_tools_pick_table()
 
-    def remove_tool(self, tool):
-        self._store.del_tool(tool)
-        # todo: do remove
+    def remove_tool(self, tool_inspect_code: str):
+        self._store.del_tool(tool_inspect_code)
+        self._config.del_tool_config(tool_inspect_code)
         self.render()
 
     def render_tool_detail(self, tool):
@@ -120,4 +120,5 @@ class ToolsController:
             **tool_selected,
             'toolFixedInspectionCode': tool
         })
+        self._store.set_selected_tool(tool)
         return

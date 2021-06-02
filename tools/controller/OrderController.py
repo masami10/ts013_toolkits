@@ -5,6 +5,7 @@ from ..view import window as main_window
 from PyQt5.QtWidgets import QCheckBox
 from sqlite3 import Connection
 from store.sql import query_ts013_today_orders
+from store.store import StorageData
 
 
 def select_tool_checkbox(order, on_select):
@@ -22,9 +23,10 @@ class OrderController:
     _content: pd.DataFrame
     _selected_orders: List[str]
 
-    def __init__(self, window: main_window.ToolKitWindow, db_connect: Connection):
+    def __init__(self, window: main_window.ToolKitWindow, db_connect: Connection, store: StorageData):
         self.window = window
         self._db_connect = db_connect
+        self._store = store
         self.notify = self.window.notify_box
         self._content = pd.DataFrame({
             '订单号': [],
@@ -53,11 +55,13 @@ class OrderController:
         })
         self.window.order_table.render_table(content)
 
-    def on_order_clicked(self, order):
-        if order in self._selected_orders:
-            self._selected_orders.remove(order)
+    def on_order_clicked(self, order_code: str):
+        if order_code in self._selected_orders:
+            self._selected_orders.remove(order_code)
         else:
-            self._selected_orders.append(order)
+            self._selected_orders.append(order_code)
+
+        self._store.update_selected_orders(','.join(self._selected_orders))
         self.render_order_detail()
 
     def render_order_detail(self):
