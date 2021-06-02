@@ -41,15 +41,16 @@ class AppController:
         self._threads = []
         self._http_server = HttpServer()
 
-        self.glb_storage = StorageData(self._db_connect)  # 单例模式
+        self.glb_storage = StorageData()  # 单例模式
+        self.glb_storage.set_connection(self._db_connect)
 
         self.glb_config = Config()
 
         # Create the form object
         self.window = main_window.ToolKitWindow(self._http_server)
         self.notify = self.window.notify_box
-        self._tools_controller = ToolsController(self.window, self.glb_config)
-        self._device_controller = DeviceController(self.window)
+        self._tools_controller = ToolsController(self.window, self.glb_config, self.glb_storage)
+        self._device_controller = DeviceController(self.window, self.glb_storage, self.glb_config)
         self._order_controller = OrderController(self.window, self._db_connect)
         self._connection_controller = ConnectionController(self.window, self.glb_config)
 

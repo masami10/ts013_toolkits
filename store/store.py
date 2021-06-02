@@ -9,7 +9,11 @@ from sqlite3 import Connection
 
 @singleton
 class StorageData(object):
-    def __init__(self, conn: Connection):
+
+    def set_connection(self, conn: Connection):
+        self._connect = conn
+
+    def __init__(self, conn: Optional[Connection] = None):
         self._data = {'tools': {}, 'checkResult': checkValue(0.0), 'selected_tool': {}, 'selected_orders': []}
         self._connect = conn
 

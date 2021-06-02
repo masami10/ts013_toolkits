@@ -5,8 +5,7 @@ from ..view import window as main_window
 import pandas as pd
 from loguru import logger
 from store.config import Config
-
-global_config = Config()
+from store.store import StorageData
 
 
 def is_config_valid(config):
@@ -26,8 +25,10 @@ class DeviceController:
         'port': 'device_port'
     }
 
-    def __init__(self, window: main_window.ToolKitWindow):
+    def __init__(self, window: main_window.ToolKitWindow, store: StorageData, config: Config):
         self.window = window
+        self._store = store
+        self._config = config
         self.notify = self.window.notify_box
         ui = self.window.ui
         self._results = pd.DataFrame({
@@ -49,7 +50,7 @@ class DeviceController:
         config = {}
         for key, value in self._config_key_map.items():
             config.update({
-                key: global_config.get_config(value)
+                key: self._config.get_config(value)
             })
         return config
 
@@ -59,7 +60,7 @@ class DeviceController:
         config_key = self._config_key_map.get(key, None)
         if config_key is None:
             raise Exception('无效的配置{}'.format(key))
-        global_config.set_config(config_key, value)
+        self._config.set_config(config_key, value)
 
     # 0004 10/02/21 08:34:54 21.9    0.00     A
     def handle_result(self, msg):
@@ -77,6 +78,7 @@ class DeviceController:
             'angle': [angle],
             'result': [result]
         }), ignore_index=True)
+        self._store.checkResult.update_measure(torque)  # 将扭矩值存储
         self.render_results()
 
     def get_client_config(self):

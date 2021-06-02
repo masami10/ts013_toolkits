@@ -9,8 +9,6 @@ from store.store import StorageData
 from store.config import Config
 from store.types import ToolsInfo
 
-store = StorageData()
-
 
 def remove_tool_button(tool, on_click):
     t = QPushButton()
@@ -38,17 +36,18 @@ def select_tool_radio(tool_sn, on_select):
 class ToolsController:
     append_controller: ToolsAppendController
 
-    def __init__(self, window: main_window.ToolKitWindow, config: Config):
+    def __init__(self, window: main_window.ToolKitWindow, config: Config, store: StorageData):
         self.window = window
         self.notify = self.window.notify_box
         self._config = config
+        self._store = store
         self.append_controller = ToolsAppendController(self.window, self.save_tool)
         self.window.tools_config_table.row_clicked_signal.connect(self.edit_tool)
         self.render()
 
     @property
     def content(self) -> pd.DataFrame:
-        tools = store.get_tools()
+        tools = self._store.get_tools()
         tdf = pd.DataFrame({
             'toolFixedInspectionCode': [],
             'toolMaterialCode': [],
@@ -62,7 +61,7 @@ class ToolsController:
         return tdf
 
     def save_tool(self, tool_data: Dict):
-        data: Dict[str, ToolsInfo] = store.edit_tool(tool_data)
+        data: Dict[str, ToolsInfo] = self._store.edit_tool(tool_data)
         dd = [tool.__dict__ for tool in data.values()]
         self._config.set_tools_config(dd)
         self.render()
@@ -109,7 +108,7 @@ class ToolsController:
         self.render_tools_pick_table()
 
     def remove_tool(self, tool):
-        store.del_tool(tool)
+        self._store.del_tool(tool)
         # todo: do remove
         self.render()
 
