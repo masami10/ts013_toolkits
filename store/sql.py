@@ -7,7 +7,7 @@ from store.types import MOMOrder
 
 def insert_ts013_tool_calibration_item(conn: Connection, identity: str) -> int:
     cr = conn.cursor()
-    cr.execute("insert into ts013_wsdl (orders) values (?)", (identity), )
+    cr.execute("insert into ts013_wsdl (orders) values (?)", (identity,), )
     ret = cr.lastrowid
     cr.close()
     return ret
@@ -15,7 +15,7 @@ def insert_ts013_tool_calibration_item(conn: Connection, identity: str) -> int:
 
 def query_calibration_id_via_identity(conn: Connection, identity: str) -> int:
     cr = conn.cursor()
-    cr.execute("SELECT id from ts013_wsdl where orders = ?", (identity), )
+    cr.execute("SELECT id from ts013_wsdl where orders = ?", (identity,), )
     result = cr.fetchone()
     cr.close()
     if not result:

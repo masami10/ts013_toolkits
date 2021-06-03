@@ -67,21 +67,28 @@ class AppController:
         self.apply_material_theme()
 
     def on_result_submit(self):
-        msg = "提交标定数据"
-        self.notify.info(msg)
-        inputs: dict = self._cache_data.get("inputs")
-        for key, val in inputs.items():
-            self.glb_storage.update_inputs_data(key, val)
-        results: dict = self._cache_data.get("results")
-        for key, val in results.items():
-            self.glb_storage.update_check_result_data(key, val)
+        try:
+            msg = "提交标定数据"
+            self.notify.info(msg)
+            inputs: dict = self._cache_data.get("inputs")
+            for key, val in inputs.items():
+                self.glb_storage.update_inputs_data(key, val)
+            results: dict = self._cache_data.get("results")
+            for key, val in results.items():
+                self.glb_storage.update_check_result_data(key, val)
 
-        selected_tool = self.glb_storage.selected_tool
-        selected_orders = self.glb_storage.selected_orders
-        check = self.glb_storage.checkResult
-        publish_calibration_value_2_mom_wsdl(self._db_connect,
-                                             selected_tool.toolFixedInspectionCode, selected_orders, selected_tool,
-                                             check)
+            selected_tool = self.glb_storage.selected_tool
+            selected_orders = self.glb_storage.selected_orders
+            if selected_tool is None:
+                raise Exception('无法提交：未选中工具')
+            if selected_orders is None or len(selected_orders) == 0:
+                raise Exception('无法提交：未选中工单')
+            check = self.glb_storage.checkResult
+            publish_calibration_value_2_mom_wsdl(self._db_connect,
+                                                 selected_tool.toolFixedInspectionCode, selected_orders, selected_tool,
+                                                 check)
+        except Exception as e:
+            self.notify.error(e)
 
     def update_inputs_cache_data(self, key: str, val: Any):
         entry = self._cache_data.get("inputs")

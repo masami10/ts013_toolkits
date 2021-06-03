@@ -20,7 +20,7 @@ class StorageData(object):
         self._connect = conn
 
     def __init__(self, conn: Optional[Connection] = None):
-        self._data = {'tools': {}, 'checkResult': checkValue(0.0), 'selected_tool': {}, 'selected_orders': []}
+        self._data = {'tools': {}, 'checkResult': checkValue(0.0), 'selected_tool': None, 'selected_orders': []}
         self._connect = conn
 
     def _update_data(self, key: str, value: Any):
