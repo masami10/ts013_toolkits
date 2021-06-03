@@ -53,6 +53,9 @@ class OrderController:
             '选中': list(map(lambda o: select_tool_checkbox(o, self.on_order_clicked), orders))
         })
         self.window.order_table.render_table(content)
+        table = self.window.order_table
+        for row in range(len(orders)):
+            table.setRowHeight(row, 50)
 
     def on_order_clicked(self, order_code: str):
         if order_code in self._selected_orders:

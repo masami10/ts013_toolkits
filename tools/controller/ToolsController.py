@@ -102,6 +102,9 @@ class ToolsController:
             '选中': list(map(lambda tool: select_tool_radio(tool, self.render_tool_detail), tools))
         })
         self.window.tools_table.render_table(content)
+        table = self.window.tools_table
+        for row in range(len(tools)):
+            table.setRowHeight(row, 50)
 
     def render(self):
         self.render_tools_config_table()
