@@ -16,7 +16,7 @@ class TcpClient(object):
         self.thread: Optional[threading.Thread] = None
         self._lock = threading.RLock()
         self.handler: Optional[Callable[[str], None]] = None
-        self._server_addr = (ip, port)
+        self._server_addr = (ip, int(port))
         self._client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     def connect(self):
@@ -25,7 +25,7 @@ class TcpClient(object):
         if not self._client:
             raise Exception('Client Is Empty')
         if self.connected:
-            return
+            raise Exception('连接已存在')
         self._client.connect(self._server_addr)
         self.connected = True
         return True
@@ -56,20 +56,21 @@ class TcpClient(object):
                 self.handler(line)
         f.close()
 
-    async def _do_start(self, on_start):
+    def _do_start(self, on_start, notify):
+        notify.info("TCP 客户端启动中...")
         self.connect()
         self.started = True
         self.thread = threading.Thread(target=self.run, name=self._name)
         self.thread.setDaemon(True)
         self.thread.start()
-        logger.info("TCP 客户端线程打开")
+        notify.info("TCP 客户端线程打开")
         on_start()
 
-    def start(self, on_start):
-        if self.start_task:
-            self.start_task.close()
-        self.start_task = self._do_start(on_start)
-        return
+    def start(self, on_start, notify):
+        # if self.start_task:
+        #     self.start_task.close()
+        self._do_start(on_start, notify)
+
 
     def stop(self):
         if self.start_task:

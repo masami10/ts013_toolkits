@@ -91,9 +91,12 @@ class DeviceController:
         config = self.get_client_config()
         if not is_config_valid(config):
             raise Exception('TCP配置错误')
+        self.notify.info('正在配置客户端...')
         self._client = TcpClient(**config)
+        self.notify.info('正在绑定结果处理程序...')
         self._client.set_handler(self.handle_result)
-        self._client.start(self.on_client_start)
+        self.notify.info('正在启动客户端...')
+        self._client.start(self.on_client_start, self.notify)
 
     def on_client_start(self):
         self.render(True)

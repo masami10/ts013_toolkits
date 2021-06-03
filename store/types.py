@@ -79,7 +79,8 @@ class checkValue(object):
         ll = len(entry)
         if ll < 3:
             entry.append(val)
-        entry[2] = val
+        else:
+            entry[2] = val
 
     def update_measures(self, vals: List[float], opt: str = 'measure_torque_values'):
         entry: List[float] = getattr(self, opt)
