@@ -42,6 +42,7 @@ class DeviceController:
         ui.DeviceConnectButton.clicked.connect(self.device_connect)
         ui.DeviceDisconnectButton.clicked.connect(self.device_disconnect)
         self.window.device_config_group.inputChanged.connect(self.on_config_input)
+        self.window.ui.ClearResultsButton.clicked.connect(self.clear_results)
         self.render(False)
         self.device_connect()
 
@@ -62,24 +63,41 @@ class DeviceController:
             raise Exception('无效的配置{}'.format(key))
         self._config.set_config(config_key, value)
 
+    def clear_results(self):
+        self._results = pd.DataFrame({
+            'count': [],
+            'date': [],
+            'time': [],
+            'torque': [],
+            'angle': [],
+            'result': []
+        })
+        self._store.checkResult.set_measures([])
+        self.render_results()
+
     # 0004 10/02/21 08:34:54 21.9    0.00     A
     def handle_result(self, msg):
-        self.notify.info('收到标定结果')
-        self.notify.info(msg)
-        dd = msg.split(' ')
-        data = list(filter(lambda d: d != '', dd))
-        count, date, time, torque, angle, result, *rest = data
-        logger.info(f'接收到标定数据: {count} {date}, {time}, {torque}, {angle}, {result} ')
-        self._results = self._results.append(pd.DataFrame({
-            'count': [count],
-            'date': [date],
-            'time': [time],
-            'torque': [torque],
-            'angle': [angle],
-            'result': [result]
-        }), ignore_index=True)
-        self._store.checkResult.update_measure(torque)  # 将扭矩值存储
-        self.render_results()
+        try:
+            if not msg:
+                return
+            self.notify.info('收到标定结果')
+            self.notify.info(msg)
+            dd = msg.split(' ')
+            data = list(filter(lambda d: d != '', dd))
+            count, date, time, torque, angle, result, *rest = data
+            logger.info(f'接收到标定数据: {count} {date}, {time}, {torque}, {angle}, {result} ')
+            self._results = self._results.append(pd.DataFrame({
+                'count': [count],
+                'date': [date],
+                'time': [time],
+                'torque': [torque],
+                'angle': [angle],
+                'result': [result]
+            }), ignore_index=True)
+            self._store.checkResult.update_measure(torque)  # 将扭矩值存储
+            self.render_results()
+        except Exception as e:
+            self.notify.error(repr(e))
 
     def get_client_config(self):
         return {

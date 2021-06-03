@@ -85,6 +85,11 @@ class checkValue(object):
         entry: List[float] = getattr(self, opt)
         entry = vals
 
+    def set_measures(self, vals: List[float], opt: str = 'measure_torque_values'):
+        entry: List[float] = getattr(self, opt)
+        entry.clear()
+        entry.extend(vals)
+
     @property
     def checkValue1(self):
         ll = len(self.measure_torque_values)

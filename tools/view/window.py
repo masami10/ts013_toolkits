@@ -47,6 +47,7 @@ class ToolKitWindow(ToolKitMixin, QtWidgets.QWidget):
         self.ui.DeviceConnectButton.setProperty('class', 'primaryButton')
         self.ui.DeviceDisconnectButton.setProperty('class', 'primaryButton')
         self.ui.ToolsConfigAddButton.setProperty('class', 'primaryButton')
+        self.ui.ClearResultsButton.setProperty('class', 'danger')
 
         self.timer = QTimer()
         # 定时器结束，触发showTime方法
