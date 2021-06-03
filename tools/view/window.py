@@ -12,6 +12,8 @@ from .ToolsAppendWindow import ToolsAppendWindow
 class ToolKitWindow(ToolKitMixin, QtWidgets.QWidget):
     resized = QtCore.pyqtSignal()
 
+    closeSignal = QtCore.pyqtSignal()
+
     def show(self) -> None:
         self.qt_instance.show()
         if self.timer:
@@ -20,6 +22,7 @@ class ToolKitWindow(ToolKitMixin, QtWidgets.QWidget):
             self._http_server.start()
 
     def closeEvent(self, event):
+        self.closeSignal.emit()
         if self.timer:
             self.timer.stop()
         if self._http_server:

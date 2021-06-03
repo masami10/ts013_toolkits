@@ -26,6 +26,7 @@ class TcpClient(object):
             raise Exception('Client Is Empty')
         if self.connected:
             raise Exception('连接已存在')
+        self._client.settimeout(5.0)  # 设置5秒timeout
         self._client.connect(self._server_addr)
         self.connected = True
         return True
@@ -70,7 +71,6 @@ class TcpClient(object):
         # if self.start_task:
         #     self.start_task.close()
         self._do_start(on_start, notify)
-
 
     def stop(self):
         if self.start_task:

@@ -43,6 +43,7 @@ class DeviceController:
         ui.DeviceDisconnectButton.clicked.connect(self.device_disconnect)
         self.window.device_config_group.inputChanged.connect(self.on_config_input)
         self.window.ui.ClearResultsButton.clicked.connect(self.clear_results)
+        self.window.closeSignal.connect(self.device_disconnect)
         self.render(False)
         self.device_connect()
 

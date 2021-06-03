@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from PyQt5.QtWidgets import QTextBrowser
 from typing import List
-
+from transport.constants import now
 from tools.view.mixin import ToolKitMixin
 from loguru import logger
 
@@ -17,7 +17,8 @@ class ToolkitNotify:
     def _notify(self, color: str, content: str):
         if not self.qt_instances or len(self.qt_instances) == 0:
             return
-        ss = "<span style=\" font-size:16pt; font-weight:600; color:#{};\" > {} </span>".format(color, content)
+        data = f'时间:{now()}, 内容: {content}'
+        ss = "<span style=\" font-size:16pt; font-weight:600; color:#{};\" > {} </span>".format(color, data)
         for instance in self.qt_instances:
             instance.append(ss)
 
