@@ -68,7 +68,7 @@ class DeviceController:
         self.notify.info(msg)
         dd = msg.split(' ')
         data = list(filter(lambda d: d != '', dd))
-        count, date, time, torque, angle, result = data
+        count, date, time, torque, angle, result, *rest = data
         logger.info(f'接收到标定数据: {count} {date}, {time}, {torque}, {angle}, {result} ')
         self._results = self._results.append(pd.DataFrame({
             'count': [count],
