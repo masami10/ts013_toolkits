@@ -19,6 +19,12 @@ QLineEdit {{
   border-radius: 3px;
 }}
 
+QLineEdit:disabled{{
+  border-width: 1px;
+  border-radius: 3px;
+  color: {QTMATERIAL_PRIMARYCOLOR};
+}}
+
 
 .bgLight {{
   background-color: {QTMATERIAL_SECONDARYCOLOR};
