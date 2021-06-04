@@ -45,7 +45,7 @@ class DeviceController:
         self.window.ui.ClearResultsButton.clicked.connect(self.clear_results)
         self.window.closeSignal.connect(self.device_disconnect)
         self.render(False)
-        self.device_connect()
+        # self.device_connect()
 
     @property
     def config(self):

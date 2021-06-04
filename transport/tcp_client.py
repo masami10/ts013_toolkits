@@ -2,7 +2,12 @@ import socket
 import threading
 from typing import Optional, Callable
 import time
+import platform
+import os
 from loguru import logger
+from distutils.util import strtobool
+
+ENV_KEEPALIVE_ENABLE = strtobool(os.getenv('ENV_KEEPALIVE_ENABLE', 'true'))
 
 
 class TcpClient(object):
@@ -26,7 +31,9 @@ class TcpClient(object):
             raise Exception('Client Is Empty')
         if self.connected:
             raise Exception('连接已存在')
-        self._client.settimeout(5.0)  # 设置5秒timeout
+        self._client.settimeout(2.0)  # 设置2秒timeout
+        if ENV_KEEPALIVE_ENABLE and platform.system() == 'Windows':
+            self._client.ioctl(socket.SIO_KEEPALIVE_VALS, (1, 5000, 1000))  # 正常连接时候5s一次，没有的时候1秒一次，最多5次
         self._client.connect(self._server_addr)
         self.connected = True
         return True
@@ -56,6 +63,10 @@ class TcpClient(object):
             if self.handler:
                 self.handler(line)
         f.close()
+
+    # def do_connect(self):
+    #     result = run_and_get_result(self.connect())
+    #     return result
 
     def _do_start(self, on_start, notify):
         notify.info("TCP 客户端启动中...")
