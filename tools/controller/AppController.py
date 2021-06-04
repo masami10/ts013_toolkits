@@ -17,7 +17,8 @@ from store.store import StorageData
 from store.contants import TS013_DB_NAME
 import sqlite3
 from typing import Any
-from loguru import logger
+from transport.wsdl import WSDLClient
+from pprint import pformat
 from api.wsdl import publish_calibration_value_2_mom_wsdl
 
 TRANSLATION_MAP = {
@@ -50,6 +51,8 @@ class AppController:
         self.glb_storage.init_tools(self.glb_config)
 
         self._cache_data = {"inputs": {}, "results": {}}  # input 和result缓存数据
+
+        self._wsdl_client = WSDLClient(self._db_connect, self.glb_config.wsdl_base_url)
 
         # Create the form object
         self.window = main_window.ToolKitWindow(self._http_server)
@@ -84,9 +87,15 @@ class AppController:
             if selected_orders is None or len(selected_orders) == 0:
                 raise Exception('无法提交：未选中工单')
             check = self.glb_storage.checkResult
-            publish_calibration_value_2_mom_wsdl(self._db_connect,
-                                                 selected_tool.toolFixedInspectionCode, selected_orders, selected_tool,
-                                                 check)
+            payload = publish_calibration_value_2_mom_wsdl(self._db_connect,
+                                                           selected_tool.toolFixedInspectionCode, selected_orders,
+                                                           selected_tool,
+                                                           check)
+            if not payload:
+                self.notify.error("未获取同步扭矩数据报文")
+                return
+            self.notify.debug(f"发送标定数据payload: {pformat(payload, indent=4)}")
+            self._wsdl_client.do_request('TorqueCheckInfo', payload)
         except Exception as e:
             self.notify.error(e)
 

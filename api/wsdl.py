@@ -1,5 +1,7 @@
 import os
 import json
+from loguru import logger
+from pprint import pformat
 from utils.tools import serialize_obj_2_json
 from typing import List
 from store.types import MOMOrder, ToolsInfo, checkValue
@@ -77,7 +79,7 @@ http://172.31.120.56/Apriso/WebServices/Public/MOM_PeripheralSystem_InspectionIn
 '''
 
 
-def publish_calibration_payload(rid: int, orders: List[MOMOrder], tool_info: ToolsInfo, check: checkValue):
+def publish_calibration_payload(rid: int, orders: List[MOMOrder], tool_info: ToolsInfo, check: checkValue) -> dict:
     return {
         "Parameter": {
             "MethodName": "TorqueCheckInfo",
@@ -113,7 +115,7 @@ def publish_calibration_payload(rid: int, orders: List[MOMOrder], tool_info: Too
 
 
 def publish_calibration_value_2_mom_wsdl(conn: Connection, tool_sn: str, orders: List[MOMOrder], tool_info: ToolsInfo,
-                                         check: checkValue):
+                                         check: checkValue) -> dict:
     ss = [o.wipOrderNo for o in orders]
     str_orders = ",".join(ss)
     identity = f"{tool_sn}@{str_orders}"
@@ -124,3 +126,4 @@ def publish_calibration_value_2_mom_wsdl(conn: Connection, tool_sn: str, orders:
     else:
         rid = c_id
     payload = publish_calibration_payload(rid, orders, tool_info, check)
+    return payload

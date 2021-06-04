@@ -19,6 +19,10 @@ class Config(object):
         self._settings.key = "value"
         self._settings.dd = '123123'
 
+    @property
+    def wsdl_base_url(self):
+        return self.get_config('momUrl')
+
     def save_config(self):
         data = self._settings.as_dict()
         loaders.write(str(self._filename), DynaBox(data).to_dict())
