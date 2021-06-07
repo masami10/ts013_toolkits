@@ -3,7 +3,7 @@ import json
 from loguru import logger
 from pprint import pformat
 from utils.tools import serialize_obj_2_json
-from typing import List
+from typing import List, Union
 from store.types import MOMOrder, ToolsInfo, checkValue
 from transport.constants import now
 from sqlite3 import Connection
@@ -79,6 +79,41 @@ http://172.31.120.56/Apriso/WebServices/Public/MOM_PeripheralSystem_InspectionIn
 '''
 
 
+def publish_calibration_raw_payload(rid: int, orders: List[MOMOrder], tool_info: ToolsInfo, check: checkValue) -> str:
+    data = publish_calibration_payload(rid, orders, tool_info, check)
+    ret = f'''
+    <soap:Envelope
+    xmlns:soap="http://www.w3.org/2003/05/soap-envelope"
+    xmlns:del="http://www.apriso.com/DELMIAApriso"
+    xmlns:flex="http://schemas.datacontract.org/2004/07/FlexNet.WebServices">
+    <soap:Header
+        xmlns:wsa="http://www.w3.org/2005/08/addressing">
+        <a:To s:mustUnderstand="1"
+            xmlns:s="http://www.w3.org/2003/05/soap-envelope"
+            xmlns:a="http://www.w3.org/2005/08/addressing">http://172.31.119.70/Apriso/WebServices/Public/MOM_PeripheralSystem_InspectionInfo.svc?wsdl
+        </a:To>
+        <wsa:Action>http://www.apriso.com/DELMIAApriso/MOM_PeripheralSystem_InspectionInfo/Invoke</wsa:Action>
+    </soap:Header>
+    <soap:Body>
+        <del:Invoke>
+            <!--Optional:-->
+            <del:inputs>
+                <!--Optional:-->
+                <!--Optional:-->
+                <flex:Parameter>{json.dumps(data)}</flex:Parameter>
+                <flex:Password>123456
+                </flex:Password>
+                <flex:Username>mtdl001
+                </flex:Username>
+            </del:inputs>
+        </del:Invoke>
+    </soap:Body>
+</soap:Envelope>
+    '''
+    logger.debug("原始数据包: {}".format(pformat(ret, indent=4)))
+    return ret
+
+
 def publish_calibration_payload(rid: int, orders: List[MOMOrder], tool_info: ToolsInfo, check: checkValue) -> dict:
     return {
         "Parameter": {
@@ -115,7 +150,7 @@ def publish_calibration_payload(rid: int, orders: List[MOMOrder], tool_info: Too
 
 
 def publish_calibration_value_2_mom_wsdl(conn: Connection, tool_sn: str, orders: List[MOMOrder], tool_info: ToolsInfo,
-                                         check: checkValue) -> dict:
+                                         check: checkValue, raw=False) -> Union[dict, str]:
     ss = [o.wipOrderNo for o in orders]
     str_orders = ",".join(ss)
     identity = f"{tool_sn}@{str_orders}"
@@ -125,5 +160,7 @@ def publish_calibration_value_2_mom_wsdl(conn: Connection, tool_sn: str, orders:
         conn.commit()
     else:
         rid = c_id
+    if raw:
+        return publish_calibration_raw_payload(rid, orders, tool_info, check)
     payload = publish_calibration_payload(rid, orders, tool_info, check)
     return payload

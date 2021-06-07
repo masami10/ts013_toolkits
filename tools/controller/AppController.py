@@ -20,6 +20,7 @@ from typing import Any
 from transport.wsdl import WSDLClient
 from pprint import pformat
 from api.wsdl import publish_calibration_value_2_mom_wsdl
+from api.restful_api import request_mom_data
 
 TRANSLATION_MAP = {
     'recheckResult': '复检结果',
@@ -87,15 +88,24 @@ class AppController:
             if selected_orders is None or len(selected_orders) == 0:
                 raise Exception('无法提交：未选中工单')
             check = self.glb_storage.checkResult
+            raw = False
             payload = publish_calibration_value_2_mom_wsdl(self._db_connect,
                                                            selected_tool.toolFixedInspectionCode, selected_orders,
                                                            selected_tool,
-                                                           check)
+                                                           check, raw)
             if not payload:
                 self.notify.error("未获取同步扭矩数据报文")
                 return
             self.notify.debug(f"发送标定数据payload: {pformat(payload, indent=4)}")
-            self._wsdl_client.do_request('TorqueCheckInfo', payload)
+            if raw:
+                full_url = self.glb_config.wsdl_base_url.split('?')[0]
+                success, text = request_mom_data(full_url, data=payload)
+            else:
+                success, text = self._wsdl_client.do_request('TorqueCheckInfo', payload)
+            if not success:
+                self.notify.error(text)
+            else:
+                self.notify.info(text)
         except Exception as e:
             self.notify.error(e)
 

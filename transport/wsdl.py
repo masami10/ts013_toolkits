@@ -40,7 +40,7 @@ class WSDLClient(object):
             return
         super(WSDLClient, self).__setattr__(key, value)
 
-    def do_request(self, method: str, data: dict) -> bool:
+    def do_request(self, method: str, data: dict) -> (bool, str):
         client = self.do_connect()
         m = client.service[method]
         if ENV_DEBUG_WSDL_REQ:
@@ -52,7 +52,7 @@ class WSDLClient(object):
             return False
         resp: Response = m(**data)
         if resp.status_code >= HTTPStatus.BAD_REQUEST:
-            logger.error(f"请求失败: {resp.content}")
-            return False
-        logger.debug(f"接收到原始数据：{resp.content}")
-        return True
+            text = f"请求失败: {resp.text}"
+            return False, text
+        text = f"接收到原始数据：{resp.text}"
+        return True, text
