@@ -35,7 +35,7 @@ class ToolKitWindow(ToolKitMixin, QtWidgets.QWidget):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self.qt_instance)
         self.tools_append_window = ToolsAppendWindow()
-        main_window.resize(1920, 1080)  # 重新设定为1920 * 1080
+        # main_window.resize(1920, 1080)  # 重新设定为1920 * 1080
         self._http_server: HttpServer = http_server
         self._notifyBox = notify.ToolkitNotify([self.ui.textLog_2, self.ui.textBrowser])
         self.ui.HomeDeviceConnStatusWidget.setProperty('class', 'bgLight')
