@@ -46,7 +46,7 @@ def create_web_app() -> web.Application:
     # loop = asyncio.get_event_loop()
     ret: web.Application = web.Application(client_max_size=1024 * 1024 * 10)
     ret.add_routes([web.get('/healthz', healthzCheckHandler),
-                    web.post('/orders', postOrderHandler),
+                    web.post('/ts013/workorders', postOrderHandler),
                     ])
 
     return ret

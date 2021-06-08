@@ -12,7 +12,7 @@ class TestSQLTS013Order(TestCase):
         self._db = connect(TS013_DB_NAME)
         cr = self._db.cursor()
         cr.execute('''CREATE TABLE IF NOT EXISTS ts013_orders(id INTEGER PRIMARY KEY AUTOINCREMENT, time TIMESTAMP
-          DEFAULT CURRENT_TIMESTAMP, schedule_date TIMESTAMP,order_no TEXT, order_type TEXT, finished_product_no TEXT)''')
+          DEFAULT CURRENT_TIMESTAMP, schedule_date TIMESTAMP,order_no TEXT NOT NULL UNIQUE , order_type TEXT , finished_product_no TEXT)''')
         self._db.commit()
 
     def tearDown(self) -> None:
@@ -26,7 +26,7 @@ class TestSQLTS013Order(TestCase):
 
     def test_insert_ts013_order_item_localtime_schedule_time(self):
         cr = self._db
-        rid = insert_ts013_order_item(cr, '111', '222', local_datetime_to_utc(local_date_from_str()), 'local')
+        rid = insert_ts013_order_item(cr, '003301554976', '231', local_datetime_to_utc(local_date_from_str()), 'M000002539446')
         self._db.commit()
         self.assertIsInstance(rid, int)
 
