@@ -2,7 +2,7 @@ import os
 import json
 from loguru import logger
 from pprint import pformat
-from utils.tools import serialize_obj_2_json
+from utils.tools import obj_2_list
 from typing import List, Union
 from store.types import MOMOrder, ToolsInfo, checkValue
 from transport.constants import now
@@ -101,10 +101,8 @@ def publish_calibration_raw_payload(rid: int, orders: List[MOMOrder], tool_info:
                 <!--Optional:-->
                 <!--Optional:-->
                 <flex:Parameter>{json.dumps(data)}</flex:Parameter>
-                <flex:Password>123456
-                </flex:Password>
-                <flex:Username>mtdl001
-                </flex:Username>
+                <flex:Password>123456</flex:Password>
+                <flex:Username>mtdl001</flex:Username>
             </del:inputs>
         </del:Invoke>
     </soap:Body>
@@ -114,38 +112,41 @@ def publish_calibration_raw_payload(rid: int, orders: List[MOMOrder], tool_info:
     return ret
 
 
-def publish_calibration_payload(rid: int, orders: List[MOMOrder], tool_info: ToolsInfo, check: checkValue) -> dict:
+def publish_calibration_parameter(rid: int, orders: List[MOMOrder], tool_info: ToolsInfo, check: checkValue) -> dict:
     return {
-        "Parameter": {
-            "MethodName": "TorqueCheckInfo",
-            "Parameter": {
-                "id": rid,
-                "toolFixedInspectionCode": tool_info.toolFixedInspectionCode,
-                "toolClassificationCode": tool_info.toolClassificationCode,
-                "toolMaterialCode": tool_info.toolMaterialCode,
-                "toolRfid": tool_info.toolRfid,
-                "toolName": tool_info.toolName,
-                "toolSpecificationType": tool_info.toolSpecificationType,
-                "checkValue": check.targetValue,
-                "maxCheckValue": check.maxCheckValue,
-                "minCheckValue": check.minCheckValue,
-                "maxRecheckValue": check.maxRecheckValue,
-                "minRecheckValue": check.minCheckValue,
-                "checkTime": now(),
-                "checkValue1": check.checkValue1,
-                "checkValue2": check.checkValue2,
-                "checkValue3": check.checkValue3,
-                "checkEmployeeNo": check.checkPerson.number,
-                "checkEmployeeName": check.checkPerson.name,
-                "checkResult": check.checkResult,
-                "recheckTime": now(),
-                "recheckValue": 0.0,
-                "recheckEmployeeNo": check.recheckPerson.number,
-                "recheckEmployeeName": check.recheckPerson.name,
-                "recheckResult": check.recheckResult,
-                "momOrders": serialize_obj_2_json(orders)
-            }
-        }
+        "id": rid,
+        "toolFixedInspectionCode": tool_info.toolFixedInspectionCode,
+        "toolClassificationCode": tool_info.toolClassificationCode,
+        "toolMaterialCode": tool_info.toolMaterialCode,
+        "toolRfid": tool_info.toolRfid,
+        "toolName": tool_info.toolName,
+        "toolSpecificationType": tool_info.toolSpecificationType,
+        "checkValue": check.targetValue,
+        "maxCheckValue": check.maxCheckValue,
+        "minCheckValue": check.minCheckValue,
+        "maxRecheckValue": check.maxRecheckValue,
+        "minRecheckValue": check.minCheckValue,
+        "checkTime": now(),
+        "checkValue1": check.checkValue1,
+        "checkValue2": check.checkValue2,
+        "checkValue3": check.checkValue3,
+        "checkEmployeeNo": check.checkPerson.number,
+        "checkEmployeeName": check.checkPerson.name,
+        "checkResult": check.checkResult,
+        "recheckTime": now(),
+        "recheckValue": 0.0,
+        "recheckEmployeeNo": check.recheckPerson.number,
+        "recheckEmployeeName": check.recheckPerson.name,
+        "recheckResult": check.recheckResult,
+        "momOrders": obj_2_list(orders)
+    }
+
+
+def publish_calibration_payload(rid: int, orders: List[MOMOrder], tool_info: ToolsInfo, check: checkValue) -> dict:
+    param = publish_calibration_parameter(rid, orders, tool_info, check)
+    return {
+        "MethodName": "TorqueCheckInfo",
+        "Parameter": json.dumps(param)
     }
 
 

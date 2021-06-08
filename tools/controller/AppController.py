@@ -88,7 +88,7 @@ class AppController:
             if selected_orders is None or len(selected_orders) == 0:
                 raise Exception('无法提交：未选中工单')
             check = self.glb_storage.checkResult
-            raw = False
+            raw = True
             payload = publish_calibration_value_2_mom_wsdl(self._db_connect,
                                                            selected_tool.toolFixedInspectionCode, selected_orders,
                                                            selected_tool,
