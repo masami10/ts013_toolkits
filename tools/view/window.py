@@ -50,6 +50,8 @@ class ToolKitWindow(ToolKitMixin, QtWidgets.QWidget):
         self.ui.DeviceConnectButton.setProperty('class', 'primaryButton')
         self.ui.DeviceDisconnectButton.setProperty('class', 'primaryButton')
         self.ui.ToolsConfigAddButton.setProperty('class', 'primaryButton')
+        self.ui.QueryOrderButton.setProperty('class', 'primaryButton')
+        self.ui.CancelQueryButton.setProperty('class', 'danger')
         self.ui.ClearResultsButton.setProperty('class', 'danger')
 
         self.timer = QTimer()
