@@ -123,7 +123,7 @@ class AppController:
             cr.execute(
                 '''CREATE TABLE IF NOT EXISTS ts013_wsdl(id INTEGER PRIMARY KEY AUTOINCREMENT, time TIMESTAMP DEFAULT CURRENT_TIMESTAMP, orders TEXT)''')
             cr.execute(
-                '''CREATE TABLE IF NOT EXISTS ts013_orders(id INTEGER PRIMARY KEY AUTOINCREMENT, time TIMESTAMP DEFAULT CURRENT_TIMESTAMP, schedule_date TIMESTAMP,order_no TEXT, order_type TEXT, finished_product_no TEXT)''')
+                '''CREATE TABLE IF NOT EXISTS ts013_orders(id INTEGER PRIMARY KEY AUTOINCREMENT, time TIMESTAMP DEFAULT CURRENT_TIMESTAMP, schedule_date TIMESTAMP,order_no TEXT NOT NULL UNIQUE , order_type TEXT, finished_product_no TEXT)''')
             self._db_connect.commit()
             cr.close()
 

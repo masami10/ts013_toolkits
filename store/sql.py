@@ -1,8 +1,9 @@
-from sqlite3 import Cursor, Connection
+from sqlite3 import Cursor, Connection, IntegrityError
 from datetime import datetime
 from transport.constants import today, tomorrow, local_date_from_str, local_datetime_to_utc
 from typing import List, Any
 from store.types import MOMOrder
+from loguru import logger
 
 
 def insert_ts013_tool_calibration_item(conn: Connection, identity: str) -> int:
@@ -26,10 +27,16 @@ def query_calibration_id_via_identity(conn: Connection, identity: str) -> int:
 def insert_ts013_order_item(conn: Connection, order_name: str, order_type: str, order_schedule_time: datetime,
                             finished_product: str) -> int:
     cr = conn.cursor()
-    cr.execute("INSERT INTO  ts013_orders(order_no, order_type, finished_product_no, schedule_date) VALUES (?,?,?, ?)",
-               (order_name, order_type, finished_product, order_schedule_time), )
-    ret = cr.lastrowid
-    cr.close()
+    try:
+        cr.execute(
+            "INSERT INTO  ts013_orders(order_no, order_type, finished_product_no, schedule_date) VALUES (?,?,?, ?)",
+            (order_name, order_type, finished_product, order_schedule_time), )
+        ret = cr.lastrowid
+    except IntegrityError as e:
+        logger.error(f'insert_ts013_order_item错误: {e}')
+        return 0
+    finally:
+        cr.close()
     return ret
 
 
