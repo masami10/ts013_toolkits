@@ -57,6 +57,18 @@ def ts013_model_2_order_obj(cr: Cursor) -> List[MOMOrder]:
     return ret
 
 
+def query_ts013_order_via_fuzzy_code(conn: Connection, order_no: str = '') -> List[MOMOrder]:
+    cr = conn.cursor()
+    if not order_no:
+        query = f'''SELECT * FROM ts013_orders'''
+    else:
+        query = f'''SELECT * FROM ts013_orders WHERE order_no LIKE '%{order_no}%' '''
+    cr.execute(query)
+    ret = ts013_model_2_order_obj(cr)
+    cr.close()
+    return ret
+
+
 def query_ts013_order_via_codes(conn: Connection, orders: List[str]) -> List[MOMOrder]:
     cr = conn.cursor()
     query = f"SELECT * FROM ts013_orders WHERE order_no in ({','.join(['?'] * len(orders))})"

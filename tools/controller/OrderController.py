@@ -2,9 +2,10 @@ import pandas as pd
 from typing import List
 
 from ..view import window as main_window
+from ui.toolkit import Ui_MainWindow
 from PyQt5.QtWidgets import QCheckBox
 from sqlite3 import Connection
-from store.sql import query_ts013_today_orders
+from store.sql import query_ts013_today_orders, query_ts013_order_via_fuzzy_code
 from store.store import StorageData
 
 
@@ -33,11 +34,30 @@ class OrderController:
             '已选择': []
         })
         self._selected_orders = []
-        ui = self.window.ui
-        ui.load_order_btn.clicked.connect(self.load_orders)
+        ui: Ui_MainWindow = self.window.ui
+        ui.load_order_btn.clicked.connect(self.load_today_orders)
+        ui.QueryOrderButton.clicked.connect(self.query_orders_via_code)
+        ui.CancelQueryButton.clicked.connect(self.load_all_orders)
         self.render()
 
-    def load_orders(self):
+    def query_orders_via_code(self):
+        order_no = self.window.ui.QueryOrderCodeEdit.text()
+        orders = query_ts013_order_via_fuzzy_code(self._db_connect, order_no)
+        order_no_list = [o.wipOrderNo for o in orders]
+        self._content = pd.DataFrame({
+            '订单号': order_no_list,
+        })
+        self.render()
+
+    def load_all_orders(self):
+        orders = query_ts013_order_via_fuzzy_code(self._db_connect, '')
+        order_no_list = [o.wipOrderNo for o in orders]
+        self._content = pd.DataFrame({
+            '订单号': order_no_list,
+        })
+        self.render()
+
+    def load_today_orders(self):
         orders = query_ts013_today_orders(self._db_connect)
         order_no_list = [o.wipOrderNo for o in orders]
         self._content = pd.DataFrame({

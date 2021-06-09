@@ -32,7 +32,7 @@ class ToolKitWindow(ToolKitMixin, QtWidgets.QWidget):
         main_window = QtWidgets.QMainWindow(*args, **kwargs)
         ToolKitMixin.__init__(self, main_window)
         QtWidgets.QWidget.__init__(self)
-        self.ui = Ui_MainWindow()
+        self.ui: Ui_MainWindow = Ui_MainWindow()
         self.ui.setupUi(self.qt_instance)
         self.tools_append_window = ToolsAppendWindow()
         # main_window.resize(1920, 1080)  # 重新设定为1920 * 1080
