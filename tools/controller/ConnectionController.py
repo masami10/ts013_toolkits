@@ -15,6 +15,7 @@ class ConnectionController:
         return {
             'orderUrl': self._config.get_config('orderUrl'),
             'momUrl': self._config.get_config('momUrl'),
+            'operationUrl': self._config.get_config('operationUrl'),
         }
 
     def on_config_input(self, key, value):

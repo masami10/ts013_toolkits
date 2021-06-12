@@ -1,7 +1,6 @@
 import json
 from loguru import logger
-from typing import List
-import pandas as pd
+from typing import List, Dict
 
 
 class MOMOrder(object):
@@ -9,6 +8,7 @@ class MOMOrder(object):
         self.wipOrderNo = orderNo  # 订单号
         self.wipOrderType = orderType  # 订单类型
         self.partName = partNo  # 产成品料号
+        self.toolTorqueInfo: Dict[str, List[ToolsTorqueInfo]] = {}  # key為k值
 
     def as_dict(self):
         return {
@@ -16,6 +16,13 @@ class MOMOrder(object):
             '订单类型': self.wipOrderType,
             '产成品': self.partName
         }
+
+    def dict(self):
+        ret = super(MOMOrder, self).__dict__
+        try:
+            ret.pop('toolTorqueInfo')
+        finally:
+            return ret
 
 
 class ToolsInfo(object):
@@ -28,21 +35,30 @@ class ToolsInfo(object):
         self.toolRfid = toolRfid
         self.toolSpecificationType = toolSpecificationType
 
+    def __str__(self):
+        return self.toolFixedInspectionCode
+
     @property
     def to_dict(self):
-        return {
-            'toolName': self.toolName,
-            'toolClassificationCode': self.toolClassificationCode,
-            'toolFixedInspectionCode': self.toolFixedInspectionCode,
-            'toolMaterialCode': self.toolMaterialCode,
-            'toolRfid': self.toolRfid,
-            'toolSpecificationType': self.toolSpecificationType,
-        }
+        return self.__dict__
 
     def update(self, tools_info: dict):
         for key, value in tools_info.items():
             if hasattr(self, key):
                 setattr(self, key, value)
+
+
+class ToolsTorqueInfo(ToolsInfo):
+
+    def __init__(self, *args, **kwargs):
+        super(ToolsTorqueInfo, self).__init__(*args, **kwargs)
+        self.torque = 0.0
+
+    def update_torque(self, torque: float):
+        self.torque = torque
+
+    def __str__(self):
+        return f"[{self.torque}]{super(ToolsTorqueInfo, self).__str__()}"
 
 
 class Person(object):

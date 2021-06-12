@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '.\ui\toolkit.ui'
+# Form implementation generated from reading ui file 'c:\Users\masami\PycharmProjects\ts013_toolkits\ui\toolkit.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.4
 #
@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(996, 525)
+        MainWindow.resize(1001, 525)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(1)
         sizePolicy.setVerticalStretch(1)
@@ -121,12 +121,14 @@ class Ui_MainWindow(object):
         self.ToolsTable = QtWidgets.QTableWidget(self.groupBox_3)
         self.ToolsTable.setMinimumSize(QtCore.QSize(240, 0))
         self.ToolsTable.setObjectName("ToolsTable")
-        self.ToolsTable.setColumnCount(2)
+        self.ToolsTable.setColumnCount(3)
         self.ToolsTable.setRowCount(0)
         item = QtWidgets.QTableWidgetItem()
         self.ToolsTable.setHorizontalHeaderItem(0, item)
         item = QtWidgets.QTableWidgetItem()
         self.ToolsTable.setHorizontalHeaderItem(1, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.ToolsTable.setHorizontalHeaderItem(2, item)
         self.ToolsTable.horizontalHeader().setCascadingSectionResizes(True)
         self.ToolsTable.horizontalHeader().setDefaultSectionSize(120)
         self.ToolsTable.horizontalHeader().setHighlightSections(False)
@@ -413,6 +415,12 @@ class Ui_MainWindow(object):
         self.MOMUrlEdit.setClearButtonEnabled(True)
         self.MOMUrlEdit.setObjectName("MOMUrlEdit")
         self.formLayout_10.setWidget(2, QtWidgets.QFormLayout.FieldRole, self.MOMUrlEdit)
+        self.OperationUrlLabel = QtWidgets.QLabel(self.groupBox_9)
+        self.OperationUrlLabel.setObjectName("OperationUrlLabel")
+        self.formLayout_10.setWidget(3, QtWidgets.QFormLayout.LabelRole, self.OperationUrlLabel)
+        self.OperationUrlEdit = QtWidgets.QLineEdit(self.groupBox_9)
+        self.OperationUrlEdit.setObjectName("OperationUrlEdit")
+        self.formLayout_10.setWidget(3, QtWidgets.QFormLayout.FieldRole, self.OperationUrlEdit)
         self.verticalLayout_4.addLayout(self.formLayout_10)
         self.verticalLayout.addWidget(self.groupBox_9)
         self.groupBox_10 = QtWidgets.QGroupBox(self.setting_tab)
@@ -509,6 +517,8 @@ class Ui_MainWindow(object):
         item = self.ToolsTable.horizontalHeaderItem(0)
         item.setText(_translate("MainWindow", "工具序列号"))
         item = self.ToolsTable.horizontalHeaderItem(1)
+        item.setText(_translate("MainWindow", "扭矩值"))
+        item = self.ToolsTable.horizontalHeaderItem(2)
         item.setText(_translate("MainWindow", "已选择"))
         self.HomeDeviceConnStatusLabel.setText(_translate("MainWindow", " 标定设备连接状态"))
         self.HomeDeviceConnStatusButton.setText(_translate("MainWindow", "已连接"))
@@ -543,6 +553,7 @@ class Ui_MainWindow(object):
         self.groupBox_9.setTitle(_translate("MainWindow", "连接"))
         self.OrderUrlLabel.setText(_translate("MainWindow", "获取订单地址"))
         self.MOMUrlLabel.setText(_translate("MainWindow", "MOM上送地址"))
+        self.OperationUrlLabel.setText(_translate("MainWindow", "工艺获取地址"))
         self.groupBox_10.setTitle(_translate("MainWindow", "工具"))
         self.ToolsConfigAddButton.setText(_translate("MainWindow", "添加工具"))
         self.groupBox_2.setTitle(_translate("MainWindow", " 标定设备"))

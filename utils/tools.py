@@ -1,14 +1,15 @@
 import json
 from typing import List
 from qasync import QEventLoop
+from store.types import MOMOrder
 
 
-def obj_2_list(orders: List[object]) -> List[dict]:
-    return [ob.__dict__ for ob in orders]
+def mom_order_2_list(orders: List[MOMOrder]) -> List[dict]:
+    return [ob.dict() for ob in orders]
 
 
-def serialize_obj_2_json(orders: List[object]) -> str:
-    data = obj_2_list(orders)
+def serialize_obj_2_json(orders: List[MOMOrder]) -> str:
+    data = mom_order_2_list(orders)
     j_data = json.dumps(data)
     return j_data
 

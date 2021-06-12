@@ -2,7 +2,7 @@ import os
 import json
 from loguru import logger
 from pprint import pformat
-from utils.tools import obj_2_list
+from utils.tools import mom_order_2_list
 from typing import List, Union
 from store.types import MOMOrder, ToolsInfo, checkValue
 from transport.constants import now
@@ -138,7 +138,7 @@ def publish_calibration_parameter(rid: int, orders: List[MOMOrder], tool_info: T
         "recheckEmployeeNo": check.recheckPerson.number,
         "recheckEmployeeName": check.recheckPerson.name,
         "recheckResult": check.recheckResult,
-        "momOrders": obj_2_list(orders)
+        "momOrders": mom_order_2_list(orders)
     }
 
 

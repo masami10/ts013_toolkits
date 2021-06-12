@@ -31,5 +31,5 @@ coll = COLLECT(exe,
                a.datas,
                strip=False,
                upx=True,
-               upx_exclude=[],
+               upx_exclude=['settings.toml'],
                name='ts013_toolkits')

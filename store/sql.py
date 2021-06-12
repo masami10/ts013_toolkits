@@ -1,7 +1,7 @@
 from sqlite3 import Cursor, Connection, IntegrityError
 from datetime import datetime
-from transport.constants import today, tomorrow, local_date_from_str, local_datetime_to_utc
-from typing import List, Any
+from transport.constants import tomorrow, local_date_from_str, local_datetime_to_utc
+from typing import List
 from store.types import MOMOrder
 from loguru import logger
 

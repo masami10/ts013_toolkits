@@ -15,8 +15,9 @@ from .OrderController import OrderController
 from .ConnectionController import ConnectionController
 from store.store import StorageData
 from store.contants import TS013_DB_NAME
+from store.types import MOMOrder
 import sqlite3
-from typing import Any
+from typing import Any, List
 from transport.wsdl import WSDLClient
 from pprint import pformat
 from api.wsdl import publish_calibration_value_2_mom_wsdl
@@ -60,7 +61,7 @@ class AppController:
         self.notify = self.window.notify_box
         self._tools_controller = ToolsController(self.window, self.glb_config, self.glb_storage)
         self._device_controller = DeviceController(self.window, self.glb_storage, self.glb_config)
-        self._order_controller = OrderController(self.window, self._db_connect, self.glb_storage)
+        self._order_controller = OrderController(self.window, self._db_connect, self.glb_storage, self.glb_config)
         self._connection_controller = ConnectionController(self.window, self.glb_config)
 
         self.window.ui.submit_btn.clicked.connect(self.on_result_submit)
@@ -160,6 +161,10 @@ class AppController:
         window.FirstCheckResultButton.successChanged.connect(self.on_result_success_changed)
         window.RecheckResultButton.successChanged.connect(self.on_result_success_changed)
         ui.ToolsConfigAddButton.clicked.connect(self._tools_controller.add_tool)
+        self._order_controller.selectedOrderChanged.connect(self._on_order_selected_change)
+
+    def _on_order_selected_change(self, orders: List[MOMOrder]):
+        self._tools_controller.render_tools_pick_table()
 
     def on_input(self, key: str, value: Any):
         self.notify.debug('字段输入：{}，{}'.format(key, value))

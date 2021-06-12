@@ -1,11 +1,12 @@
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, List
 from py_singleton import singleton
-from store.types import ToolsInfo, checkValue
+from store.types import ToolsInfo, checkValue, MOMOrder, ToolsTorqueInfo
 from store.sql import query_ts013_order_via_codes
 from loguru import logger
-from typing import Dict
 from sqlite3 import Connection
 from store.config import Config
+from api.restful_api import request_get_tool_info
+from http import HTTPStatus
 
 
 @singleton
@@ -26,7 +27,7 @@ class StorageData(object):
     def _update_data(self, key: str, value: Any):
         self._data.update({key: value})
 
-    def update_selected_orders(self, orders_str: str):
+    def update_selected_orders(self, orders_str: str) -> List[MOMOrder]:
         orders = []
         if orders_str == "":
             self._data.update({'selected_orders': []})
@@ -34,6 +35,7 @@ class StorageData(object):
             order_codes = orders_str.split(',')
             orders = query_ts013_order_via_codes(self._connect, order_codes)
         self._data.update({'selected_orders': orders})
+        return orders
 
     def update_inputs_data(self, key: str, val: Any):
         self._data.get('inputs', {}).update({key: val})
@@ -64,7 +66,7 @@ class StorageData(object):
         self._data.update({'selected_tool': t})
 
     @property
-    def selected_orders(self):
+    def selected_orders(self) -> List[MOMOrder]:
         return self._data.get('selected_orders')
 
     @property
@@ -123,6 +125,36 @@ class StorageData(object):
 
     def get_tools(self) -> Dict[str, ToolsInfo]:
         return self._data.get('tools', {})
+
+    def do_generate_tool_torque_info(self, url: str, order: MOMOrder):
+        order.toolTorqueInfo = {}
+        try:
+            success, resp = request_get_tool_info(url, order.partName)
+            if not success:
+                msg = "request_get_tool_info 调用接口失败: {}".format(resp.text)
+                raise Exception(msg)
+            data = resp.json()
+            if data['status_code'] != HTTPStatus.OK:
+                msg = "request_get_tool_info 调用接口失败: {}".format(resp.text)
+                raise Exception(msg)
+            d: dict = data.get('msg', {})
+            if not d:
+                return
+            val: List
+            for key, val in d.items():
+                tools = []
+                for v in val:
+                    t, tool_inspect_code = v.split(']')
+                    torque = float(t[1:])
+                    ti = self.get_tool_via_inspect_code(tool_inspect_code)
+                    if not ti:
+                        logger.error("error msg")
+                    tti = ToolsTorqueInfo(ti.__dict__)
+                    tti.update_torque(torque)
+                    tools.append(tti)
+                order.toolTorqueInfo.update({key: tools})
+        except Exception as e:
+            raise e
 
     def __str__(self):
         return 'Global Storage'

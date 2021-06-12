@@ -1,13 +1,14 @@
 # -*- coding:utf-8 -*-
 
 from PyQt5.QtWidgets import QPushButton, QRadioButton, QTableWidget
-from typing import Dict
+from typing import Dict, List
 from ..view import window as main_window
 import pandas as pd
 from .ToolsAppendController import ToolsAppendController
 from store.store import StorageData
 from store.config import Config
-from store.types import ToolsInfo
+from store.types import ToolsInfo, ToolsTorqueInfo
+from itertools import chain
 
 
 def remove_tool_button(tool, on_click):
@@ -47,7 +48,6 @@ class ToolsController:
 
     @property
     def content(self) -> pd.DataFrame:
-        tools = self._store.get_tools()
         tdf = pd.DataFrame({
             'toolFixedInspectionCode': [],
             'toolMaterialCode': [],
@@ -55,9 +55,18 @@ class ToolsController:
             'toolClassificationCode': [],
             'toolName': [],
             'toolSpecificationType': [],
+            'torque': []
         })
-        for key, value in tools.items():
-            tdf = tdf.append(value.to_dict, ignore_index=True)
+        select_orders = self._store.selected_orders
+        if not select_orders:
+            return tdf
+        order = select_orders[0]
+        tools: List[ToolsTorqueInfo] = []
+        for k, v in order.toolTorqueInfo.items():
+            tools.extend(v)
+
+        for toolTorqueInfo in tools:
+            tdf = tdf.append(toolTorqueInfo.to_dict, ignore_index=True)
         return tdf
 
     def save_tool(self, tool_data: Dict):
@@ -99,6 +108,7 @@ class ToolsController:
         tools = list(self.content['toolFixedInspectionCode'])
         content = pd.DataFrame({
             '定检编号': tools,
+            '扭矩值': list(self.content['torque']),
             '选中': list(map(lambda tool: select_tool_radio(tool, self.render_tool_detail), tools))
         })
         self.window.tools_table.render_table(content)
@@ -115,7 +125,7 @@ class ToolsController:
         self._config.del_tool_config(tool_inspect_code)
         self.render()
 
-    def render_tool_detail(self, tool):
+    def render_tool_detail(self, tool: str):
         tools = self.content
         tools = tools.set_index('toolFixedInspectionCode')
         tool_selected = dict(tools.loc[tool])

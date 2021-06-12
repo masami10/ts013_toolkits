@@ -1,2 +1,3 @@
 pyinstaller
 faker==8.4.0
+requests_mock

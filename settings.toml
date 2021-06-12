@@ -1,5 +1,8 @@
 ORDERURL = "http://192.168.3.23"
-MOMURL = "http://10.220.29.136/Apriso/WebServices/Public/MOM_PeripheralSystem_InspectionInfo.svc?wsdl"
+MOMURL = "http://10.220.29.139/Apriso/WebServices/Public/MOM_PeripheralSystem_InspectionInfo.svc?wsdl"
+DEVICE_IP = "192.168.3.100"
+DEVICE_PORT = "3000"
+OPERATIONURL = "http://mes.zxj.crrcgc.com/ts013/get_tools_info"
 [[TOOLS]]
 toolName = "123"
 toolClassificationCode = "345123"

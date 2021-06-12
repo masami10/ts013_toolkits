@@ -23,6 +23,10 @@ class Config(object):
     def wsdl_base_url(self):
         return self.get_config('momUrl')
 
+    @property
+    def get_tool_url(self):
+        return self.get_config('operationUrl')
+
     def save_config(self):
         data = self._settings.as_dict()
         loaders.write(str(self._filename), DynaBox(data).to_dict())

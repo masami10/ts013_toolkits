@@ -1,16 +1,18 @@
 import pandas as pd
 from typing import List
-
+from PyQt5 import QtCore
 from ..view import window as main_window
 from ui.toolkit import Ui_MainWindow
-from PyQt5.QtWidgets import QCheckBox
+from PyQt5.QtWidgets import QRadioButton
 from sqlite3 import Connection
 from store.sql import query_ts013_today_orders, query_ts013_order_via_fuzzy_code
 from store.store import StorageData
+from store.types import MOMOrder
+from store.config import Config
 
 
 def select_tool_checkbox(order, on_select):
-    t = QCheckBox()
+    t = QRadioButton()
 
     def on_button_clicked():
         on_select(order)
@@ -20,14 +22,17 @@ def select_tool_checkbox(order, on_select):
     return t
 
 
-class OrderController:
+class OrderController(QtCore.QObject):
+    selectedOrderChanged = QtCore.pyqtSignal(list)
     _content: pd.DataFrame
     _selected_orders: List[str]
 
-    def __init__(self, window: main_window.ToolKitWindow, db_connect: Connection, store: StorageData):
+    def __init__(self, window: main_window.ToolKitWindow, db_connect: Connection, store: StorageData, config: Config):
+        super(OrderController, self).__init__()
         self.window = window
         self._db_connect = db_connect
         self._store = store
+        self._config = config
         self.notify = self.window.notify_box
         self._content = pd.DataFrame({
             '订单号': [],
@@ -81,10 +86,16 @@ class OrderController:
         if order_code in self._selected_orders:
             self._selected_orders.remove(order_code)
         else:
-            self._selected_orders.append(order_code)
+            self._selected_orders = [order_code]  # 現在只能選擇一張訂單
 
-        self._store.update_selected_orders(','.join(self._selected_orders))
-        self.render_order_detail()
+        orders: List[MOMOrder] = self._store.update_selected_orders(','.join(self._selected_orders))
+        try:
+            for o in orders:
+                self._store.do_generate_tool_torque_info(self._config.get_tool_url, o)
+            self.selectedOrderChanged.emit(orders)
+            self.render_order_detail()
+        except Exception as e:
+            self.notify.error(e)
 
     def render_order_detail(self):
         orders_content = ', '.join(self._selected_orders)

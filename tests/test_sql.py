@@ -38,6 +38,13 @@ class TestSQLTS013Order(TestCase):
         self._db.commit()
         self.assertIsInstance(rid, int)
 
+    def test_insert_ts013_order_item_localtime_schedule_time3(self):
+        cr = self._db
+        rid = insert_ts013_order_item(cr, '003301554978', '231', local_datetime_to_utc(local_date_from_str()),
+                                      'M000002539447')
+        self._db.commit()
+        self.assertIsInstance(rid, int)
+
     def test_query_ts013_today_orders(self):
         cr = self._db
         ret = query_ts013_today_orders(cr)
