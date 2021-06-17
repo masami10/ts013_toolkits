@@ -48,6 +48,21 @@ class ToolsController:
 
     @property
     def content(self) -> pd.DataFrame:
+        tools = self._store.get_tools()
+        tdf = pd.DataFrame({
+            'toolFixedInspectionCode': [],
+            'toolMaterialCode': [],
+            'toolRfid': [],
+            'toolClassificationCode': [],
+            'toolName': [],
+            'toolSpecificationType': [],
+        })
+        for key, value in tools.items():
+            tdf = tdf.append(value.to_dict, ignore_index=True)
+        return tdf
+
+    @property
+    def content_current_order(self):
         tdf = pd.DataFrame({
             'toolFixedInspectionCode': [],
             'toolMaterialCode': [],
@@ -68,6 +83,8 @@ class ToolsController:
         for toolTorqueInfo in tools:
             tdf = tdf.append(toolTorqueInfo.to_dict, ignore_index=True)
         return tdf
+
+
 
     def save_tool(self, tool_data: Dict):
         data: Dict[str, ToolsInfo] = self._store.edit_tool(tool_data)
@@ -105,10 +122,10 @@ class ToolsController:
             table.setRowHeight(row, 50)
 
     def render_tools_pick_table(self):
-        tools = list(self.content['toolFixedInspectionCode'])
+        tools = list(self.content_current_order['toolFixedInspectionCode'])
         content = pd.DataFrame({
             '定检编号': tools,
-            '扭矩值': list(self.content['torque']),
+            '扭矩值': list(self.content_current_order['torque']),
             '选中': list(map(lambda tool: select_tool_radio(tool, self.render_tool_detail), tools))
         })
         self.window.tools_table.render_table(content)
