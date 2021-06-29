@@ -3,7 +3,10 @@ from datetime import datetime
 from transport.constants import tomorrow, local_date_from_str, local_datetime_to_utc
 from typing import List
 from store.types import MOMOrder
+from store.config import Config
 from loguru import logger
+
+glb_config = Config()
 
 
 def insert_ts013_tool_calibration_item(conn: Connection, identity: str) -> int:
@@ -25,12 +28,12 @@ def query_calibration_id_via_identity(conn: Connection, identity: str) -> int:
 
 
 def insert_ts013_order_item(conn: Connection, order_name: str, order_type: str, order_schedule_time: datetime,
-                            finished_product: str) -> int:
+                            finished_product: str, workcenter: str = glb_config.workCenter) -> int:
     cr = conn.cursor()
     try:
         cr.execute(
-            "INSERT INTO  ts013_orders(order_no, order_type, finished_product_no, schedule_date) VALUES (?,?,?, ?)",
-            (order_name, order_type, finished_product, order_schedule_time), )
+            "INSERT INTO  ts013_orders(order_no, order_type, finished_product_no, schedule_date, workcenter) VALUES (?,?,?, ?, ?)",
+            (order_name, order_type, finished_product, order_schedule_time, workcenter), )
         ret = cr.lastrowid
     except IntegrityError as e:
         logger.error(f'insert_ts013_order_item错误: {e}')
@@ -47,12 +50,21 @@ def query_ts013_today_orders(conn: Connection) -> List[MOMOrder]:
     return results
 
 
+def query_ts013_local_workcenter_today_orders(conn: Connection) -> List[MOMOrder]:
+    prev = local_datetime_to_utc(local_date_from_str())
+    workcenter = glb_config.workCenter
+    nn = local_datetime_to_utc(tomorrow())
+    results = query_ts013_order_via_schedule_date(conn, prev, nn)
+    rs = list(filter(lambda s: s.workcenter == workcenter, results))
+    return rs
+
+
 def ts013_model_2_order_obj(cr: Cursor) -> List[MOMOrder]:
     results = cr.fetchall()
     ret = []
     for r in results:
-        rid, create_at, schedule_time, order_no, order_type, finished_product_no = r
-        m = MOMOrder(order_no, order_type, finished_product_no)
+        rid, create_at, workcenter, schedule_time, order_no, order_type, finished_product_no = r
+        m = MOMOrder(order_no, order_type, finished_product_no, workcenter)
         ret.append(m)
     return ret
 

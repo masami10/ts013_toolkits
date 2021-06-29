@@ -5,7 +5,8 @@ from ..view import window as main_window
 from ui.toolkit import Ui_MainWindow
 from PyQt5.QtWidgets import QRadioButton
 from sqlite3 import Connection
-from store.sql import query_ts013_today_orders, query_ts013_order_via_fuzzy_code
+from store.sql import query_ts013_today_orders, query_ts013_order_via_fuzzy_code, \
+    query_ts013_local_workcenter_today_orders
 from store.store import StorageData
 from store.types import MOMOrder
 from store.config import Config
@@ -41,6 +42,7 @@ class OrderController(QtCore.QObject):
         self._selected_orders = []
         ui: Ui_MainWindow = self.window.ui
         ui.load_order_btn.clicked.connect(self.load_today_orders)
+        ui.filter_workcenter_btn.clicked.connect(self.load_local_today_orders)
         ui.QueryOrderButton.clicked.connect(self.query_orders_via_code)
         ui.CancelQueryButton.clicked.connect(self.load_all_orders)
         self.render()
@@ -56,6 +58,14 @@ class OrderController(QtCore.QObject):
 
     def load_all_orders(self):
         orders = query_ts013_order_via_fuzzy_code(self._db_connect, '')
+        order_no_list = [o.wipOrderNo for o in orders]
+        self._content = pd.DataFrame({
+            '订单号': order_no_list,
+        })
+        self.render()
+
+    def load_local_today_orders(self):
+        orders = query_ts013_local_workcenter_today_orders(self._db_connect)
         order_no_list = [o.wipOrderNo for o in orders]
         self._content = pd.DataFrame({
             '订单号': order_no_list,

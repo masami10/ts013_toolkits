@@ -26,11 +26,15 @@ async def postOrderHandler(req):
         if not entry:
             raise Exception('没有找到订单数据入口')
         orderinfo = entry.get('MOMWIPORDER')
+        operationInfo = orderinfo.get('MOMWIPORDEROPR', {})
         ordername = orderinfo.get('WIPORDERNO')
+        workcenter = operationInfo.get('WORKCENTER', '')
         schedule_date_time = local_datetime_from_str(orderinfo.get('SCHEDULEDSTARTDATE'))
         rid = insert_ts013_order_item(db, ordername, orderinfo.get('WIPORDERTYPE'),
                                       schedule_date_time,
-                                      orderinfo.get('PRODUCTNO'))
+                                      orderinfo.get('PRODUCTNO'),
+                                      workcenter
+                                      )
         if rid < 0:
             raise Exception('订单插入数据库错误')
         logger.info(f'订单: {ordername} 插入数据库成功')

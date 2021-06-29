@@ -76,7 +76,8 @@ class ToolKitWindow(ToolKitMixin, QtWidgets.QWidget):
         self._config_input_group = InputGroup.InputGroup({
             'orderUrl': self.ui.OrderUrlEdit,
             'momUrl': self.ui.MOMUrlEdit,
-            'operationUrl': self.ui.OperationUrlEdit
+            'operationUrl': self.ui.OperationUrlEdit,
+            'workCenter': self.ui.workCenterLabelEdit,
         })
         self._device_config_group = InputGroup.InputGroup({
             'ip': self.ui.DeviceIPEdit,

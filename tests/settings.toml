@@ -1,2 +1,14 @@
-KEY = "value"
-DD = "123123"
+ORDERURL = "http://192.168.3.23"
+MOMURL = "http://10.220.29.139/Apriso/WebServices/Public/MOM_PeripheralSystem_InspectionInfo.svc?wsdl"
+DEVICE_IP = "192.168.3.100"
+DEVICE_PORT = "3000"
+OPERATIONURL = "http://mes.zxj.crrcgc.com/ts013/get_tools_info"
+WORKCENTER = "13213"
+[[TOOLS]]
+toolName = "123"
+toolClassificationCode = "345123"
+toolFixedInspectionCode = "345345"
+toolMaterialCode = "1234"
+toolRfid = "345"
+toolSpecificationType = "24"
+

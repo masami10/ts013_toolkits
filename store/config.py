@@ -39,6 +39,10 @@ class Config(object):
         setattr(self._settings, 'tools', value)
         self.save_config()
 
+    @property
+    def workCenter(self):
+        return getattr(self._settings, 'workCenter')
+
     def del_tool_config(self, tool_inspect_code: str):
         tool_config = self.tools_config
         v = list(filter(lambda c: c.toolFixedInspectionCode != tool_inspect_code, tool_config))

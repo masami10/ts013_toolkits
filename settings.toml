@@ -3,6 +3,7 @@ MOMURL = "http://10.220.29.139/Apriso/WebServices/Public/MOM_PeripheralSystem_In
 DEVICE_IP = "192.168.3.100"
 DEVICE_PORT = "3000"
 OPERATIONURL = "http://mes.zxj.crrcgc.com/ts013/get_tools_info"
+WORKCENTER = "13213"
 [[TOOLS]]
 toolName = "123"
 toolClassificationCode = "345123"

@@ -155,7 +155,7 @@
                 <item>
                  <widget class="QGroupBox" name="groupBox">
                   <property name="title">
-                   <string> 当日订单</string>
+                   <string> 订单</string>
                   </property>
                   <layout class="QVBoxLayout" name="verticalLayout_5">
                    <property name="spacing">
@@ -209,6 +209,13 @@
                        <string>已选择</string>
                       </property>
                      </column>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QPushButton" name="filter_workcenter_btn">
+                     <property name="text">
+                      <string>本工位当日订单</string>
+                     </property>
                     </widget>
                    </item>
                    <item>
@@ -932,6 +939,16 @@
                  </item>
                  <item row="3" column="1">
                   <widget class="QLineEdit" name="OperationUrlEdit"/>
+                 </item>
+                 <item row="4" column="0">
+                  <widget class="QLabel" name="workCenterLabel">
+                   <property name="text">
+                    <string>工位号</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="4" column="1">
+                  <widget class="QLineEdit" name="workCenterLabelEdit"/>
                  </item>
                 </layout>
                </item>

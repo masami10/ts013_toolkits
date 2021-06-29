@@ -1,26 +1,32 @@
 import json
 from loguru import logger
 from typing import List, Dict
+from store.config import Config
+
+config = Config()
 
 
 class MOMOrder(object):
-    def __init__(self, orderNo: str, orderType: str, partNo: str):
+    def __init__(self, orderNo: str, orderType: str, partNo: str, workCenter: str = config.workCenter):
         self.wipOrderNo = orderNo  # 订单号
         self.wipOrderType = orderType  # 订单类型
         self.partName = partNo  # 产成品料号
+        self.workCenter = workCenter
         self.toolTorqueInfo: Dict[str, List[ToolsTorqueInfo]] = {}  # key為k值
 
     def as_dict(self):
         return {
             '订单号': self.wipOrderNo,
             '订单类型': self.wipOrderType,
-            '产成品': self.partName
+            '产成品': self.partName,
+            '工位号': self.workCenter
         }
 
     def dict(self):
         ret = super(MOMOrder, self).__dict__
         try:
             ret.pop('toolTorqueInfo')
+            ret.pop('workCenter')
         finally:
             return ret
 
