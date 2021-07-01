@@ -4,6 +4,7 @@ from dynaconf import loaders
 from dynaconf.utils.boxing import DynaBox
 import os
 import pathlib
+from loguru import logger
 from py_singleton import singleton
 
 ENV_RUNTIME_ENV = os.getenv('ENV_RUNTIME_ENV', 'test')
@@ -41,7 +42,7 @@ class Config(object):
 
     @property
     def workCenter(self):
-        return getattr(self._settings, 'workCenter')
+        return self.get_config('workCenter', 'Dummy Workcenter')
 
     def del_tool_config(self, tool_inspect_code: str):
         tool_config = self.tools_config
@@ -50,10 +51,11 @@ class Config(object):
 
     @property
     def tools_config(self):
-        return getattr(self._settings, 'tools')
+        return self.get_config('tools')
 
-    def get_config(self, key):
+    def get_config(self, key, default=None):
         try:
-            return getattr(self._settings, key)
+            return getattr(self._settings, key, default)
         except Exception as e:
+            logger.error(e)
             return None
