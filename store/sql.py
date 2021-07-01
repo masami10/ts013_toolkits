@@ -55,7 +55,7 @@ def query_ts013_local_workcenter_today_orders(conn: Connection) -> List[MOMOrder
     workcenter = glb_config.workCenter
     nn = local_datetime_to_utc(tomorrow())
     results = query_ts013_order_via_schedule_date(conn, prev, nn)
-    rs = list(filter(lambda s: s.workcenter == workcenter, results))
+    rs = list(filter(lambda s: s.workCenter == workcenter, results))
     return rs
 
 
