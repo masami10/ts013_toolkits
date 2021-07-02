@@ -51,7 +51,7 @@ def request_get_tool_info_stop(retry_state):
 @retry(stop=request_get_tool_info_stop, wait=wait_random_exponential(multiplier=0.5, min=2, max=5), reraise=True,
        after=after_log(_logger, logging.INFO))
 def request_get_tool_info(full_url: str, product_no: str) -> Tuple[bool, Response]:
-    url = urljoin(full_url, product_no)
+    url = f'{full_url}/{product_no}'
     resp = requests.get(url=url, timeout=2)
     if resp.status_code != HTTPStatus.OK:
         return False, resp
