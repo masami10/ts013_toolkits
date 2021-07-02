@@ -141,15 +141,26 @@ class StorageData(object):
             if not d:
                 return
             val: List
+            cache = {}
             for key, val in d.items():
                 tools = []
                 for v in val:
                     t, tool_inspect_code = v.split(']')
                     torque = float(t[1:])
+                    if tool_inspect_code not in cache.keys():
+                        cache.update({
+                            tool_inspect_code: []
+                        })
+                    e = cache.get(tool_inspect_code)
+                    if torque in e:
+                        continue
+                    else:
+                        e.append(torque)
                     ti = self.get_tool_via_inspect_code(tool_inspect_code)
                     if not ti:
                         logger.error(f"未找到相应的工具: {tool_inspect_code}")
-                    tti = ToolsTorqueInfo(ti.__dict__)
+                        continue
+                    tti = ToolsTorqueInfo(**ti.__dict__)
                     tti.update_torque(torque)
                     tools.append(tti)
                 order.toolTorqueInfo.update({key: tools})

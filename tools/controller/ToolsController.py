@@ -56,6 +56,7 @@ class ToolsController:
             'toolClassificationCode': [],
             'toolName': [],
             'toolSpecificationType': [],
+            'torque': []
         })
         for key, value in tools.items():
             tdf = tdf.append(value.to_dict, ignore_index=True)
@@ -81,10 +82,9 @@ class ToolsController:
             tools.extend(v)
 
         for toolTorqueInfo in tools:
-            tdf = tdf.append(toolTorqueInfo.to_dict, ignore_index=True)
+            d = toolTorqueInfo.to_dict
+            tdf = tdf.append(pd.DataFrame(d), ignore_index=True)
         return tdf
-
-
 
     def save_tool(self, tool_data: Dict):
         data: Dict[str, ToolsInfo] = self._store.edit_tool(tool_data)
@@ -123,10 +123,14 @@ class ToolsController:
 
     def render_tools_pick_table(self):
         tools = list(self.content_current_order['toolFixedInspectionCode'])
+        torques = list(self.content_current_order['torque'])
+        zipped = zip(tools, torques)
+        if not tools:
+            return
         content = pd.DataFrame({
             '定检编号': tools,
             '扭矩值': list(self.content_current_order['torque']),
-            '选中': list(map(lambda tool: select_tool_radio(tool, self.render_tool_detail), tools))
+            '选中': list(map(lambda tool: select_tool_radio(tool, self.render_tool_detail), zipped))
         })
         self.window.tools_table.render_table(content)
         table = self.window.tools_table
@@ -142,12 +146,14 @@ class ToolsController:
         self._config.del_tool_config(tool_inspect_code)
         self.render()
 
-    def render_tool_detail(self, tool: str):
+    def render_tool_detail(self, t: tuple):
         tools = self.content
         tools = tools.set_index('toolFixedInspectionCode')
+        tool, torque = t
         tool_selected = dict(tools.loc[tool])
         self.window.input_group.set_texts({
             **tool_selected,
+            "targetTorque": torque,
             'toolFixedInspectionCode': tool
         })
         self._store.set_selected_tool(tool)

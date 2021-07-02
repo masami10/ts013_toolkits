@@ -63,6 +63,18 @@ class ToolsTorqueInfo(ToolsInfo):
     def update_torque(self, torque: float):
         self.torque = torque
 
+    @property
+    def to_dict(self):
+        return {
+            'toolName': [self.toolName],
+            'toolClassificationCode': [self.toolClassificationCode],
+            'toolFixedInspectionCode': [self.toolFixedInspectionCode],
+            'toolMaterialCode': [self.toolMaterialCode],
+            'toolRfid': [self.toolRfid],
+            'toolSpecificationType': [self.toolSpecificationType],
+            'torque': [self.torque]
+        }
+
     def __str__(self):
         return f"[{self.torque}]{super(ToolsTorqueInfo, self).__str__()}"
 

@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import QLineEdit, QWidget
 from typing import Dict
 from PyQt5 import QtCore
 from functools import partial
-
+from loguru import logger
 
 class InputGroup(QWidget):
     inputChanged = QtCore.pyqtSignal(str, str)
@@ -20,11 +20,17 @@ class InputGroup(QWidget):
         self.inputChanged.emit(key, value)
 
     def set_text(self, key, text):
-        input = self._inputs.get(key, None)
-        if not input:
-            raise Exception('不存在输入框：{}'.format(key))
-        input.setText(text)
+        try:
+            input = self._inputs.get(key, None)
+            if not input:
+                raise Exception('不存在输入框：{}'.format(key))
+            if not isinstance(text, str):
+                text = str(text)
+            input.setText(text)
+        except Exception as e:
+            logger.error(e)
 
     def set_texts(self, texts: dict):
         for key, value in texts.items():
             self.set_text(key, value)
+
