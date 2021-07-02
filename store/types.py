@@ -23,7 +23,7 @@ class MOMOrder(object):
         }
 
     def dict(self):
-        ret = super(MOMOrder, self).__dict__
+        ret = self.__dict__
         try:
             ret.pop('toolTorqueInfo')
             ret.pop('workCenter')
