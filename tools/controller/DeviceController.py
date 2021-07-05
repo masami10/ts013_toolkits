@@ -115,10 +115,10 @@ class DeviceController:
         self.notify.info('正在绑定结果处理程序...')
         self._client.set_handler(self.handle_result)
         self.notify.info('正在启动客户端...')
-        self._client.start(self.on_client_start, self.notify)
+        self._client.start(self.on_client_status, self.notify)
 
-    def on_client_start(self):
-        self.render(True)
+    def on_client_status(self, status=True):
+        self.render(status)
 
     def _stop_client(self):
         self._client.stop()

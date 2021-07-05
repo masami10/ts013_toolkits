@@ -16,6 +16,7 @@ class TcpClient(object):
         self.started = False
         self.connected = False  # 是否连接
         self.start_task = None
+        self.on_client_status = None
         self._name = name
         self._newline = newline
         self.thread: Optional[threading.Thread] = None
@@ -31,7 +32,7 @@ class TcpClient(object):
             raise Exception('Client Is Empty')
         if self.connected:
             raise Exception('连接已存在')
-        self._client.settimeout(2.0)  # 设置2秒timeout
+        # self._client.settimeout(2.0)  # 设置2秒timeout
         if ENV_KEEPALIVE_ENABLE and platform.system() == 'Windows':
             self._client.ioctl(socket.SIO_KEEPALIVE_VALS, (1, 5000, 1000))  # 正常连接时候5s一次，没有的时候1秒一次，最多5次
         self._client.connect(self._server_addr)
@@ -56,6 +57,10 @@ class TcpClient(object):
                 time.sleep(0.5)
                 continue
             line = f.readline()
+            if not line:
+                logger.info("客户端断开，请重新连接")
+                self.do_stop()
+                return
             if isinstance(line, bytes):
                 line = line.decode(encoding='utf-8')
             line = line.split(self._newline)[0]
@@ -76,18 +81,24 @@ class TcpClient(object):
         self.thread.setDaemon(True)
         self.thread.start()
         notify.info("TCP 客户端线程打开")
-        on_start()
+        on_start(True)
 
     def start(self, on_start, notify):
         # if self.start_task:
         #     self.start_task.close()
+        self.on_client_status = on_start
         self._do_start(on_start, notify)
 
-    def stop(self):
+    def do_stop(self):
         if self.start_task:
             self.start_task.close()
         self.started = False
         self.disconnect()
-        if self.thread:
+        if self.on_client_status:
+            self.on_client_status(False)
+
+    def stop(self):
+        self.do_stop()
+        if self.thread.is_alive():
             self.thread.join()
         logger.info("TCP 客户端线程关闭")
