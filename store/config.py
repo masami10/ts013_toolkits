@@ -28,6 +28,10 @@ class Config(object):
     def get_tool_url(self):
         return self.get_config('operationUrl')
 
+    @property
+    def get_order_url(self):
+        return self.get_config('orderUrl', '')
+
     def save_config(self):
         data = self._settings.as_dict()
         loaders.write(str(self._filename), DynaBox(data).to_dict())

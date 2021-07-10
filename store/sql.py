@@ -35,6 +35,7 @@ def insert_ts013_order_item(conn: Connection, order_name: str, order_type: str, 
             "INSERT INTO  ts013_orders(order_no, order_type, finished_product_no, schedule_date, workcenter) VALUES (?,?,?, ?, ?)",
             (order_name, order_type, finished_product, order_schedule_time, workcenter), )
         ret = cr.lastrowid
+        conn.commit()
     except IntegrityError as e:
         logger.error(f'insert_ts013_order_item错误: {e}')
         return 0

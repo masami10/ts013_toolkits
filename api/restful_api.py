@@ -41,18 +41,30 @@ def request_mom_data(full_url, data: str) -> Tuple[bool, str]:
         return True, "调用接口成功: {}".format(resp.text)
 
 
-def request_get_tool_info_stop(retry_state):
+def request_stop(retry_state):
     if isinstance(retry_state.outcome, ValueError) or retry_state.attempt_number >= 3:
         return True
     else:
         return False
 
 
-@retry(stop=request_get_tool_info_stop, wait=wait_random_exponential(multiplier=0.5, min=2, max=5), reraise=True,
+@retry(stop=request_stop, wait=wait_random_exponential(multiplier=0.5, min=2, max=5), reraise=True,
        after=after_log(_logger, logging.INFO))
 def request_get_tool_info(full_url: str, product_no: str) -> Tuple[bool, Response]:
     url = f'{full_url}/{product_no}'
     resp = requests.get(url=url, timeout=2)
+    if resp.status_code != HTTPStatus.OK:
+        return False, resp
+    else:
+        return True, resp
+
+
+@retry(stop=request_stop, wait=wait_random_exponential(multiplier=0.5, min=5, max=20), reraise=True,
+       after=after_log(_logger, logging.INFO))
+def request_get_last_one_week_orders(full_url: str, workcenter_code: str) -> Tuple[bool, Response]:
+    url = f'{full_url}'
+    params = {'workcenter': workcenter_code}
+    resp = requests.get(url=url, params=params, timeout=10)
     if resp.status_code != HTTPStatus.OK:
         return False, resp
     else:

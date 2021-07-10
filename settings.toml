@@ -1,9 +1,9 @@
-ORDERURL = "http://192.168.3.23"
+ORDERURL = "http://172.27.45.78:8069/ts013/workorders"
 MOMURL = "http://10.220.29.139/Apriso/WebServices/Public/MOM_PeripheralSystem_InspectionInfo.svc?wsdl"
 DEVICE_IP = "192.168.3.100"
 DEVICE_PORT = "3000"
 OPERATIONURL = "http://172.23.174.140:8069/ts013/get_tools_info"
-WORKCENTER = "13213"
+WORKCENTER = "TS301107020201"
 [[TOOLS]]
 toolName = "123"
 toolClassificationCode = "345123"

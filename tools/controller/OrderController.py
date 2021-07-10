@@ -6,10 +6,14 @@ from ui.toolkit import Ui_MainWindow
 from PyQt5.QtWidgets import QRadioButton
 from sqlite3 import Connection
 from store.sql import query_ts013_today_orders, query_ts013_order_via_fuzzy_code, \
-    query_ts013_local_workcenter_today_orders
+    query_ts013_local_workcenter_today_orders, insert_ts013_order_item
 from store.store import StorageData
 from store.types import MOMOrder
 from store.config import Config
+from api.restful_api import request_get_last_one_week_orders
+from http import HTTPStatus
+from typing import Optional, Dict
+from transport.constants import local_datetime_to_utc
 
 
 def select_tool_checkbox(order, on_select):
@@ -42,6 +46,7 @@ class OrderController(QtCore.QObject):
         self._selected_orders = []
         ui: Ui_MainWindow = self.window.ui
         ui.load_order_btn.clicked.connect(self.load_today_orders)
+        ui.load_server_order_btn.clicked.connect(self.load_last_one_week_orders)
         ui.filter_workcenter_btn.clicked.connect(self.load_local_today_orders)
         ui.QueryOrderButton.clicked.connect(self.query_orders_via_code)
         ui.CancelQueryButton.clicked.connect(self.load_all_orders)
@@ -71,6 +76,34 @@ class OrderController(QtCore.QObject):
             '订单号': order_no_list,
         })
         self.render()
+
+    def load_last_one_week_orders(self):
+        try:
+            success, resp = request_get_last_one_week_orders(self._config.get_order_url, self._config.workCenter)
+            if not success:
+                msg = "request_get_last_one_week_orders 调用接口失败: {}".format(resp.text)
+                raise Exception(msg)
+            data = resp.json()
+            if data['status_code'] != HTTPStatus.OK:
+                msg = "request_get_last_one_week_orders 调用接口失败: {}".format(resp.text)
+                raise Exception(msg)
+            orders: Optional[List] = data.get('msg', [])
+            if not orders:
+                return
+            o: Dict
+            for o in orders:
+                order_schedule_time = o.get('order_schedule_time')
+                if order_schedule_time:
+                    o.update({
+                        'order_schedule_time': local_datetime_to_utc(order_schedule_time)
+                    })
+                id = insert_ts013_order_item(self._db_connect, **o)
+                if id:
+                    self.notify.info(f"订单: {o.get('order_name')}插入数据库成功")
+                else:
+                    self.notify.info(f"订单: {o.get('order_name')}插入数据库失败")
+        except Exception as e:
+            raise e
 
     def load_today_orders(self):
         orders = query_ts013_today_orders(self._db_connect)

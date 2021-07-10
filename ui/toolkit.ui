@@ -212,6 +212,13 @@
                     </widget>
                    </item>
                    <item>
+                    <widget class="QPushButton" name="load_server_order_btn">
+                     <property name="text">
+                      <string>同步MES服务器订单</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
                     <widget class="QPushButton" name="filter_workcenter_btn">
                      <property name="text">
                       <string>本工位当日订单</string>
@@ -221,7 +228,7 @@
                    <item>
                     <widget class="QPushButton" name="load_order_btn">
                      <property name="text">
-                      <string>同步当日订单</string>
+                      <string>同步本地当日订单</string>
                      </property>
                      <property name="flat">
                       <bool>false</bool>
