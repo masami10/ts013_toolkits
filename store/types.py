@@ -7,7 +7,7 @@ config = Config()
 
 
 class MOMOrder(object):
-    def __init__(self, orderNo: str, orderType: str, partNo: str, workCenter: str = config.workCenter):
+    def __init__(self, orderNo: str, orderType: str, partNo: str, workCenter: str = config.workCenters[0]):
         self.wipOrderNo = orderNo  # 订单号
         self.wipOrderType = orderType  # 订单类型
         self.partName = partNo  # 产成品料号

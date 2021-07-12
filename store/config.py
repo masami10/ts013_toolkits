@@ -45,8 +45,14 @@ class Config(object):
         self.save_config()
 
     @property
-    def workCenter(self):
-        return self.get_config('workCenter', 'Dummy Workcenter')
+    def workCenters(self):
+        data = self.get_config('workCenter', '')
+        return data.split(',') or ['Dummy Workcenter']
+
+    @property
+    def rawWorkCenters(self):
+        data = self.get_config('workCenter', 'Dummy Workcenter')
+        return data
 
     def del_tool_config(self, tool_inspect_code: str):
         tool_config = self.tools_config

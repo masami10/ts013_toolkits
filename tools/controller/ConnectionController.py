@@ -16,7 +16,7 @@ class ConnectionController:
             'orderUrl': self._config.get_config('orderUrl'),
             'momUrl': self._config.get_config('momUrl'),
             'operationUrl': self._config.get_config('operationUrl'),
-            'workCenter': self._config.get_config('workCenter'),
+            'workCenter': self._config.rawWorkCenters,
         }
 
     def on_config_input(self, key, value):

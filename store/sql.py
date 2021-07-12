@@ -28,7 +28,7 @@ def query_calibration_id_via_identity(conn: Connection, identity: str) -> int:
 
 
 def insert_ts013_order_item(conn: Connection, order_name: str, order_type: str, order_schedule_time: datetime,
-                            finished_product: str, workcenter: str = glb_config.workCenter) -> int:
+                            finished_product: str, workcenter: str = glb_config.workCenters[0]) -> int:
     cr = conn.cursor()
     try:
         cr.execute(
@@ -53,10 +53,10 @@ def query_ts013_today_orders(conn: Connection) -> List[MOMOrder]:
 
 def query_ts013_local_workcenter_today_orders(conn: Connection) -> List[MOMOrder]:
     prev = local_datetime_to_utc(local_date_from_str())
-    workcenter = glb_config.workCenter
+    workcenters = glb_config.workCenters
     nn = local_datetime_to_utc(tomorrow())
     results = query_ts013_order_via_schedule_date(conn, prev, nn)
-    rs = list(filter(lambda s: s.workCenter == workcenter, results))
+    rs = list(filter(lambda s: s.workCenter in workcenters, results))
     return rs
 
 

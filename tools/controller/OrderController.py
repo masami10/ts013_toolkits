@@ -79,29 +79,31 @@ class OrderController(QtCore.QObject):
 
     def load_last_one_week_orders(self):
         try:
-            success, resp = request_get_last_one_week_orders(self._config.get_order_url, self._config.workCenter)
-            if not success:
-                msg = "request_get_last_one_week_orders 调用接口失败: {}".format(resp.text)
-                raise Exception(msg)
-            data = resp.json()
-            if data['status_code'] != HTTPStatus.OK:
-                msg = "request_get_last_one_week_orders 调用接口失败: {}".format(resp.text)
-                raise Exception(msg)
-            orders: Optional[List] = data.get('msg', [])
-            if not orders:
-                return
-            o: Dict
-            for o in orders:
-                order_schedule_time = o.get('order_schedule_time')
-                if order_schedule_time:
-                    o.update({
-                        'order_schedule_time': local_datetime_to_utc(order_schedule_time)
-                    })
-                id = insert_ts013_order_item(self._db_connect, **o)
-                if id:
-                    self.notify.info(f"订单: {o.get('order_name')}插入数据库成功")
-                else:
-                    self.notify.info(f"订单: {o.get('order_name')}插入数据库失败")
+            workcenters = self._config.workCenters or []
+            for workcenter in workcenters:
+                success, resp = request_get_last_one_week_orders(self._config.get_order_url, workcenter)
+                if not success:
+                    msg = "request_get_last_one_week_orders 调用接口失败: {}".format(resp.text)
+                    raise Exception(msg)
+                data = resp.json()
+                if data['status_code'] != HTTPStatus.OK:
+                    msg = "request_get_last_one_week_orders 调用接口失败: {}".format(resp.text)
+                    raise Exception(msg)
+                orders: Optional[List] = data.get('msg', [])
+                if not orders:
+                    return
+                o: Dict
+                for o in orders:
+                    order_schedule_time = o.get('order_schedule_time')
+                    if order_schedule_time:
+                        o.update({
+                            'order_schedule_time': local_datetime_to_utc(order_schedule_time)
+                        })
+                    id = insert_ts013_order_item(self._db_connect, **o)
+                    if id:
+                        self.notify.info(f"订单: {o.get('order_name')}插入数据库成功")
+                    else:
+                        self.notify.info(f"订单: {o.get('order_name')}插入数据库失败")
         except Exception as e:
             raise e
 
