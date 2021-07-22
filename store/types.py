@@ -25,6 +25,7 @@ class MOMOrder(object):
     def dict(self):
         ret = self.__dict__
         try:
+            ret['partName'] = ''  # 部件名称必须为空
             ret.pop('toolTorqueInfo')
             ret.pop('workCenter')
         finally:
