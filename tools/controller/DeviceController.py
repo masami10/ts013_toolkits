@@ -44,6 +44,7 @@ class DeviceController:
         self.window.device_config_group.inputChanged.connect(self.on_config_input)
         self.window.ui.ClearResultsButton.clicked.connect(self.clear_results)
         self.window.closeSignal.connect(self.device_disconnect)
+        self._client = None
         self.render(False)
         # self.device_connect()
 
@@ -112,10 +113,14 @@ class DeviceController:
         }
 
     def _start_client(self):
+        if self._client:
+            self.device_disconnect()
+            self.notify.info('正在重新连接...')
         config = self.get_client_config()
         if not is_config_valid(config):
             raise Exception('TCP配置错误')
         self.notify.info('正在配置客户端...')
+
         self._client = TcpClient(**config)
         self.notify.info('正在绑定结果处理程序...')
         self._client.set_handler(self.handle_result)
@@ -127,6 +132,7 @@ class DeviceController:
 
     def _stop_client(self):
         self._client.stop()
+        self._client = None
 
     def device_connect(self):
         try:

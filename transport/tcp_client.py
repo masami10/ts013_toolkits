@@ -21,26 +21,34 @@ class TcpClient(object):
         self._name = name
         self._newline = newline
         self.thread: Optional[threading.Thread] = None
-        self._lock = threading.RLock()
+        self._lock = threading.Lock()
         self.handler: Optional[Callable[[str], None]] = None
         self._server_addr = (ip, int(port))
         self._client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     def connect(self, on_start, notify):
-        if not self._server_addr:
-            raise Exception('Server Address Is Empty')
-        if not self._client:
-            raise Exception('Client Is Empty')
-        if self.connected:
-            raise Exception('连接已存在')
-        if ENV_KEEPALIVE_ENABLE and platform.system() == 'Windows':
-            self._client.ioctl(socket.SIO_KEEPALIVE_VALS, (1, 5000, 1000))  # 正常连接时候5s一次，没有的时候1秒一次，最多5次
-        self._client.connect(self._server_addr)
-        self.connected = True
-        notify.info("TCP 客户端线程打开")
-        on_start(True)
-        self.started = True
-        self.run()
+        self._lock.acquire()
+        try:
+            if not self._server_addr:
+                raise Exception('Server Address Is Empty')
+            if not self._client:
+                raise Exception('Client Is Empty')
+            if self.connected:
+                raise Exception('连接已存在')
+            if ENV_KEEPALIVE_ENABLE and platform.system() == 'Windows':
+                self._client.ioctl(socket.SIO_KEEPALIVE_VALS, (1, 5000, 1000))  # 正常连接时候5s一次，没有的时候1秒一次，最多5次
+            self._client.connect(self._server_addr)
+            self.connected = True
+            notify.info("TCP 客户端线程打开")
+            on_start(True)
+            self.started = True
+        finally:
+            self._lock.release()
+        try:
+            self.run()
+        except Exception as e:
+            notify.error(e)
+
 
     def disconnect(self):
         if not self._client:
@@ -49,8 +57,7 @@ class TcpClient(object):
         self.connected = False
 
     def set_handler(self, handler: Callable[[str], None]):
-        with self._lock:
-            self.handler = handler
+        self.handler = handler
 
     def run(self):
         with self._client.makefile('r', encoding='utf-8', newline=self._newline) as f:
@@ -73,7 +80,11 @@ class TcpClient(object):
                 line = line.split(self._newline)[0]
                 logger.debug(f"接收到数据{line}")
                 if self.handler:
-                    self.handler(line)
+                    self._lock.acquire()
+                    try:
+                        self.handler(line)
+                    finally:
+                        self._lock.release()
         f.close()
 
     def _do_start(self, on_start, notify):
@@ -83,6 +94,9 @@ class TcpClient(object):
         self.thread.start()
 
     def start(self, on_start, notify):
+        if self.connected:
+            notify.info('tcp已连接')
+            return
         self.on_client_status = on_start
         self._do_start(on_start, notify)
 
