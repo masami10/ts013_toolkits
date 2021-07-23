@@ -85,7 +85,7 @@ class TcpClient(object):
                         self.handler(line)
                     finally:
                         self._lock.release()
-        f.close()
+        # f.close()
 
     def _do_start(self, on_start, notify):
         notify.info("TCP 客户端启动中...")

@@ -135,7 +135,7 @@ class ToolkitTable(ToolKitMixin, QWidget):
         table.setHorizontalHeaderLabels(table_headers)
         header = table.horizontalHeader()
         header.setDefaultAlignment(Qt.AlignCenter)
-        header.setStyleSheet("background-color: gray")
+        # header.setStyleSheet("background-color: gray")
         header.setSectionResizeMode(QHeaderView.Stretch)  # 均分显示
         header.setVisible(True)
 
