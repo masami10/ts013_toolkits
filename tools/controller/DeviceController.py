@@ -46,7 +46,7 @@ class DeviceController:
         self.window.closeSignal.connect(self.device_disconnect)
         self._client = None
         self.render(False)
-        # self.device_connect()
+        self.device_connect()
 
     @property
     def config(self):
