@@ -116,7 +116,7 @@ class ToolsController:
             'RFID': list(self.content['toolRfid']),
             '动作': list(map(lambda tool: remove_tool_button(tool, self.remove_tool), tools))
         })
-        self.window.tools_config_table.render_table(content)
+        self.window.tools_config_table.table_render_signal.emit(content)
         table: QTableWidget = self.window.tools_config_table
         for row in range(len(tools)):
             table.setRowHeight(row, 50)
@@ -132,7 +132,7 @@ class ToolsController:
             '扭矩值': list(self.content_current_order['torque']),
             '选中': list(map(lambda tool: select_tool_radio(tool, self.render_tool_detail), zipped))
         })
-        self.window.tools_table.render_table(content)
+        self.window.tools_table.table_render_signal.emit(content)
         table = self.window.tools_table
         for row in range(len(tools)):
             table.setRowHeight(row, 50)

@@ -122,7 +122,7 @@ class OrderController(QtCore.QObject):
             '订单号': orders,
             '选中': list(map(lambda o: select_tool_checkbox(o, self.on_order_clicked), orders))
         })
-        self.window.order_table.render_table(content)
+        self.window.order_table.table_render_signal.emit(content)
         table = self.window.order_table
         for row in range(len(orders)):
             table.setRowHeight(row, 50)

@@ -15,6 +15,7 @@ empty_row_data = ["", ""]
 class ToolkitTable(ToolKitMixin, QWidget):
     cell_edited_signal = QtCore.pyqtSignal(list, int, int)
     row_clicked_signal = QtCore.pyqtSignal(str)
+    table_render_signal = QtCore.pyqtSignal(pd.DataFrame)
 
     def __init__(self, instance: QTableWidget, headers: List[str] = table_headers):
         ToolKitMixin.__init__(self, instance)
@@ -24,6 +25,8 @@ class ToolkitTable(ToolKitMixin, QWidget):
         self.table_instance.cellDoubleClicked.connect(self.set_active)
         self.table_instance.cellChanged.connect(self.on_cell_changed)
         self.table_instance.itemClicked.connect(self.on_item_clicked)
+        self.table_render_signal.connect(self.render_table)
+
 
     def set_active(self):
         self._active = True

@@ -166,4 +166,4 @@ class DeviceController:
             '扭矩值': list(self._results['torque']),
             '角度值': list(self._results['angle'])
         })
-        self.window.result_table.render_table(content)
+        self.window.result_table.table_render_signal.emit(content)
