@@ -114,7 +114,10 @@ class DeviceController:
 
     def _start_client(self):
         if self._client:
-            self.device_disconnect()
+            try:
+                self.device_disconnect()
+            except Exception as e:
+                self.notify.error(e)
             self.notify.info('正在重新连接...')
         config = self.get_client_config()
         if not is_config_valid(config):
