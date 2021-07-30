@@ -1,6 +1,6 @@
 from sqlite3 import Cursor, Connection, IntegrityError
 from datetime import datetime
-from transport.constants import tomorrow, local_date_from_str, local_datetime_to_utc
+from transport.constants import tomorrow, local_date_from_str, local_datetime_to_utc, months
 from typing import List
 from store.types import MOMOrder
 from store.config import Config
@@ -73,12 +73,14 @@ def ts013_model_2_order_obj(cr: Cursor) -> List[MOMOrder]:
 def query_ts013_order_via_fuzzy_code(conn: Connection, order_no: str = '') -> List[MOMOrder]:
     cr = conn.cursor()
     if not order_no:
-        query = f'''SELECT * FROM ts013_orders'''
+        prev = local_datetime_to_utc(months(3, prev=True))
+        nn = local_datetime_to_utc(tomorrow())
+        ret = query_ts013_order_via_schedule_date(conn, prev, nn)
     else:
         query = f'''SELECT * FROM ts013_orders WHERE order_no LIKE '%{order_no}%' '''
-    cr.execute(query)
-    ret = ts013_model_2_order_obj(cr)
-    cr.close()
+        cr.execute(query)
+        ret = ts013_model_2_order_obj(cr)
+        cr.close()
     return ret
 
 
