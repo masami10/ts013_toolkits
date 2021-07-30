@@ -156,8 +156,8 @@ class DeviceController:
 
     def render_results(self):
         content = pd.DataFrame({
-            '时间': list(self._results['time']),
-            '扭矩值': list(self._results['torque']),
-            '角度值': list(self._results['angle'])
+            '时间': list(self._results['time'])[-3:],
+            '扭矩值': list(self._results['torque'])[-3:],
+            '角度值': list(self._results['angle'])[-3:]
         })
         self.window.result_table.render_table(content)

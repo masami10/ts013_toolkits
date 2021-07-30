@@ -60,9 +60,13 @@ class ToolsTorqueInfo(ToolsInfo):
     def __init__(self, *args, **kwargs):
         super(ToolsTorqueInfo, self).__init__(*args, **kwargs)
         self.torque = 0.0
+        self.pset = 0
 
     def update_torque(self, torque: float):
         self.torque = torque
+
+    def update_pset(self, pset: str):
+        self.pset = pset
 
     @property
     def to_dict(self):

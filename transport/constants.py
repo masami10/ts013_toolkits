@@ -44,6 +44,15 @@ def tomorrow() -> str:
     return tomorrow_utc.astimezone(TS013_TZ).strftime(DEFAULT_DATE_FORMAT)
 
 
+def months(d, prev=False) -> str:
+    delta = int(d * 4)
+    if prev:
+        tomorrow_utc = datetime.today() - timedelta(weeks=delta)
+    else:
+        tomorrow_utc = datetime.today() + timedelta(weeks=delta)
+    return tomorrow_utc.astimezone(TS013_TZ).strftime(DEFAULT_DATE_FORMAT)
+
+
 def today() -> str:
     today_utc = datetime.today()
     if isinstance(today_utc, str):

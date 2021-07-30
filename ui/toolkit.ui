@@ -302,6 +302,11 @@
                      </column>
                      <column>
                       <property name="text">
+                       <string>程序号</string>
+                      </property>
+                     </column>
+                     <column>
+                      <property name="text">
                        <string>扭矩值</string>
                       </property>
                      </column>
@@ -450,6 +455,16 @@
                    </property>
                   </widget>
                  </item>
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="minTorqueLabel">
+                   <property name="text">
+                    <string>最小扭矩</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QLineEdit" name="minTorqueEdit"/>
+                 </item>
                 </layout>
                </item>
                <item>
@@ -472,6 +487,16 @@
                  </item>
                  <item row="0" column="1">
                   <widget class="QLineEdit" name="TargetTorqueEdit"/>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="MaxTorqueLabel">
+                   <property name="text">
+                    <string>最大扭矩</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QLineEdit" name="MaxTorqueEdit"/>
                  </item>
                 </layout>
                </item>

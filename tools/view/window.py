@@ -61,6 +61,8 @@ class ToolKitWindow(ToolKitMixin, QtWidgets.QWidget):
         self._input_group = InputGroup.InputGroup({
             'orderCode': self.ui.OrderCodeEdit,
             'targetTorque': self.ui.TargetTorqueEdit,
+            'minTorque': self.ui.minTorqueEdit,
+            'maxTorque': self.ui.MaxTorqueEdit,
             'firstCheckCard': self.ui.FirstCheckCardEdit,
             'recheckCard': self.ui.RecheckCardEdit,
             'FirstCheckName': self.ui.FirstCheckNameEdit,

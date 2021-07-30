@@ -71,7 +71,8 @@ class ToolsController:
             'toolClassificationCode': [],
             'toolName': [],
             'toolSpecificationType': [],
-            'torque': []
+            'torque': [],
+            'pset': []
         })
         select_orders = self._store.selected_orders
         if not select_orders:
@@ -129,6 +130,7 @@ class ToolsController:
             return
         content = pd.DataFrame({
             '定检编号': tools,
+            '程序号': list(self.content_current_order['pset']),
             '扭矩值': list(self.content_current_order['torque']),
             '选中': list(map(lambda tool: select_tool_radio(tool, self.render_tool_detail), zipped))
         })
@@ -150,10 +152,17 @@ class ToolsController:
         tools = self.content
         tools = tools.set_index('toolFixedInspectionCode')
         tool, torque = t
+        fTorque = 0.0
+        if isinstance(torque, str):
+            fTorque = float(torque)
+        minTorque = round(fTorque * 0.975, 2)
+        maxTorque = round(fTorque * 1.025, 2)
         tool_selected = dict(tools.loc[tool])
         self.window.input_group.set_texts({
             **tool_selected,
             "targetTorque": torque,
+            "minTorque": str(minTorque),
+            "maxTorque": str(maxTorque),
             'toolFixedInspectionCode': tool
         })
         self._store.set_selected_tool(tool)

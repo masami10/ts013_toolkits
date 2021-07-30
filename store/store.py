@@ -146,7 +146,8 @@ class StorageData(object):
                 tools = []
                 for v in val:
                     t, tool_inspect_code = v.split(']')
-                    torque = float(t[1:])
+                    t_torque, pset = t.split(',')
+                    torque = float(t_torque[1:])
                     if tool_inspect_code not in cache.keys():
                         cache.update({
                             tool_inspect_code: []
@@ -162,6 +163,7 @@ class StorageData(object):
                         continue
                     tti = ToolsTorqueInfo(**ti.__dict__)
                     tti.update_torque(torque)
+                    tti.update_pset(pset)
                     tools.append(tti)
                 order.toolTorqueInfo.update({key: tools})
         except Exception as e:
