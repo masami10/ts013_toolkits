@@ -21,6 +21,7 @@ class ToolkitNotify:
         ss = "<span style=\" font-size:16pt; font-weight:600; color:#{};\" > {} </span>".format(color, data)
         for instance in self.qt_instances:
             instance.append(ss)
+            instance.verticalScrollBar().setValue(instance.verticalScrollBar().maximum())
 
     def error(self, content: str):
         color = 'e33371'

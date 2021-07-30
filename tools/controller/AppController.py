@@ -145,13 +145,19 @@ class AppController:
             self.app.setStyleSheet(stylesheet + file.read().format(**os.environ))
 
     def run_app(self):
-        loop = QEventLoop()
-        asyncio.set_event_loop(loop)
-        # Show form
-        self.window.show()
+        ret = 0
+        try:
+            loop = QEventLoop()
+            asyncio.set_event_loop(loop)
+            # Show form
+            self.window.show()
 
-        # Run the program
-        sys.exit(self.app.exec())
+            # Run the program
+            ret = self.app.exec()
+        except Exception as e:
+            self.notify.error(e)
+            self._device_controller.device_disconnect()
+        sys.exit(ret)
 
     def connect_signals(self):
         window = self.window
