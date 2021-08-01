@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1001</width>
-    <height>525</height>
+    <width>1054</width>
+    <height>535</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -62,29 +62,38 @@
        </attribute>
        <layout class="QHBoxLayout" name="horizontalLayout_17">
         <property name="spacing">
-         <number>3</number>
+         <number>0</number>
         </property>
         <property name="leftMargin">
-         <number>3</number>
+         <number>0</number>
         </property>
         <property name="topMargin">
-         <number>3</number>
+         <number>0</number>
         </property>
         <property name="rightMargin">
-         <number>3</number>
+         <number>0</number>
         </property>
         <property name="bottomMargin">
-         <number>3</number>
+         <number>0</number>
         </property>
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_8" stretch="0,3">
+          <property name="spacing">
+           <number>2</number>
+          </property>
           <property name="sizeConstraint">
            <enum>QLayout::SetDefaultConstraint</enum>
           </property>
           <item>
            <layout class="QVBoxLayout" name="verticalLayout_8">
+            <property name="spacing">
+             <number>2</number>
+            </property>
             <item>
              <layout class="QHBoxLayout" name="horizontalLayout_13">
+              <property name="spacing">
+               <number>3</number>
+              </property>
               <item>
                <layout class="QVBoxLayout" name="left3">
                 <property name="spacing">
@@ -100,7 +109,7 @@
                   </property>
                   <layout class="QVBoxLayout" name="verticalLayout_9">
                    <property name="spacing">
-                    <number>3</number>
+                    <number>0</number>
                    </property>
                    <property name="leftMargin">
                     <number>0</number>
@@ -116,8 +125,14 @@
                    </property>
                    <item>
                     <layout class="QFormLayout" name="formLayout">
+                     <property name="labelAlignment">
+                      <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+                     </property>
                      <property name="horizontalSpacing">
-                      <number>3</number>
+                      <number>0</number>
+                     </property>
+                     <property name="verticalSpacing">
+                      <number>0</number>
                      </property>
                      <item row="0" column="0">
                       <widget class="QLabel" name="QueryOrderCodeLabel">
@@ -157,6 +172,9 @@
                   <property name="title">
                    <string> 订单</string>
                   </property>
+                  <property name="flat">
+                   <bool>true</bool>
+                  </property>
                   <layout class="QVBoxLayout" name="verticalLayout_5">
                    <property name="spacing">
                     <number>3</number>
@@ -190,8 +208,11 @@
                      <attribute name="horizontalHeaderDefaultSectionSize">
                       <number>120</number>
                      </attribute>
+                     <attribute name="horizontalHeaderHighlightSections">
+                      <bool>false</bool>
+                     </attribute>
                      <attribute name="horizontalHeaderStretchLastSection">
-                      <bool>true</bool>
+                      <bool>false</bool>
                      </attribute>
                      <attribute name="verticalHeaderVisible">
                       <bool>false</bool>
@@ -241,13 +262,48 @@
                </layout>
               </item>
               <item>
-               <layout class="QVBoxLayout" name="Left_2" stretch="0">
+               <layout class="QVBoxLayout" name="Left_2" stretch="0,0">
                 <property name="spacing">
-                 <number>3</number>
+                 <number>2</number>
                 </property>
                 <property name="sizeConstraint">
                  <enum>QLayout::SetFixedSize</enum>
                 </property>
+                <item>
+                 <widget class="QWidget" name="HomeDeviceConnStatusWidget" native="true">
+                  <layout class="QHBoxLayout" name="horizontalLayout_6">
+                   <property name="spacing">
+                    <number>0</number>
+                   </property>
+                   <property name="leftMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="topMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="rightMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="bottomMargin">
+                    <number>0</number>
+                   </property>
+                   <item>
+                    <widget class="QLabel" name="HomeDeviceConnStatusLabel">
+                     <property name="text">
+                      <string> 标定设备连接状态</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QPushButton" name="HomeDeviceConnStatusButton">
+                     <property name="text">
+                      <string>已连接</string>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
                 <item>
                  <widget class="QGroupBox" name="groupBox_3">
                   <property name="title">
@@ -255,7 +311,7 @@
                   </property>
                   <layout class="QVBoxLayout" name="verticalLayout_7">
                    <property name="spacing">
-                    <number>3</number>
+                    <number>0</number>
                    </property>
                    <property name="leftMargin">
                     <number>0</number>
@@ -276,6 +332,12 @@
                        <width>240</width>
                        <height>0</height>
                       </size>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true"/>
+                     </property>
+                     <property name="showGrid">
+                      <bool>true</bool>
                      </property>
                      <attribute name="horizontalHeaderCascadingSectionResizes">
                       <bool>true</bool>
@@ -339,55 +401,13 @@
           <item>
            <layout class="QVBoxLayout" name="Right_2" stretch="0,0,0,0,0,2,0">
             <property name="spacing">
-             <number>3</number>
+             <number>2</number>
             </property>
             <item>
              <layout class="QHBoxLayout" name="horizontalLayout_5">
               <property name="spacing">
-               <number>3</number>
+               <number>2</number>
               </property>
-              <item>
-               <layout class="QHBoxLayout" name="HomeDeviceConnStatusLayout">
-                <property name="spacing">
-                 <number>3</number>
-                </property>
-                <item>
-                 <widget class="QWidget" name="HomeDeviceConnStatusWidget" native="true">
-                  <layout class="QHBoxLayout" name="horizontalLayout_6">
-                   <property name="spacing">
-                    <number>0</number>
-                   </property>
-                   <property name="leftMargin">
-                    <number>0</number>
-                   </property>
-                   <property name="topMargin">
-                    <number>0</number>
-                   </property>
-                   <property name="rightMargin">
-                    <number>0</number>
-                   </property>
-                   <property name="bottomMargin">
-                    <number>0</number>
-                   </property>
-                   <item>
-                    <widget class="QLabel" name="HomeDeviceConnStatusLabel">
-                     <property name="text">
-                      <string> 标定设备连接状态</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QPushButton" name="HomeDeviceConnStatusButton">
-                     <property name="text">
-                      <string>已连接</string>
-                     </property>
-                    </widget>
-                   </item>
-                  </layout>
-                 </widget>
-                </item>
-               </layout>
-              </item>
               <item>
                <widget class="QLabel" name="timeLabel">
                 <property name="styleSheet">
@@ -770,7 +790,7 @@
               </property>
               <layout class="QHBoxLayout" name="horizontalLayout_11">
                <property name="spacing">
-                <number>3</number>
+                <number>2</number>
                </property>
                <property name="leftMargin">
                 <number>0</number>
@@ -853,10 +873,10 @@
                <bool>true</bool>
               </attribute>
               <attribute name="horizontalHeaderDefaultSectionSize">
-               <number>200</number>
+               <number>29</number>
               </attribute>
               <attribute name="horizontalHeaderStretchLastSection">
-               <bool>true</bool>
+               <bool>false</bool>
               </attribute>
               <column>
                <property name="text">
@@ -907,6 +927,21 @@
         <string>设置</string>
        </attribute>
        <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="3,1">
+        <property name="spacing">
+         <number>2</number>
+        </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_2">
           <item>

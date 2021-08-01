@@ -68,3 +68,16 @@ QLineEdit:disabled{{
   border-color: #dc3545;
 }}
 
+QGroupBox{{
+  padding-left:2px;
+  padding-right:2px;
+  padding-bottom:2px;
+}}
+
+QGroupBox::title  {{
+    subcontrol-origin: margin;
+}}
+
+QHeaderView::section {{
+    padding:0px;
+}}

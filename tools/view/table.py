@@ -25,6 +25,8 @@ class ToolkitTable(ToolKitMixin, QWidget):
         self.table_instance.cellDoubleClicked.connect(self.set_active)
         self.table_instance.cellChanged.connect(self.on_cell_changed)
         self.table_instance.itemClicked.connect(self.on_item_clicked)
+        self.table_instance.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self.table_instance.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.table_render_signal.connect(self.render_table)
 
 
