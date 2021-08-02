@@ -14,6 +14,7 @@ from api.restful_api import request_get_last_one_week_orders
 from http import HTTPStatus
 from typing import Optional, Dict
 from transport.constants import local_datetime_to_utc
+from tools.model.OrdersModel import orders_model_instance as orders_model, OrdersModel
 
 
 def select_tool_checkbox(order, on_select):
@@ -29,8 +30,6 @@ def select_tool_checkbox(order, on_select):
 
 class OrderController(QtCore.QObject):
     selectedOrderChanged = QtCore.pyqtSignal(list)
-    _content: pd.DataFrame
-    _selected_orders: List[str]
 
     def __init__(self, window: main_window.ToolKitWindow, db_connect: Connection, store: StorageData, config: Config):
         super(OrderController, self).__init__()
@@ -39,11 +38,7 @@ class OrderController(QtCore.QObject):
         self._store = store
         self._config = config
         self.notify = self.window.notify_box
-        self._content = pd.DataFrame({
-            '订单号': [],
-            '已选择': []
-        })
-        self._selected_orders = []
+        orders_model.set_orders([])
         ui: Ui_MainWindow = self.window.ui
         ui.load_order_btn.clicked.connect(self.load_today_orders)
         ui.load_server_order_btn.clicked.connect(self.load_last_one_week_orders)
@@ -55,26 +50,17 @@ class OrderController(QtCore.QObject):
     def query_orders_via_code(self):
         order_no = self.window.ui.QueryOrderCodeEdit.text()
         orders = query_ts013_order_via_fuzzy_code(self._db_connect, order_no)
-        order_no_list = [o.wipOrderNo for o in orders]
-        self._content = pd.DataFrame({
-            '订单号': order_no_list,
-        })
+        orders_model.set_orders(orders)
         self.render()
 
     def load_all_orders(self):
         orders = query_ts013_order_via_fuzzy_code(self._db_connect, '')
-        order_no_list = [o.wipOrderNo for o in orders]
-        self._content = pd.DataFrame({
-            '订单号': order_no_list,
-        })
+        orders_model.set_orders(orders)
         self.render()
 
     def load_local_today_orders(self):
         orders = query_ts013_local_workcenter_today_orders(self._db_connect)
-        order_no_list = [o.wipOrderNo for o in orders]
-        self._content = pd.DataFrame({
-            '订单号': order_no_list,
-        })
+        orders_model.set_orders(orders)
         self.render()
 
     def load_last_one_week_orders(self):
@@ -109,31 +95,30 @@ class OrderController(QtCore.QObject):
 
     def load_today_orders(self):
         orders = query_ts013_today_orders(self._db_connect)
-        order_no_list = [o.wipOrderNo for o in orders]
-        self._content = pd.DataFrame({
-            '订单号': order_no_list,
-        })
+        orders_model.set_orders(orders)
         self.render()
 
     def render(self):
-        orders = list(self._content['订单号'])
-
+        orders = orders_model.order_list
+        order_list_info: pd.DataFrame = orders_model.order_list_info
         content = pd.DataFrame({
             '订单号': orders,
+            '标定状态': list(
+                map(lambda info: OrdersModel.check_status(info.get('first_checked'), info.get('rechecked')),
+                    order_list_info.to_dict('records')
+                    )
+            ),
             '选中': list(map(lambda o: select_tool_checkbox(o, self.on_order_clicked), orders))
         })
-        self.window.order_table.table_render_signal.emit(content)
         table = self.window.order_table
+        table.table_render_signal.emit(content)
         for row in range(len(orders)):
             table.setRowHeight(row, 50)
 
     def on_order_clicked(self, order_code: str):
-        if order_code in self._selected_orders:
-            self._selected_orders.remove(order_code)
-        else:
-            self._selected_orders = [order_code]  # 現在只能選擇一張訂單
+        orders_model.toggle_select_order(order_code)
 
-        orders: List[MOMOrder] = self._store.update_selected_orders(','.join(self._selected_orders))
+        orders: List[MOMOrder] = self._store.update_selected_orders(','.join(orders_model.selected_orders))
         try:
             for o in orders:
                 self._store.do_generate_tool_torque_info(self._config.get_tool_url, o)
@@ -143,5 +128,5 @@ class OrderController(QtCore.QObject):
             self.notify.error(e)
 
     def render_order_detail(self):
-        orders_content = ', '.join(self._selected_orders)
+        orders_content = ', '.join(orders_model.selected_orders)
         self.window.input_group.set_text('orderCode', orders_content)

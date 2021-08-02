@@ -26,7 +26,7 @@ from tools.model.InputModel import input_model_instance
 from store.sql import set_order_check_status
 from tools.model.CheckTypeModel import check_type_model_instance
 from tools.view.CheckTypeRadio import CheckTypeRadio
-
+from store.sql import DEFAULT_CONNECTION
 TRANSLATION_MAP = {
     'recheckResult': '复检结果',
     'firstCheckResult': '检验结果',
@@ -46,7 +46,7 @@ class AppController:
         # Create the application object
         self.app = QtWidgets.QApplication(sys.argv)
 
-        self._db_connect = sqlite3.connect(TS013_DB_NAME)
+        self._db_connect = DEFAULT_CONNECTION
 
         self._threads = []
         self._http_server = HttpServer()
@@ -115,8 +115,7 @@ class AppController:
             else:
                 self.notify.info(text)
                 set_order_check_status(
-                    self._db_connect,
-                    selected_orders,
+                    list(map(lambda o: o.wipOrderNo, selected_orders)),
                     is_first_check=check_type_model_instance.is_first_check
                 )
         except Exception as e:

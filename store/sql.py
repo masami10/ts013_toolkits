@@ -1,12 +1,26 @@
-from sqlite3 import Cursor, Connection, IntegrityError
+from sqlite3 import Cursor, Connection, IntegrityError, Row
 from datetime import datetime
 from transport.constants import tomorrow, local_date_from_str, local_datetime_to_utc, months
 from typing import List
 from store.types import MOMOrder
 from store.config import Config
 from loguru import logger
+from store.contants import TS013_DB_NAME
+import sqlite3
+import pandas as pd
 
 glb_config = Config()
+
+DEFAULT_CONNECTION = sqlite3.connect(TS013_DB_NAME)
+
+
+def with_connection(func):
+    def dec(*args, conn: Connection = None, **kwargs):
+        if not conn:
+            conn = DEFAULT_CONNECTION
+        return func(*args, conn=conn, **kwargs)
+
+    return dec
 
 
 def insert_ts013_tool_calibration_item(conn: Connection, identity: str) -> int:
@@ -60,12 +74,23 @@ def query_ts013_local_workcenter_today_orders(conn: Connection) -> List[MOMOrder
     return rs
 
 
+def row_keys_to_idxs(keys, key_list):
+    idxs = []
+    for key in keys:
+        if key not in key_list:
+            raise Exception('尝试获取错误的key: {}'.format(key))
+        idx = key_list.index(key)
+        idxs.append(idx)
+    return idxs
+
+
 def ts013_model_2_order_obj(cr: Cursor) -> List[MOMOrder]:
+    ks = list(map(lambda d: d[0], cr.description))
+    idxs = row_keys_to_idxs(['order_no', 'order_type', 'finished_product_no', 'workcenter'], ks)
     results = cr.fetchall()
     ret = []
     for r in results:
-        rid, create_at, workcenter, schedule_time, order_no, order_type, finished_product_no = r
-        m = MOMOrder(order_no, order_type, finished_product_no, workcenter)
+        m = MOMOrder(*list(map(lambda i: r[i], idxs)))
         ret.append(m)
     return ret
 
@@ -101,19 +126,41 @@ def query_ts013_order_via_schedule_date(conn: Connection, prev: datetime, next: 
     return ret
 
 
-def set_order_check_status(conn: Connection, order_nos, is_first_check=True, status=True):
+def result_to_dataframe(cr: Cursor) -> pd.DataFrame:
+    cols = list(map(lambda d: d[0], cr.description))
+    data = []
+    for row in cr.fetchall():
+        data.append([*row])
+    return pd.DataFrame(data=data, columns=cols)
+
+
+@with_connection
+def query_order_list_info(order_nos, conn: Connection = None) -> pd.DataFrame:
+    cr = conn.cursor()
+    cr.execute(f'''
+        SELECT order_no, first_checked, rechecked FROM ts013_orders where order_no in ({','.join(['?'] * len(order_nos))})
+    ''', order_nos)
+    df = result_to_dataframe(cr)
+    cr.close()
+    return df
+
+
+@with_connection
+def set_order_check_status(order_nos, conn: Connection = None, is_first_check=True, status=True):
     status_int = 1 if status else 0
     cr = conn.cursor()
     if is_first_check:
-        cr.execute('''
-        UPDATE table_name 
+        query = f'''
+        UPDATE ts013_orders 
         SET first_checked = ? 
-        WHERE order_no in (?);
-        ''', (status_int, order_nos), )
+        WHERE order_no in ({','.join(['?'] * len(order_nos))});
+        '''
+        cr.execute(query, (status_int, *order_nos), )
     else:
-        cr.execute('''
-            UPDATE table_name 
+        cr.execute(f'''
+            UPDATE ts013_orders 
             SET rechecked = ? 
-            WHERE order_no in (?);
-        ''', (status_int, order_nos), )
+            WHERE order_no in ({','.join(['?'] * len(order_nos))});
+        ''', (status_int, *order_nos), )
     cr.close()
+    conn.commit()
