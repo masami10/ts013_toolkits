@@ -6,6 +6,7 @@ import pandas as pd
 from loguru import logger
 from store.config import Config
 from store.store import StorageData
+from tools.model.InputModel import input_model_instance
 
 
 def is_config_valid(config):
@@ -100,7 +101,7 @@ class DeviceController:
                 'torque': [torque],
                 'angle': [angle],
                 'result': [result]
-            }), ignore_index=True)
+            }), ignore_index=True).tail(3)
             self._store.checkResult.update_measure(torque)  # 将扭矩值存储
             self.render_results()
         except Exception as e:
@@ -163,10 +164,26 @@ class DeviceController:
         self.window.DeviceConnStatusIndicator.set_success(status)
         self.window.HomeDeviceConnStatusIndicator.set_success(status)
 
+    @staticmethod
+    def is_result_nok(torque) -> bool:
+        max_torque = input_model_instance.get_input('maxTorque')
+        min_torque = input_model_instance.get_input('minTorque')
+        if max_torque is None and min_torque is None:
+            return False
+        if torque is None:
+            return True
+        if min_torque is not None and float(min_torque) > float(torque):
+            return True
+        if max_torque is not None and float(max_torque) < float(torque):
+            return True
+        return False
+
     def render_results(self):
+
         content = pd.DataFrame({
-            '时间': list(self._results['time'])[-3:],
-            '扭矩值': list(self._results['torque'])[-3:],
-            '角度值': list(self._results['angle'])[-3:]
+            '时间': list(self._results['time']),
+            '扭矩值': list(self._results['torque']),
+            '角度值': list(self._results['angle']),
+            'mark_error': list(map(self.is_result_nok, self._results['torque']))
         })
         self.window.result_table.table_render_signal.emit(content)

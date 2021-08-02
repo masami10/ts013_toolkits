@@ -6,7 +6,7 @@ from tools.view.mixin import ToolKitMixin
 from loguru import logger
 import numpy as np
 import pandas as pd
-from PyQt5 import QtCore
+from PyQt5 import QtCore, QtGui
 
 table_headers = ["编号", "选择"]
 empty_row_data = ["", ""]
@@ -16,6 +16,8 @@ class ToolkitTable(ToolKitMixin, QWidget):
     cell_edited_signal = QtCore.pyqtSignal(list, int, int)
     row_clicked_signal = QtCore.pyqtSignal(str)
     table_render_signal = QtCore.pyqtSignal(pd.DataFrame)
+
+    error_color = QtGui.QColor('#dc3545')
 
     def __init__(self, instance: QTableWidget, headers: List[str] = table_headers):
         ToolKitMixin.__init__(self, instance)
@@ -28,7 +30,6 @@ class ToolkitTable(ToolKitMixin, QWidget):
         self.table_instance.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.table_instance.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.table_render_signal.connect(self.render_table)
-
 
     def set_active(self):
         self._active = True
@@ -145,6 +146,9 @@ class ToolkitTable(ToolKitMixin, QWidget):
         header.setVisible(True)
 
     def render_table(self, table_content: pd.DataFrame):
+        mark_error = list(table_content.get('mark_error', []))
+        if 'mark_error' in table_content.columns:
+            table_content=table_content.drop(columns=['mark_error'])
         tTable = self.table_instance
         tTable.clearContents()
         self._headers = table_content.keys()
@@ -157,3 +161,12 @@ class ToolkitTable(ToolKitMixin, QWidget):
         tTable.setRowCount(ll)
         for row, dd in enumerate(render_list):
             self.set_table_row_item(row, dd)
+        if len(mark_error) > 0:
+            for row, should_mark_error in enumerate(mark_error):
+                if should_mark_error:
+                    self.set_error(row)
+
+    def set_error(self, row):
+        t_table = self.table_instance
+        for n in range(0, t_table.columnCount()):
+            t_table.item(row, n).setBackground(self.error_color)

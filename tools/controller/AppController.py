@@ -22,6 +22,7 @@ from transport.wsdl import WSDLClient
 from pprint import pformat
 from api.wsdl import publish_calibration_value_2_mom_wsdl
 from api.restful_api import request_mom_data
+from tools.model.InputModel import input_model_instance
 
 TRANSLATION_MAP = {
     'recheckResult': '复检结果',
@@ -52,8 +53,6 @@ class AppController:
         self.glb_storage.set_connection(self._db_connect)
         self.glb_storage.init_tools(self.glb_config)
 
-        self._cache_data = {"inputs": {}, "results": {}}  # input 和result缓存数据
-
         self._wsdl_client = WSDLClient(self._db_connect, self.glb_config.wsdl_base_url)
 
         # Create the form object
@@ -75,10 +74,10 @@ class AppController:
         try:
             msg = "提交标定数据"
             self.notify.info(msg)
-            inputs: dict = self._cache_data.get("inputs")
+            inputs: dict = input_model_instance.inputs
             for key, val in inputs.items():
                 self.glb_storage.update_inputs_data(key, val)
-            results: dict = self._cache_data.get("results")
+            results: dict = input_model_instance.results
             for key, val in results.items():
                 self.glb_storage.update_check_result_data(key, val)
 
@@ -174,8 +173,7 @@ class AppController:
 
     def on_input(self, key: str, value: Any):
         self.notify.debug('字段输入：{}，{}'.format(key, value))
-        self.update_inputs_cache_data(key, value)
-        # self.glb_storage.update_inputs_data(key, value)
+        input_model_instance.update_inputs_data(key, value)
 
     def on_result_success_changed(self, result_key: str, success: bool):
         lvl = 'info'
@@ -183,5 +181,5 @@ class AppController:
             lvl = 'error'
         m = getattr(self.notify, lvl, self.notify.info)
         m('结果变化：{}，{}'.format(get_translation(result_key), get_translation(str(success))))
-        self.update_results_cache_data(result_key, success)
+        input_model_instance.update_results_data(result_key, success)
         # self.glb_storage.update_check_result_data(result_key, success)  # 更新存储的数据
