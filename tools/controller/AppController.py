@@ -23,6 +23,9 @@ from pprint import pformat
 from api.wsdl import publish_calibration_value_2_mom_wsdl
 from api.restful_api import request_mom_data
 from tools.model.InputModel import input_model_instance
+from store.sql import set_order_check_status
+from tools.model.CheckTypeModel import check_type_model_instance
+from tools.view.CheckTypeRadio import CheckTypeRadio
 
 TRANSLATION_MAP = {
     'recheckResult': '复检结果',
@@ -62,7 +65,10 @@ class AppController:
         self._device_controller = DeviceController(self.window, self.glb_storage, self.glb_config)
         self._order_controller = OrderController(self.window, self._db_connect, self.glb_storage, self.glb_config)
         self._connection_controller = ConnectionController(self.window, self.glb_config)
-
+        self._check_type_radio = CheckTypeRadio(
+            self.window.ui.firstCheckRadio,
+            self.window.ui.recheckRadio
+        )
         self.window.ui.submit_btn.clicked.connect(self.on_result_submit)
 
         self.init_sqlite_db()
@@ -72,6 +78,8 @@ class AppController:
 
     def on_result_submit(self):
         try:
+            if not check_type_model_instance.did_set:
+                raise Exception('请选择标定类型！')
             msg = "提交标定数据"
             self.notify.info(msg)
             inputs: dict = input_model_instance.inputs
@@ -106,6 +114,11 @@ class AppController:
                 self.notify.error(text)
             else:
                 self.notify.info(text)
+                set_order_check_status(
+                    self._db_connect,
+                    selected_orders,
+                    is_first_check=check_type_model_instance.is_first_check
+                )
         except Exception as e:
             self.notify.error(e)
 
@@ -120,10 +133,26 @@ class AppController:
     def init_sqlite_db(self):
         if self._db_connect:
             cr = self._db_connect.cursor()
-            cr.execute(
-                '''CREATE TABLE IF NOT EXISTS ts013_wsdl(id INTEGER PRIMARY KEY AUTOINCREMENT, time TIMESTAMP DEFAULT CURRENT_TIMESTAMP, orders TEXT)''')
-            cr.execute(
-                '''CREATE TABLE IF NOT EXISTS ts013_orders(id INTEGER PRIMARY KEY AUTOINCREMENT, time TIMESTAMP DEFAULT CURRENT_TIMESTAMP, workcenter TEXT, schedule_date TIMESTAMP,order_no TEXT NOT NULL UNIQUE , order_type TEXT, finished_product_no TEXT)''')
+            cr.execute('''
+                CREATE TABLE IF NOT EXISTS ts013_wsdl(
+                    id INTEGER PRIMARY KEY AUTOINCREMENT, 
+                    time TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
+                    orders TEXT
+                )
+            ''')
+            cr.execute('''
+                CREATE TABLE IF NOT EXISTS ts013_orders(
+                    id INTEGER PRIMARY KEY AUTOINCREMENT, 
+                    time TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
+                    workcenter TEXT, 
+                    schedule_date TIMESTAMP,
+                    order_no TEXT NOT NULL UNIQUE , 
+                    order_type TEXT, 
+                    finished_product_no TEXT, 
+                    first_checked INTEGER, 
+                    rechecked INTEGER
+                )
+            ''')
             self._db_connect.commit()
             cr.close()
 
@@ -163,10 +192,15 @@ class AppController:
         ui = window.ui
         ### tab 1 曲线对比
         window.input_group.inputChanged.connect(self.on_input)
-        window.FirstCheckResultButton.successChanged.connect(self.on_result_success_changed)
-        window.RecheckResultButton.successChanged.connect(self.on_result_success_changed)
+        # window.FirstCheckResultButton.successChanged.connect(self.on_result_success_changed)
+        # window.RecheckResultButton.successChanged.connect(self.on_result_success_changed)
         ui.ToolsConfigAddButton.clicked.connect(self._tools_controller.add_tool)
         self._order_controller.selectedOrderChanged.connect(self._on_order_selected_change)
+        self._check_type_radio.checkTypeChanged.connect(self.set_check_type)
+
+    def set_check_type(self, is_first_check: bool):
+        self.notify.debug('设置检测类型为：{}'.format('初检' if is_first_check else '复检'))
+        check_type_model_instance.set_is_first_check(is_first_check)
 
     def _on_order_selected_change(self, orders: List[MOMOrder]):
         self._tools_controller.render_tools_pick_table()

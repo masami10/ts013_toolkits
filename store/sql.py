@@ -99,3 +99,21 @@ def query_ts013_order_via_schedule_date(conn: Connection, prev: datetime, next: 
     ret = ts013_model_2_order_obj(cr)
     cr.close()
     return ret
+
+
+def set_order_check_status(conn: Connection, order_nos, is_first_check=True, status=True):
+    status_int = 1 if status else 0
+    cr = conn.cursor()
+    if is_first_check:
+        cr.execute('''
+        UPDATE table_name 
+        SET first_checked = ? 
+        WHERE order_no in (?);
+        ''', (status_int, order_nos), )
+    else:
+        cr.execute('''
+            UPDATE table_name 
+            SET rechecked = ? 
+            WHERE order_no in (?);
+        ''', (status_int, order_nos), )
+    cr.close()

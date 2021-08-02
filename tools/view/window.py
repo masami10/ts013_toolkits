@@ -100,14 +100,14 @@ class ToolKitWindow(ToolKitMixin, QtWidgets.QWidget):
             fail_test='未连接',
             disabled=True
         )
-        self._FirstCheckResultButton = StatusIndicator.StatusIndicator(
-            self.ui.FirstCheckResultButton,
-            'firstCheckResult'
-        )
-        self._RecheckResultButton = StatusIndicator.StatusIndicator(
-            self.ui.RecheckResultButton,
-            'recheckResult'
-        )
+        # self._FirstCheckResultButton = StatusIndicator.StatusIndicator(
+        #     self.ui.FirstCheckResultButton,
+        #     'firstCheckResult'
+        # )
+        # self._RecheckResultButton = StatusIndicator.StatusIndicator(
+        #     self.ui.RecheckResultButton,
+        #     'recheckResult'
+        # )
         self._OrderTable = table.ToolkitTable(self.ui.OrderTable)
         self._ToolsTable = table.ToolkitTable(self.ui.ToolsTable)
         self._ResultTable = table.ToolkitTable(self.ui.ResultTable)
@@ -149,13 +149,13 @@ class ToolKitWindow(ToolKitMixin, QtWidgets.QWidget):
     def device_config_group(self):
         return self._device_config_group
 
-    @property
-    def FirstCheckResultButton(self):
-        return self._FirstCheckResultButton
-
-    @property
-    def RecheckResultButton(self):
-        return self._RecheckResultButton
+    # @property
+    # def FirstCheckResultButton(self):
+    #     return self._FirstCheckResultButton
+    #
+    # @property
+    # def RecheckResultButton(self):
+    #     return self._RecheckResultButton
 
     @property
     def DeviceConnStatusIndicator(self):

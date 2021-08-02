@@ -399,7 +399,7 @@
            </layout>
           </item>
           <item>
-           <layout class="QVBoxLayout" name="Right_2" stretch="0,0,0,0,0,2,0">
+           <layout class="QVBoxLayout" name="Right_2" stretch="0,0,0,0,0,0,2,0">
             <property name="spacing">
              <number>2</number>
             </property>
@@ -781,9 +781,12 @@
              </widget>
             </item>
             <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_15"/>
+            </item>
+            <item>
              <widget class="QGroupBox" name="groupBox_7">
               <property name="title">
-               <string/>
+               <string>标定类型</string>
               </property>
               <property name="flat">
                <bool>true</bool>
@@ -805,58 +808,18 @@
                 <number>0</number>
                </property>
                <item>
-                <layout class="QFormLayout" name="formLayout_8">
-                 <property name="horizontalSpacing">
-                  <number>3</number>
+                <widget class="QRadioButton" name="firstCheckRadio">
+                 <property name="text">
+                  <string> 初检</string>
                  </property>
-                 <property name="verticalSpacing">
-                  <number>3</number>
-                 </property>
-                 <item row="0" column="0">
-                  <widget class="QLabel" name="FirstCheckResultLabel">
-                   <property name="text">
-                    <string>初检结果  </string>
-                   </property>
-                   <property name="alignment">
-                    <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="1">
-                  <widget class="QPushButton" name="FirstCheckResultButton">
-                   <property name="text">
-                    <string>成功</string>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
+                </widget>
                </item>
                <item>
-                <layout class="QFormLayout" name="formLayout_9">
-                 <property name="horizontalSpacing">
-                  <number>3</number>
+                <widget class="QRadioButton" name="recheckRadio">
+                 <property name="text">
+                  <string> 复检</string>
                  </property>
-                 <property name="verticalSpacing">
-                  <number>3</number>
-                 </property>
-                 <item row="0" column="0">
-                  <widget class="QLabel" name="RecheckResultLabel">
-                   <property name="text">
-                    <string>复检结果  </string>
-                   </property>
-                   <property name="alignment">
-                    <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="1">
-                  <widget class="QPushButton" name="RecheckResultButton">
-                   <property name="text">
-                    <string>成功</string>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
+                </widget>
                </item>
               </layout>
              </widget>
