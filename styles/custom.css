@@ -81,3 +81,11 @@ QGroupBox::title  {{
 QHeaderView::section {{
     padding:0px;
 }}
+
+QScrollBar::handle:vertical {{
+    background-color: #2979ff;
+}}
+
+QScrollBar::handle:horizontal {{
+    background-color: #2979ff;
+}}
