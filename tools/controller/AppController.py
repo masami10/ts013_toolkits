@@ -122,14 +122,6 @@ class AppController:
         except Exception as e:
             self.notify.error(e)
 
-    def update_inputs_cache_data(self, key: str, val: Any):
-        entry = self._cache_data.get("inputs")
-        entry.update({key: val})
-
-    def update_results_cache_data(self, key: str, val: Any):
-        entry = self._cache_data.get("results")
-        entry.update({key: val})
-
     def init_sqlite_db(self):
         if self._db_connect:
             cr = self._db_connect.cursor()
@@ -192,8 +184,6 @@ class AppController:
         ui = window.ui
         ### tab 1 曲线对比
         window.input_group.inputChanged.connect(self.on_input)
-        # window.FirstCheckResultButton.successChanged.connect(self.on_result_success_changed)
-        # window.RecheckResultButton.successChanged.connect(self.on_result_success_changed)
         ui.ToolsConfigAddButton.clicked.connect(self._tools_controller.add_tool)
         self._order_controller.selectedOrderChanged.connect(self._on_order_selected_change)
         self._check_type_radio.checkTypeChanged.connect(self.set_check_type)
