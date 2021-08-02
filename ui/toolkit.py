@@ -570,7 +570,7 @@ class Ui_MainWindow(object):
         item.setText(_translate("MainWindow", "扭矩值"))
         item = self.ResultTable.horizontalHeaderItem(2)
         item.setText(_translate("MainWindow", "角度值"))
-        self.ClearResultsButton.setText(_translate("MainWindow", "  清空结果"))
+        self.ClearResultsButton.setText(_translate("MainWindow", "清空结果"))
         self.submit_btn.setText(_translate("MainWindow", "提交"))
         self.tabWidget_2.setTabText(self.tabWidget_2.indexOf(self.operation_tab), _translate("MainWindow", "标定"))
         self.groupBox_9.setTitle(_translate("MainWindow", "连接"))
