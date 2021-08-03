@@ -77,11 +77,11 @@ class StorageData(object):
     def checkResult(self) -> checkValue:
         return self._data.get('checkResult')
 
-    def update_check_result_data(self, result_key: str, val: bool):
+    def update_check_result_data(self, is_first_check: bool, val: bool):
         result = self.checkResult
-        if result_key == 'firstCheckResult':
+        if is_first_check:
             result.setCheckResult(val)
-        if result_key == 'recheckResult':
+        else:
             result.setReCheckResult(val)
 
     def get_inputs_data(self):

@@ -14,9 +14,7 @@ from .DeviceController import DeviceController
 from .OrderController import OrderController
 from .ConnectionController import ConnectionController
 from store.store import StorageData
-from store.contants import TS013_DB_NAME
 from store.types import MOMOrder
-import sqlite3
 from typing import Any, List
 from transport.wsdl import WSDLClient
 from pprint import pformat
@@ -25,6 +23,7 @@ from api.restful_api import request_mom_data
 from tools.model.InputModel import input_model_instance
 from store.sql import set_order_check_status
 from tools.model.CheckTypeModel import check_type_model_instance
+from tools.model.CheckResultModel import check_result_model_instance as result_model
 from tools.view.CheckTypeRadio import CheckTypeRadio
 from store.sql import DEFAULT_CONNECTION
 
@@ -85,8 +84,14 @@ class AppController:
 
             for key, val in input_model_instance.inputs.items():
                 self.glb_storage.update_inputs_data(key, val)
-            for key, val in input_model_instance.results.items():
-                self.glb_storage.update_check_result_data(key, val)
+            result = result_model.results_all_ok(
+                input_model_instance.get_input("maxTorque"),
+                input_model_instance.get_input("minTorque"),
+            )
+            self.glb_storage.update_check_result_data(
+                check_type_model_instance.is_first_check,
+                result
+            )
 
             selected_tool = self.glb_storage.selected_tool
             selected_orders = self.glb_storage.selected_orders
@@ -199,12 +204,3 @@ class AppController:
     def on_input(self, key: str, value: Any):
         self.notify.debug('字段输入：{}，{}'.format(key, value))
         input_model_instance.update_inputs_data(key, value)
-
-    def on_result_success_changed(self, result_key: str, success: bool):
-        lvl = 'info'
-        if not success:
-            lvl = 'error'
-        m = getattr(self.notify, lvl, self.notify.info)
-        m('结果变化：{}，{}'.format(get_translation(result_key), get_translation(str(success))))
-        input_model_instance.update_results_data(result_key, success)
-        # self.glb_storage.update_check_result_data(result_key, success)  # 更新存储的数据
