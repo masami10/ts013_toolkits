@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Dict
 
 
 class InputModel:
@@ -7,11 +7,11 @@ class InputModel:
         self._data = {"inputs": {}, "results": {}}  # input 和result缓存数据
 
     @property
-    def inputs(self):
+    def inputs(self) -> Dict:
         return self._data.get("inputs")
 
     @property
-    def results(self):
+    def results(self) -> Dict:
         return self._data.get("results")
 
     def update_inputs_data(self, key: str, val: Any):

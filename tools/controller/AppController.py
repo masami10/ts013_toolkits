@@ -27,6 +27,7 @@ from store.sql import set_order_check_status
 from tools.model.CheckTypeModel import check_type_model_instance
 from tools.view.CheckTypeRadio import CheckTypeRadio
 from store.sql import DEFAULT_CONNECTION
+
 TRANSLATION_MAP = {
     'recheckResult': '复检结果',
     'firstCheckResult': '检验结果',
@@ -80,13 +81,11 @@ class AppController:
         try:
             if not check_type_model_instance.did_set:
                 raise Exception('请选择标定类型！')
-            msg = "提交标定数据"
-            self.notify.info(msg)
-            inputs: dict = input_model_instance.inputs
-            for key, val in inputs.items():
+            self.notify.info("提交标定数据")
+
+            for key, val in input_model_instance.inputs.items():
                 self.glb_storage.update_inputs_data(key, val)
-            results: dict = input_model_instance.results
-            for key, val in results.items():
+            for key, val in input_model_instance.results.items():
                 self.glb_storage.update_check_result_data(key, val)
 
             selected_tool = self.glb_storage.selected_tool
@@ -97,13 +96,16 @@ class AppController:
                 raise Exception('无法提交：未选中工单')
             check = self.glb_storage.checkResult
             raw = True
-            payload = publish_calibration_value_2_mom_wsdl(self._db_connect,
-                                                           selected_tool.toolFixedInspectionCode, selected_orders,
-                                                           selected_tool,
-                                                           check, raw)
+            payload = publish_calibration_value_2_mom_wsdl(
+                self._db_connect,
+                selected_tool.toolFixedInspectionCode,
+                selected_orders,
+                selected_tool,
+                check,
+                raw
+            )
             if not payload:
-                self.notify.error("未获取同步扭矩数据报文")
-                return
+                raise Exception("未获取同步扭矩数据报文")
             self.notify.debug(f"发送标定数据payload: {pformat(payload, indent=4)}")
             if raw:
                 full_url = self.glb_config.wsdl_base_url.split('?')[0]
@@ -111,13 +113,13 @@ class AppController:
             else:
                 success, text = self._wsdl_client.do_request('TorqueCheckInfo', payload)
             if not success:
-                self.notify.error(text)
-            else:
-                self.notify.info(text)
-                set_order_check_status(
-                    list(map(lambda o: o.wipOrderNo, selected_orders)),
-                    is_first_check=check_type_model_instance.is_first_check
-                )
+                raise Exception(text)
+            self.notify.info(text)
+            set_order_check_status(
+                list(map(lambda o: o.wipOrderNo, selected_orders)),
+                is_first_check=check_type_model_instance.is_first_check
+            )
+            self._order_controller.render()
         except Exception as e:
             self.notify.error(e)
 

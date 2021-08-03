@@ -18,8 +18,9 @@ from tools.model.OrdersModel import orders_model_instance as orders_model, Order
 from PyQt5 import QtCore, QtWidgets
 
 
-def select_tool_checkbox(order, on_select):
+def select_tool_checkbox(order, on_select, selected: bool = False):
     t = QRadioButton()
+    t.setChecked(selected)
 
     def on_button_clicked():
         on_select(order)
@@ -109,7 +110,8 @@ class OrderController(QtCore.QObject):
                     order_list_info.to_dict('records')
                     )
             ),
-            '选中': list(map(lambda o: select_tool_checkbox(o, self.on_order_clicked), orders))
+            '选中': list(map(lambda o: select_tool_checkbox(o, self.on_order_clicked, o in orders_model.selected_orders),
+                           orders))
         })
         table = self.window.order_table
         table.table_render_signal.emit(content)
