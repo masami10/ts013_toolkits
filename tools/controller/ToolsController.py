@@ -8,7 +8,7 @@ from .ToolsAppendController import ToolsAppendController
 from store.store import StorageData
 from store.config import Config
 from store.types import ToolsInfo, ToolsTorqueInfo
-from itertools import chain
+from PyQt5 import QtWidgets
 
 
 def remove_tool_button(tool, on_click):
@@ -134,8 +134,12 @@ class ToolsController:
             '扭矩值': list(self.content_current_order['torque']),
             '选中': list(map(lambda tool: select_tool_radio(tool, self.render_tool_detail), zipped))
         })
-        self.window.tools_table.table_render_signal.emit(content)
         table = self.window.tools_table
+        table.table_render_signal.emit(content)
+        header = table.horizontalHeader()
+        header.setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(3, QtWidgets.QHeaderView.ResizeToContents)
         for row in range(len(tools)):
             table.setRowHeight(row, 50)
 

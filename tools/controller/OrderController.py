@@ -15,6 +15,7 @@ from http import HTTPStatus
 from typing import Optional, Dict
 from transport.constants import local_datetime_to_utc
 from tools.model.OrdersModel import orders_model_instance as orders_model, OrdersModel
+from PyQt5 import QtCore, QtWidgets
 
 
 def select_tool_checkbox(order, on_select):
@@ -112,6 +113,11 @@ class OrderController(QtCore.QObject):
         })
         table = self.window.order_table
         table.table_render_signal.emit(content)
+        if not orders or len(orders) == 0:
+            return
+        header = table.horizontalHeader()
+        header.setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeToContents)
         for row in range(len(orders)):
             table.setRowHeight(row, 50)
 

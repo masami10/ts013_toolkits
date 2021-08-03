@@ -28,7 +28,6 @@ class ToolkitTable(ToolKitMixin, QWidget):
         self.table_instance.cellChanged.connect(self.on_cell_changed)
         self.table_instance.itemClicked.connect(self.on_item_clicked)
         self.table_instance.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-        self.table_instance.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.table_render_signal.connect(self.render_table)
 
     def set_active(self):
@@ -115,6 +114,7 @@ class ToolkitTable(ToolKitMixin, QWidget):
             tTable.setCellWidget(row, col, content)
             return
         item = QTableWidgetItem(ss)
+        item.setTextAlignment(Qt.AlignCenter)
         tTable.setItem(row, col, item)
 
     def get_table_item(self, row: int, col: int) -> QTableWidgetItem:
