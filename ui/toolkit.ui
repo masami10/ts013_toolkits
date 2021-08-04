@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1054</width>
-    <height>535</height>
+    <width>1366</width>
+    <height>700</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -195,9 +195,27 @@
                     <widget class="QTableWidget" name="OrderTable">
                      <property name="minimumSize">
                       <size>
-                       <width>280</width>
+                       <width>180</width>
                        <height>0</height>
                       </size>
+                     </property>
+                     <property name="autoScroll">
+                      <bool>false</bool>
+                     </property>
+                     <property name="editTriggers">
+                      <set>QAbstractItemView::NoEditTriggers</set>
+                     </property>
+                     <property name="tabKeyNavigation">
+                      <bool>false</bool>
+                     </property>
+                     <property name="showDropIndicator" stdset="0">
+                      <bool>false</bool>
+                     </property>
+                     <property name="selectionMode">
+                      <enum>QAbstractItemView::NoSelection</enum>
+                     </property>
+                     <property name="selectionBehavior">
+                      <enum>QAbstractItemView::SelectRows</enum>
                      </property>
                      <property name="sortingEnabled">
                       <bool>true</bool>
@@ -348,12 +366,27 @@
                     <widget class="QTableWidget" name="ToolsTable">
                      <property name="minimumSize">
                       <size>
-                       <width>280</width>
+                       <width>400</width>
                        <height>0</height>
                       </size>
                      </property>
                      <property name="styleSheet">
                       <string notr="true"/>
+                     </property>
+                     <property name="autoScroll">
+                      <bool>false</bool>
+                     </property>
+                     <property name="editTriggers">
+                      <set>QAbstractItemView::NoEditTriggers</set>
+                     </property>
+                     <property name="tabKeyNavigation">
+                      <bool>false</bool>
+                     </property>
+                     <property name="showDropIndicator" stdset="0">
+                      <bool>false</bool>
+                     </property>
+                     <property name="selectionMode">
+                      <enum>QAbstractItemView::NoSelection</enum>
                      </property>
                      <property name="showGrid">
                       <bool>true</bool>
@@ -850,6 +883,18 @@
                 <width>0</width>
                 <height>120</height>
                </size>
+              </property>
+              <property name="editTriggers">
+               <set>QAbstractItemView::NoEditTriggers</set>
+              </property>
+              <property name="tabKeyNavigation">
+               <bool>false</bool>
+              </property>
+              <property name="showDropIndicator" stdset="0">
+               <bool>false</bool>
+              </property>
+              <property name="selectionMode">
+               <enum>QAbstractItemView::NoSelection</enum>
               </property>
               <attribute name="horizontalHeaderCascadingSectionResizes">
                <bool>true</bool>

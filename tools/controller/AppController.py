@@ -182,8 +182,7 @@ class AppController:
             loop = QEventLoop()
             asyncio.set_event_loop(loop)
             # Show form
-            self.window.show()
-
+            self.window.showMaximized()
             # Run the program
             ret = self.app.exec()
         except Exception as e:

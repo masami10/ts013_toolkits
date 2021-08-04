@@ -14,8 +14,8 @@ class ToolKitWindow(ToolKitMixin, QtWidgets.QWidget):
 
     closeSignal = QtCore.pyqtSignal()
 
-    def show(self) -> None:
-        self.qt_instance.show()
+    def showMaximized(self) -> None:
+        self.qt_instance.showMaximized()
         if self.timer:
             self.timer.start(1000)  # 定时器为1秒
         if self._http_server:
