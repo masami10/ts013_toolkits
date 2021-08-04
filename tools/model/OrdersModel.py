@@ -1,12 +1,14 @@
-import pandas as pd
 from typing import List
-from store.sql import query_order_list_info
+from py_singleton import singleton
+from store.types import MOMOrder
+from store.sql import query_ts013_order_via_codes
 
 
+@singleton
 class OrdersModel:
-    _orders: List
+    _orders: List[str]
 
-    _selected_orders: List
+    _selected_orders: List[MOMOrder]
 
     def __init__(self):
         self._orders = []
@@ -17,30 +19,34 @@ class OrdersModel:
         self._orders = order_no_list
 
     @property
-    def order_list(self):
+    def order_list(self) -> List[str]:
         return self._orders
 
     @property
-    def selected_orders(self):
+    def selected_orders(self) -> List[MOMOrder]:
         return self._selected_orders
+
+    @property
+    def selected_order_codes(self) -> List[str]:
+        return list(map(lambda o: o.wipOrderNo, self._selected_orders))
+
+    def get_order_by_code(self, order_code) -> MOMOrder:
+        return next(o for o in self._selected_orders if o.wipOrderNo == order_code)
 
     def toggle_select_order(self, order_code):
         if order_code in self.selected_orders:
             self._selected_orders.remove(order_code)
         else:
-            self._selected_orders = [order_code]  # 現在只能選擇一張訂單
+            orders = query_ts013_order_via_codes([order_code])  # 現在只能選擇一張訂單
+            self._selected_orders = orders
 
     @property
-    def order_list_info(self) -> pd.DataFrame:
-        return query_order_list_info(self._orders)
-
-    @staticmethod
-    def check_status(first_check_status, recheck_status):
-        if recheck_status == 1:
-            return '已复检'
-        if first_check_status == 1:
-            return '已初检'
-        return '未标定'
+    def selected_order_torques(self):
+        torques = []
+        for order in self._selected_orders:
+            for k, v in order.toolTorqueInfo.items():
+                torques.extend(v)
+        return torques
 
 
 orders_model_instance = OrdersModel()

@@ -109,7 +109,8 @@ def query_ts013_order_via_fuzzy_code(conn: Connection, order_no: str = '') -> Li
     return ret
 
 
-def query_ts013_order_via_codes(conn: Connection, orders: List[str]) -> List[MOMOrder]:
+@with_connection
+def query_ts013_order_via_codes(orders: List[str], conn: Connection = None) -> List[MOMOrder]:
     cr = conn.cursor()
     query = f"SELECT * FROM ts013_orders WHERE order_no in ({','.join(['?'] * len(orders))})"
     cr.execute(query, orders)
@@ -135,32 +136,56 @@ def result_to_dataframe(cr: Cursor) -> pd.DataFrame:
 
 
 @with_connection
-def query_order_list_info(order_nos, conn: Connection = None) -> pd.DataFrame:
+def create_torque_check_status_table(conn: Connection = None):
     cr = conn.cursor()
-    cr.execute(f'''
-        SELECT order_no, first_checked, rechecked FROM ts013_orders where order_no in ({','.join(['?'] * len(order_nos))})
-    ''', order_nos)
-    df = result_to_dataframe(cr)
+    cr.execute('''
+                    CREATE TABLE IF NOT EXISTS torque_check_status(
+                        tool TEXT NOT NULL ,
+                        torque TEXT NOT NULL ,
+                        first_check_date TIMESTAMP DEFAULT null,
+                        recheck_date TIMESTAMP DEFAULT null,
+                        primary key (tool, torque)
+                    )
+                ''')
+    conn.commit()
     cr.close()
-    return df
 
 
 @with_connection
-def set_order_check_status(order_nos, conn: Connection = None, is_first_check=True, status=True):
-    status_int = 1 if status else 0
-    cr = conn.cursor()
-    if is_first_check:
-        query = f'''
-        UPDATE ts013_orders 
-        SET first_checked = ? 
-        WHERE order_no in ({','.join(['?'] * len(order_nos))});
+def is_torque_check_status_stored(tool: str, torque: str, conn: Connection = None):
+    query = f'''
+            SELECT count(*) FROM  torque_check_status WHERE (tool, torque) in (VALUES ('{tool}', '{torque}'));
         '''
-        cr.execute(query, (status_int, *order_nos), )
+    cr = conn.cursor()
+    cr.execute(query)
+    ret,  = cr.fetchone()
+    return ret > 0
+
+
+@with_connection
+def save_torque_check_status(tool: str, torque: str, is_first_check: bool, conn: Connection = None):
+    if not is_torque_check_status_stored(tool, torque):
+        query = f'''
+            INSERT INTO torque_check_status(tool, torque, {'first_check_date' if is_first_check else 'recheck_date'}) VALUES (?, ?, CURRENT_TIMESTAMP);
+        '''
     else:
-        cr.execute(f'''
-            UPDATE ts013_orders 
-            SET rechecked = ? 
-            WHERE order_no in ({','.join(['?'] * len(order_nos))});
-        ''', (status_int, *order_nos), )
-    cr.close()
+        query = f'''
+            UPDATE torque_check_status SET {'first_check_date' if is_first_check else 'recheck_date'} = CURRENT_TIMESTAMP WHERE tool= ? and torque= ? ;
+        '''
+    cr = conn.cursor()
+    cr.execute(query, (tool, torque), )
     conn.commit()
+    cr.close()
+
+
+@with_connection
+def query_torque_check_status(tool_torque_pairs, conn: Connection = None) -> pd.DataFrame:
+    pairs_str = ', '.join(list(map(lambda p: f"('{p[0]}', '{p[1]}')", tool_torque_pairs)))
+    query = f'''
+        SELECT tool, torque, date(first_check_date, 'localtime') as first_check_date, date(recheck_date, 'localtime') as recheck_date FROM  torque_check_status WHERE (tool, torque) in (VALUES {pairs_str});
+    '''
+    cr = conn.cursor()
+    cr.execute(query)
+    ret = result_to_dataframe(cr)
+    cr.close()
+    return ret

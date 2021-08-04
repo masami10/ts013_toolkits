@@ -57,10 +57,10 @@ class ToolsInfo(object):
 
 class ToolsTorqueInfo(ToolsInfo):
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, torque: str = '0', pset: str = '1', **kwargs):
         super(ToolsTorqueInfo, self).__init__(*args, **kwargs)
-        self.torque = 0.0
-        self.pset = 0
+        self.torque = torque
+        self.pset = pset
 
     def update_torque(self, torque: float):
         self.torque = torque
@@ -77,7 +77,8 @@ class ToolsTorqueInfo(ToolsInfo):
             'toolMaterialCode': [self.toolMaterialCode],
             'toolRfid': [self.toolRfid],
             'toolSpecificationType': [self.toolSpecificationType],
-            'torque': [self.torque]
+            'torque': [self.torque],
+            'pset': [self.pset]
         }
 
     def __str__(self):

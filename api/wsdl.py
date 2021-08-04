@@ -4,7 +4,7 @@ from loguru import logger
 from pprint import pformat
 from utils.tools import mom_order_2_list
 from typing import List, Union
-from store.types import MOMOrder, ToolsInfo, checkValue
+from store.types import MOMOrder, ToolsInfo, checkValue, ToolsTorqueInfo
 from transport.constants import now
 from sqlite3 import Connection
 from store.sql import query_calibration_id_via_identity, insert_ts013_tool_calibration_item
@@ -150,7 +150,8 @@ def publish_calibration_payload(rid: int, orders: List[MOMOrder], tool_info: Too
     }
 
 
-def publish_calibration_value_2_mom_wsdl(conn: Connection, tool_sn: str, orders: List[MOMOrder], tool_info: ToolsInfo,
+def publish_calibration_value_2_mom_wsdl(conn: Connection, tool_sn: str, orders: List[MOMOrder],
+                                         tool_info: ToolsTorqueInfo,
                                          check: checkValue, raw=False) -> Union[dict, str]:
     ss = [o.wipOrderNo for o in orders]
     str_orders = ",".join(ss)

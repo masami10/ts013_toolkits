@@ -1,14 +1,15 @@
 # -*- coding:utf-8 -*-
 
 from PyQt5.QtWidgets import QPushButton, QRadioButton, QTableWidget
-from typing import Dict, List
+from typing import Dict
 from ..view import window as main_window
 import pandas as pd
 from .ToolsAppendController import ToolsAppendController
 from store.store import StorageData
 from store.config import Config
-from store.types import ToolsInfo, ToolsTorqueInfo
+from store.types import ToolsInfo
 from PyQt5 import QtWidgets
+from tools.model.ToolsModel import ToolsModel
 
 
 def remove_tool_button(tool, on_click):
@@ -23,8 +24,9 @@ def remove_tool_button(tool, on_click):
     return t
 
 
-def select_tool_radio(tool_sn, on_select):
+def select_tool_radio(tool_sn, on_select, selected: bool):
     t = QRadioButton()
+    t.setChecked(selected)
 
     def on_button_clicked():
         on_select(tool_sn)
@@ -46,47 +48,6 @@ class ToolsController:
         self.window.tools_config_table.row_clicked_signal.connect(self.edit_tool)
         self.render()
 
-    @property
-    def content(self) -> pd.DataFrame:
-        tools = self._store.get_tools()
-        tdf = pd.DataFrame({
-            'toolFixedInspectionCode': [],
-            'toolMaterialCode': [],
-            'toolRfid': [],
-            'toolClassificationCode': [],
-            'toolName': [],
-            'toolSpecificationType': [],
-            'torque': []
-        })
-        for key, value in tools.items():
-            tdf = tdf.append(value.to_dict, ignore_index=True)
-        return tdf
-
-    @property
-    def content_current_order(self):
-        tdf = pd.DataFrame({
-            'toolFixedInspectionCode': [],
-            'toolMaterialCode': [],
-            'toolRfid': [],
-            'toolClassificationCode': [],
-            'toolName': [],
-            'toolSpecificationType': [],
-            'torque': [],
-            'pset': []
-        })
-        select_orders = self._store.selected_orders
-        if not select_orders:
-            return tdf
-        order = select_orders[0]
-        tools: List[ToolsTorqueInfo] = []
-        for k, v in order.toolTorqueInfo.items():
-            tools.extend(v)
-
-        for toolTorqueInfo in tools:
-            d = toolTorqueInfo.to_dict
-            tdf = tdf.append(pd.DataFrame(d), ignore_index=True)
-        return tdf
-
     def save_tool(self, tool_data: Dict):
         data: Dict[str, ToolsInfo] = self._store.edit_tool(tool_data)
         dd = [tool.__dict__ for tool in data.values()]
@@ -94,7 +55,7 @@ class ToolsController:
         self.render()
 
     def edit_tool(self, tool):
-        content = self.content.set_index('toolFixedInspectionCode')
+        content = ToolsModel().content.set_index('toolFixedInspectionCode')
         tool_data = dict(content.loc[tool])
         self.append_controller.edit({
             **tool_data,
@@ -107,14 +68,15 @@ class ToolsController:
         self.render()
 
     def render_tools_config_table(self):
-        tools = list(self.content['toolFixedInspectionCode'])
+        content = ToolsModel().content
+        tools = list(content['toolFixedInspectionCode'])
         content = pd.DataFrame({
             '定检编号': tools,
-            '分类号': list(self.content['toolClassificationCode']),
-            '物料号': list(self.content['toolMaterialCode']),
-            '名称': list(self.content['toolName']),
-            '规格': list(self.content['toolSpecificationType']),
-            'RFID': list(self.content['toolRfid']),
+            '分类号': list(content['toolClassificationCode']),
+            '物料号': list(content['toolMaterialCode']),
+            '名称': list(content['toolName']),
+            '规格': list(content['toolSpecificationType']),
+            'RFID': list(content['toolRfid']),
             '动作': list(map(lambda tool: remove_tool_button(tool, self.remove_tool), tools))
         })
         self.window.tools_config_table.table_render_signal.emit(content)
@@ -123,16 +85,27 @@ class ToolsController:
             table.setRowHeight(row, 50)
 
     def render_tools_pick_table(self):
-        tools = list(self.content_current_order['toolFixedInspectionCode'])
-        torques = list(self.content_current_order['torque'])
+        content_current_order = ToolsModel().content_current_order
+        tools = list(content_current_order['toolFixedInspectionCode'])
+        torques = list(content_current_order['torque'])
         zipped = zip(tools, torques)
         if not tools:
             return
+        check_status_map = {
+            0: '未标定',
+            1: '已初检',
+            2: '已复检'
+        }
         content = pd.DataFrame({
             '定检编号': tools,
-            '程序号': list(self.content_current_order['pset']),
-            '扭矩值': list(self.content_current_order['torque']),
-            '选中': list(map(lambda tool: select_tool_radio(tool, self.render_tool_detail), zipped))
+            '程序号': list(content_current_order['pset']),
+            '扭矩值': torques,
+            '标定状态': list(map(lambda c: check_status_map[c], content_current_order['check_status'])),
+            '选中': list(map(lambda tool: select_tool_radio(
+                tool,
+                self.render_tool_detail,
+                ToolsModel().is_selected(*tool)
+            ), zipped))
         })
         table = self.window.tools_table
         table.table_render_signal.emit(content)
@@ -140,6 +113,7 @@ class ToolsController:
         header.setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeToContents)
         header.setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeToContents)
         header.setSectionResizeMode(3, QtWidgets.QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(4, QtWidgets.QHeaderView.ResizeToContents)
         for row in range(len(tools)):
             table.setRowHeight(row, 50)
 
@@ -153,12 +127,13 @@ class ToolsController:
         self.render()
 
     def render_tool_detail(self, t: tuple):
-        tools = self.content
+        tools = ToolsModel().content
         tools = tools.set_index('toolFixedInspectionCode')
         tool, torque = t
-        fTorque = 0.0
         if isinstance(torque, str):
             fTorque = float(torque)
+        else:
+            fTorque = torque
         minTorque = round(fTorque * 0.975, 2)
         maxTorque = round(fTorque * 1.025, 2)
         tool_selected = dict(tools.loc[tool])
@@ -169,5 +144,5 @@ class ToolsController:
             "maxTorque": str(maxTorque),
             'toolFixedInspectionCode': tool
         })
-        self._store.set_selected_tool(tool)
+        ToolsModel().set_selected_torque(tool, torque)
         return

@@ -1,7 +1,6 @@
 from typing import Any, Dict, Optional, List
 from py_singleton import singleton
 from store.types import ToolsInfo, checkValue, MOMOrder, ToolsTorqueInfo
-from store.sql import query_ts013_order_via_codes
 from loguru import logger
 from sqlite3 import Connection
 from store.config import Config
@@ -21,21 +20,11 @@ class StorageData(object):
         self._connect = conn
 
     def __init__(self, conn: Optional[Connection] = None):
-        self._data = {'tools': {}, 'checkResult': checkValue(0.0), 'selected_tool': None, 'selected_orders': []}
+        self._data = {'tools': {}, 'checkResult': checkValue(0.0)}
         self._connect = conn
 
     def _update_data(self, key: str, value: Any):
         self._data.update({key: value})
-
-    def update_selected_orders(self, orders_str: str) -> List[MOMOrder]:
-        orders = []
-        if orders_str == "":
-            self._data.update({'selected_orders': []})
-        else:
-            order_codes = orders_str.split(',')
-            orders = query_ts013_order_via_codes(self._connect, order_codes)
-        self._data.update({'selected_orders': orders})
-        return orders
 
     def update_inputs_data(self, key: str, val: Any):
         self._data.get('inputs', {}).update({key: val})
@@ -58,20 +47,6 @@ class StorageData(object):
             t = self.get_tool_via_inspect_code(val)
             if not t:
                 return
-
-    def set_selected_tool(self, tool_inspect_code: str):
-        t = self.get_tool_via_inspect_code(tool_inspect_code)
-        if not t:
-            return
-        self._data.update({'selected_tool': t})
-
-    @property
-    def selected_orders(self) -> List[MOMOrder]:
-        return self._data.get('selected_orders')
-
-    @property
-    def selected_tool(self) -> Optional[ToolsInfo]:
-        return self._data.get('selected_tool')
 
     @property
     def checkResult(self) -> checkValue:
@@ -147,7 +122,7 @@ class StorageData(object):
                 for v in val:
                     t, tool_inspect_code = v.split(']')
                     t_torque, pset = t.split(',')
-                    torque = float(t_torque[1:])
+                    torque = t_torque[1:]
                     if tool_inspect_code not in cache.keys():
                         cache.update({
                             tool_inspect_code: []
@@ -161,9 +136,7 @@ class StorageData(object):
                     if not ti:
                         logger.error(f"未找到相应的工具: {tool_inspect_code}")
                         continue
-                    tti = ToolsTorqueInfo(**ti.__dict__)
-                    tti.update_torque(torque)
-                    tti.update_pset(pset)
+                    tti = ToolsTorqueInfo(torque=torque, pset=pset, **ti.__dict__)
                     tools.append(tti)
                 order.toolTorqueInfo.update({key: tools})
         except Exception as e:

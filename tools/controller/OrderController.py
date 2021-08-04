@@ -102,16 +102,11 @@ class OrderController(QtCore.QObject):
 
     def render(self):
         orders = orders_model.order_list
-        order_list_info: pd.DataFrame = orders_model.order_list_info
         content = pd.DataFrame({
             '订单号': orders,
-            '标定状态': list(
-                map(lambda info: OrdersModel.check_status(info.get('first_checked'), info.get('rechecked')),
-                    order_list_info.to_dict('records')
-                    )
-            ),
-            '选中': list(map(lambda o: select_tool_checkbox(o, self.on_order_clicked, o in orders_model.selected_orders),
-                           orders))
+            '选中': list(
+                map(lambda o: select_tool_checkbox(o, self.on_order_clicked, o in orders_model.selected_order_codes),
+                    orders))
         })
         table = self.window.order_table
         table.table_render_signal.emit(content)
@@ -119,14 +114,12 @@ class OrderController(QtCore.QObject):
             return
         header = table.horizontalHeader()
         header.setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeToContents)
-        header.setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeToContents)
         for row in range(len(orders)):
             table.setRowHeight(row, 50)
 
     def on_order_clicked(self, order_code: str):
         orders_model.toggle_select_order(order_code)
-
-        orders: List[MOMOrder] = self._store.update_selected_orders(','.join(orders_model.selected_orders))
+        orders = orders_model.selected_orders
         try:
             for o in orders:
                 self._store.do_generate_tool_torque_info(self._config.get_tool_url, o)
@@ -136,5 +129,5 @@ class OrderController(QtCore.QObject):
             self.notify.error(e)
 
     def render_order_detail(self):
-        orders_content = ', '.join(orders_model.selected_orders)
+        orders_content = ', '.join(orders_model.selected_order_codes)
         self.window.input_group.set_text('orderCode', orders_content)

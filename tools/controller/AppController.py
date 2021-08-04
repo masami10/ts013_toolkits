@@ -21,11 +21,14 @@ from pprint import pformat
 from api.wsdl import publish_calibration_value_2_mom_wsdl
 from api.restful_api import request_mom_data
 from tools.model.InputModel import input_model_instance
-from store.sql import set_order_check_status
 from tools.model.CheckTypeModel import check_type_model_instance
 from tools.model.CheckResultModel import check_result_model_instance as result_model
 from tools.view.CheckTypeRadio import CheckTypeRadio
-from store.sql import DEFAULT_CONNECTION
+from store.sql import DEFAULT_CONNECTION, create_torque_check_status_table
+from tools.model.OrdersModel import OrdersModel
+from tools.model.ToolsModel import ToolsModel
+from store.sql import save_torque_check_status
+
 
 TRANSLATION_MAP = {
     'recheckResult': '复检结果',
@@ -93,9 +96,9 @@ class AppController:
                 result
             )
 
-            selected_tool = self.glb_storage.selected_tool
-            selected_orders = self.glb_storage.selected_orders
-            if selected_tool is None:
+            selected_torque = ToolsModel().selected_torque
+            selected_orders = OrdersModel().selected_orders
+            if selected_torque is None:
                 raise Exception('无法提交：未选中工具')
             if selected_orders is None or len(selected_orders) == 0:
                 raise Exception('无法提交：未选中工单')
@@ -103,9 +106,9 @@ class AppController:
             raw = True
             payload = publish_calibration_value_2_mom_wsdl(
                 self._db_connect,
-                selected_tool.toolFixedInspectionCode,
+                selected_torque.toolFixedInspectionCode,
                 selected_orders,
-                selected_tool,
+                selected_torque,
                 check,
                 raw
             )
@@ -120,11 +123,13 @@ class AppController:
             if not success:
                 raise Exception(text)
             self.notify.info(text)
-            set_order_check_status(
-                list(map(lambda o: o.wipOrderNo, selected_orders)),
-                is_first_check=check_type_model_instance.is_first_check
+            save_torque_check_status(
+                selected_torque.toolFixedInspectionCode,
+                selected_torque.torque,
+                check_type_model_instance.is_first_check
             )
             self._order_controller.render()
+            self._tools_controller.render_tools_pick_table()
         except Exception as e:
             self.notify.error(e)
 
@@ -151,6 +156,7 @@ class AppController:
                     rechecked INTEGER
                 )
             ''')
+            create_torque_check_status_table()
             self._db_connect.commit()
             cr.close()
 
