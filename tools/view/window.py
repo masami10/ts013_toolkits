@@ -45,7 +45,7 @@ class ToolKitWindow(ToolKitMixin, QtWidgets.QWidget):
         self.ui.ToolsTable.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.ui.ResultTable.setProperty('class', 'bgLight')
         self.ui.timeLabel.setProperty('class', 'bgLight')
-        self.ui.load_order_btn.setProperty('class', 'primaryButton')
+        self.ui.load_server_order_btn.setProperty('class', 'primaryButton')
         self.ui.submit_btn.setProperty('class', 'primaryButton')
         self.ui.DeviceConnectButton.setProperty('class', 'primaryButton')
         self.ui.DeviceDisconnectButton.setProperty('class', 'primaryButton')

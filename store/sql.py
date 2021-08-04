@@ -58,6 +58,24 @@ def insert_ts013_order_item(conn: Connection, order_name: str, order_type: str, 
     return ret
 
 
+@with_connection
+def query_ts013_orders(order_no: str = '', is_today=True, is_current_workcenter: bool = True, conn: Connection = None):
+    filter_strs = []
+    if is_today:
+        prev = local_datetime_to_utc(local_date_from_str())
+        nn = local_datetime_to_utc(tomorrow())
+        filter_strs.append(f"schedule_date between '{prev}' AND '{nn}'")
+    if is_current_workcenter:
+        workcenters = list(map(lambda w: f"'{w}'", glb_config.workCenters))
+        filter_strs.append(f'workcenter in ({", ".join(workcenters)})')
+    query = f'''SELECT * FROM ts013_orders WHERE order_no LIKE '%{order_no}%' {(' and ' + ' and '.join(filter_strs)) if len(filter_strs) else ''};'''
+    cr = conn.cursor()
+    cr.execute(query)
+    ret = ts013_model_2_order_obj(cr)
+    cr.close()
+    return ret
+
+
 def query_ts013_today_orders(conn: Connection) -> List[MOMOrder]:
     prev = local_datetime_to_utc(local_date_from_str())
     nn = local_datetime_to_utc(tomorrow())
@@ -158,7 +176,7 @@ def is_torque_check_status_stored(tool: str, torque: str, conn: Connection = Non
         '''
     cr = conn.cursor()
     cr.execute(query)
-    ret,  = cr.fetchone()
+    ret, = cr.fetchone()
     return ret > 0
 
 

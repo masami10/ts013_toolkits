@@ -1,20 +1,18 @@
 import pandas as pd
 from typing import List
-from PyQt5 import QtCore
 from ..view import window as main_window
 from ui.toolkit import Ui_MainWindow
 from PyQt5.QtWidgets import QRadioButton
 from sqlite3 import Connection
 from store.sql import query_ts013_today_orders, query_ts013_order_via_fuzzy_code, \
-    query_ts013_local_workcenter_today_orders, insert_ts013_order_item
+    query_ts013_local_workcenter_today_orders, insert_ts013_order_item, query_ts013_orders
 from store.store import StorageData
-from store.types import MOMOrder
 from store.config import Config
 from api.restful_api import request_get_last_one_week_orders
 from http import HTTPStatus
 from typing import Optional, Dict
 from transport.constants import local_datetime_to_utc
-from tools.model.OrdersModel import orders_model_instance as orders_model, OrdersModel
+from tools.model.OrdersModel import orders_model_instance as orders_model
 from PyQt5 import QtCore, QtWidgets
 
 
@@ -42,20 +40,27 @@ class OrderController(QtCore.QObject):
         self.notify = self.window.notify_box
         orders_model.set_orders([])
         ui: Ui_MainWindow = self.window.ui
-        ui.load_order_btn.clicked.connect(self.load_today_orders)
         ui.load_server_order_btn.clicked.connect(self.load_last_one_week_orders)
-        ui.filter_workcenter_btn.clicked.connect(self.load_local_today_orders)
-        ui.QueryOrderButton.clicked.connect(self.query_orders_via_code)
+        ui.QueryOrderButton.clicked.connect(self.query_orders)
+        ui.todayCheckBox.clicked.connect(self.query_orders)
+        ui.workcenterCheckBox.clicked.connect(self.query_orders)
         ui.CancelQueryButton.clicked.connect(self.load_all_orders)
         self.render()
 
-    def query_orders_via_code(self):
+    def query_orders(self):
         order_no = self.window.ui.QueryOrderCodeEdit.text()
-        orders = query_ts013_order_via_fuzzy_code(self._db_connect, order_no)
+        orders = query_ts013_orders(
+            order_no=order_no,
+            is_today=self.window.ui.todayCheckBox.isChecked(),
+            is_current_workcenter=self.window.ui.workcenterCheckBox.isChecked()
+        )
+        # orders = query_ts013_order_via_fuzzy_code(self._db_connect, order_no)
         orders_model.set_orders(orders)
         self.render()
 
     def load_all_orders(self):
+        self.window.ui.todayCheckBox.setChecked(False)
+        self.window.ui.workcenterCheckBox.setChecked(False)
         orders = query_ts013_order_via_fuzzy_code(self._db_connect, '')
         orders_model.set_orders(orders)
         self.render()
