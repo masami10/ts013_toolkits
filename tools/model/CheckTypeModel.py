@@ -1,3 +1,7 @@
+from py_singleton import singleton
+
+
+@singleton
 class CheckTypeModel:
 
     def __init__(self):

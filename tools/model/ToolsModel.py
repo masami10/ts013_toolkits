@@ -1,12 +1,10 @@
-from typing import List
 import pandas as pd
 from store.types import ToolsTorqueInfo
 from store.store import StorageData
 from py_singleton import singleton
 from store.sql import query_torque_check_status
 from .OrdersModel import OrdersModel
-from datetime import date, datetime
-from store.types import MOMOrder
+from datetime import date
 
 
 def is_checked(check_date):

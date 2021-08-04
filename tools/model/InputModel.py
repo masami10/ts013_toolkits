@@ -1,6 +1,8 @@
 from typing import Any, Dict
 
+from py_singleton import singleton
 
+@singleton
 class InputModel:
 
     def __init__(self):

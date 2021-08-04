@@ -1,6 +1,8 @@
 from pandas import DataFrame
 
+from py_singleton import singleton
 
+@singleton
 class CheckResultModel:
     _results: DataFrame
 
