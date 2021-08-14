@@ -52,7 +52,7 @@ def request_stop(retry_state):
        after=after_log(_logger, logging.INFO))
 def request_get_tool_info(full_url: str, product_no: str) -> Tuple[bool, Response]:
     url = f'{full_url}/{product_no}'
-    resp = requests.get(url=url, timeout=2)
+    resp = requests.get(url=url, timeout=5)
     if resp.status_code != HTTPStatus.OK:
         return False, resp
     else:
