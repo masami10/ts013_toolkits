@@ -1,28 +1,430 @@
-ORDERURL = "http://172.27.45.78:8069/ts013/workorders"
-MOMURL = "http://10.220.29.139/Apriso/WebServices/Public/MOM_PeripheralSystem_InspectionInfo.svc?wsdl"
+ORDERURL = "http://192.168.5.110:8069/ts013/workorders"
+MOMURL = "http://mom.zxj.crrcgc.com/Apriso/WebServices/Public/MOM_PeripheralSystem_InspectionInfo.svc?wsdl"
 DEVICE_IP = "192.168.3.100"
-DEVICE_PORT = "3000"
-OPERATIONURL = "http://172.23.174.140:8069/ts013/get_tools_info"
-WORKCENTER = "TS301107020201"
+DEVICE_PORT = "8000"
+OPERATIONURL = "http://192.168.5.110:8069/ts013/get_tools_info"
+WORKCENTER = "TS301107010201"
 [[TOOLS]]
-toolName = "123"
-toolClassificationCode = "345123"
-toolFixedInspectionCode = "20M82068"
+toolName = "105004100538"
+toolClassificationCode = "105004100538"
+toolFixedInspectionCode = "105004100538"
 toolMaterialCode = "1234"
-toolRfid = "345"
+toolRfid = "105004100538_rfid"
 toolSpecificationType = "24"
+
 [[TOOLS]]
-toolName = "123"
-toolClassificationCode = "345123"
-toolFixedInspectionCode = "20M83670"
+toolName = "105004100551"
+toolClassificationCode = "105004100551"
+toolFixedInspectionCode = "105004100551"
 toolMaterialCode = "1234"
-toolRfid = "345"
+toolRfid = "105004100551_rfid"
 toolSpecificationType = "24"
+
 [[TOOLS]]
-toolName = "123"
-toolClassificationCode = "345123"
-toolFixedInspectionCode = "20M82557"
+toolName = "105004100509"
+toolClassificationCode = "105004100509"
+toolFixedInspectionCode = "105004100509"
 toolMaterialCode = "1234"
-toolRfid = "345"
+toolRfid = "105004100509_rfid"
+toolSpecificationType = "24"
+
+[[TOOLS]]
+toolName = "105004100502"
+toolClassificationCode = "105004100502"
+toolFixedInspectionCode = "105004100502"
+toolMaterialCode = "1234"
+toolRfid = "105004100502_rfid"
+toolSpecificationType = "24"
+
+[[TOOLS]]
+toolName = "105004100491"
+toolClassificationCode = "105004100491"
+toolFixedInspectionCode = "105004100491"
+toolMaterialCode = "1234"
+toolRfid = "105004100491_rfid"
+toolSpecificationType = "24"
+
+[[TOOLS]]
+toolName = "105004100532"
+toolClassificationCode = "105004100532"
+toolFixedInspectionCode = "105004100532"
+toolMaterialCode = "1234"
+toolRfid = "105004100532_rfid"
+toolSpecificationType = "24"
+
+[[TOOLS]]
+toolName = "105004100552"
+toolClassificationCode = "105004100552"
+toolFixedInspectionCode = "105004100552"
+toolMaterialCode = "1234"
+toolRfid = "105004100552_rfid"
+toolSpecificationType = "24"
+
+[[TOOLS]]
+toolName = "105004100553"
+toolClassificationCode = "105004100553"
+toolFixedInspectionCode = "105004100553"
+toolMaterialCode = "1234"
+toolRfid = "105004100553_rfid"
+toolSpecificationType = "24"
+
+[[TOOLS]]
+toolName = "105004100547"
+toolClassificationCode = "105004100547"
+toolFixedInspectionCode = "105004100547"
+toolMaterialCode = "1234"
+toolRfid = "105004100547_rfid"
+toolSpecificationType = "24"
+
+[[TOOLS]]
+toolName = "105004100550"
+toolClassificationCode = "105004100550"
+toolFixedInspectionCode = "105004100550"
+toolMaterialCode = "1234"
+toolRfid = "105004100550_rfid"
+toolSpecificationType = "24"
+
+[[TOOLS]]
+toolName = "105004100539"
+toolClassificationCode = "105004100539"
+toolFixedInspectionCode = "105004100539"
+toolMaterialCode = "1234"
+toolRfid = "105004100539_rfid"
+toolSpecificationType = "24"
+
+[[TOOLS]]
+toolName = "105004100554"
+toolClassificationCode = "105004100554"
+toolFixedInspectionCode = "105004100554"
+toolMaterialCode = "1234"
+toolRfid = "105004100554_rfid"
+toolSpecificationType = "24"
+
+[[TOOLS]]
+toolName = "105004100506"
+toolClassificationCode = "105004100506"
+toolFixedInspectionCode = "105004100506"
+toolMaterialCode = "1234"
+toolRfid = "105004100506_rfid"
+toolSpecificationType = "24"
+
+[[TOOLS]]
+toolName = "105004100497"
+toolClassificationCode = "105004100497"
+toolFixedInspectionCode = "105004100497"
+toolMaterialCode = "1234"
+toolRfid = "105004100497_rfid"
+toolSpecificationType = "24"
+
+[[TOOLS]]
+toolName = "105004100503"
+toolClassificationCode = "105004100503"
+toolFixedInspectionCode = "105004100503"
+toolMaterialCode = "1234"
+toolRfid = "105004100503_rfid"
+toolSpecificationType = "24"
+
+[[TOOLS]]
+toolName = "105004100489"
+toolClassificationCode = "105004100489"
+toolFixedInspectionCode = "105004100489"
+toolMaterialCode = "1234"
+toolRfid = "105004100489_rfid"
+toolSpecificationType = "24"
+
+[[TOOLS]]
+toolName = "105004100555"
+toolClassificationCode = "105004100555"
+toolFixedInspectionCode = "105004100555"
+toolMaterialCode = "1234"
+toolRfid = "105004100555_rfid"
+toolSpecificationType = "24"
+
+[[TOOLS]]
+toolName = "105004100540"
+toolClassificationCode = "105004100540"
+toolFixedInspectionCode = "105004100540"
+toolMaterialCode = "1234"
+toolRfid = "105004100540_rfid"
+toolSpecificationType = "24"
+
+[[TOOLS]]
+toolName = "105004100542"
+toolClassificationCode = "105004100542"
+toolFixedInspectionCode = "105004100542"
+toolMaterialCode = "1234"
+toolRfid = "105004100542_rfid"
+toolSpecificationType = "24"
+
+[[TOOLS]]
+toolName = "105004100533"
+toolClassificationCode = "105004100533"
+toolFixedInspectionCode = "105004100533"
+toolMaterialCode = "1234"
+toolRfid = "105004100533_rfid"
+toolSpecificationType = "24"
+
+[[TOOLS]]
+toolName = "105004100543"
+toolClassificationCode = "105004100543"
+toolFixedInspectionCode = "105004100543"
+toolMaterialCode = "1234"
+toolRfid = "105004100543_rfid"
+toolSpecificationType = "24"
+
+[[TOOLS]]
+toolName = "105004100501"
+toolClassificationCode = "105004100501"
+toolFixedInspectionCode = "105004100501"
+toolMaterialCode = "1234"
+toolRfid = "105004100501_rfid"
+toolSpecificationType = "24"
+
+[[TOOLS]]
+toolName = "105004100494"
+toolClassificationCode = "105004100494"
+toolFixedInspectionCode = "105004100494"
+toolMaterialCode = "1234"
+toolRfid = "105004100494_rfid"
+toolSpecificationType = "24"
+
+[[TOOLS]]
+toolName = "105004100488"
+toolClassificationCode = "105004100488"
+toolFixedInspectionCode = "105004100488"
+toolMaterialCode = "1234"
+toolRfid = "105004100488_rfid"
+toolSpecificationType = "24"
+
+[[TOOLS]]
+toolName = "105004100560"
+toolClassificationCode = "105004100560"
+toolFixedInspectionCode = "105004100560"
+toolMaterialCode = "1234"
+toolRfid = "105004100560_rfid"
+toolSpecificationType = "24"
+
+[[TOOLS]]
+toolName = "105004100528"
+toolClassificationCode = "105004100528"
+toolFixedInspectionCode = "105004100528"
+toolMaterialCode = "1234"
+toolRfid = "105004100528_rfid"
+toolSpecificationType = "24"
+
+[[TOOLS]]
+toolName = "105004100544"
+toolClassificationCode = "105004100544"
+toolFixedInspectionCode = "105004100544"
+toolMaterialCode = "1234"
+toolRfid = "105004100544_rfid"
+toolSpecificationType = "24"
+
+[[TOOLS]]
+toolName = "105004100534"
+toolClassificationCode = "105004100534"
+toolFixedInspectionCode = "105004100534"
+toolMaterialCode = "1234"
+toolRfid = "105004100534_rfid"
+toolSpecificationType = "24"
+
+[[TOOLS]]
+toolName = "105004100545"
+toolClassificationCode = "105004100545"
+toolFixedInspectionCode = "105004100545"
+toolMaterialCode = "1234"
+toolRfid = "105004100545_rfid"
+toolSpecificationType = "24"
+
+[[TOOLS]]
+toolName = "105004100493"
+toolClassificationCode = "105004100493"
+toolFixedInspectionCode = "105004100493"
+toolMaterialCode = "1234"
+toolRfid = "105004100493_rfid"
+toolSpecificationType = "24"
+
+[[TOOLS]]
+toolName = "105004100505"
+toolClassificationCode = "105004100505"
+toolFixedInspectionCode = "105004100505"
+toolMaterialCode = "1234"
+toolRfid = "105004100505_rfid"
+toolSpecificationType = "24"
+
+[[TOOLS]]
+toolName = "105004100490"
+toolClassificationCode = "105004100490"
+toolFixedInspectionCode = "105004100490"
+toolMaterialCode = "1234"
+toolRfid = "105004100490_rfid"
+toolSpecificationType = "24"
+
+[[TOOLS]]
+toolName = "105004100558"
+toolClassificationCode = "105004100558"
+toolFixedInspectionCode = "105004100558"
+toolMaterialCode = "1234"
+toolRfid = "105004100558_rfid"
+toolSpecificationType = "24"
+
+[[TOOLS]]
+toolName = "105004100549"
+toolClassificationCode = "105004100549"
+toolFixedInspectionCode = "105004100549"
+toolMaterialCode = "1234"
+toolRfid = "105004100549_rfid"
+toolSpecificationType = "24"
+
+[[TOOLS]]
+toolName = "105004100541"
+toolClassificationCode = "105004100541"
+toolFixedInspectionCode = "105004100541"
+toolMaterialCode = "1234"
+toolRfid = "105004100541_rfid"
+toolSpecificationType = "24"
+
+[[TOOLS]]
+toolName = "105004100546"
+toolClassificationCode = "105004100546"
+toolFixedInspectionCode = "105004100546"
+toolMaterialCode = "1234"
+toolRfid = "105004100546_rfid"
+toolSpecificationType = "24"
+
+[[TOOLS]]
+toolName = "105004100531"
+toolClassificationCode = "105004100531"
+toolFixedInspectionCode = "105004100531"
+toolMaterialCode = "1234"
+toolRfid = "105004100531_rfid"
+toolSpecificationType = "24"
+
+[[TOOLS]]
+toolName = "105004100557"
+toolClassificationCode = "105004100557"
+toolFixedInspectionCode = "105004100557"
+toolMaterialCode = "1234"
+toolRfid = "105004100557_rfid"
+toolSpecificationType = "24"
+
+[[TOOLS]]
+toolName = "105004100535"
+toolClassificationCode = "105004100535"
+toolFixedInspectionCode = "105004100535"
+toolMaterialCode = "1234"
+toolRfid = "105004100535_rfid"
+toolSpecificationType = "24"
+
+[[TOOLS]]
+toolName = "105004100492"
+toolClassificationCode = "105004100492"
+toolFixedInspectionCode = "105004100492"
+toolMaterialCode = "1234"
+toolRfid = "105004100492_rfid"
+toolSpecificationType = "24"
+
+[[TOOLS]]
+toolName = "105004100499"
+toolClassificationCode = "105004100499"
+toolFixedInspectionCode = "105004100499"
+toolMaterialCode = "1234"
+toolRfid = "105004100499_rfid"
+toolSpecificationType = "24"
+
+[[TOOLS]]
+toolName = "105004100530"
+toolClassificationCode = "105004100530"
+toolFixedInspectionCode = "105004100530"
+toolMaterialCode = "1234"
+toolRfid = "105004100530_rfid"
+toolSpecificationType = "24"
+
+[[TOOLS]]
+toolName = "105004100559"
+toolClassificationCode = "105004100559"
+toolFixedInspectionCode = "105004100559"
+toolMaterialCode = "1234"
+toolRfid = "105004100559_rfid"
+toolSpecificationType = "24"
+
+[[TOOLS]]
+toolName = "105004100537"
+toolClassificationCode = "105004100537"
+toolFixedInspectionCode = "105004100537"
+toolMaterialCode = "1234"
+toolRfid = "105004100537_rfid"
+toolSpecificationType = "24"
+
+[[TOOLS]]
+toolName = "105004100495"
+toolClassificationCode = "105004100495"
+toolFixedInspectionCode = "105004100495"
+toolMaterialCode = "1234"
+toolRfid = "105004100495_rfid"
+toolSpecificationType = "24"
+
+[[TOOLS]]
+toolName = "105004100500"
+toolClassificationCode = "105004100500"
+toolFixedInspectionCode = "105004100500"
+toolMaterialCode = "1234"
+toolRfid = "105004100500_rfid"
+toolSpecificationType = "24"
+
+[[TOOLS]]
+toolName = "105004100536"
+toolClassificationCode = "105004100536"
+toolFixedInspectionCode = "105004100536"
+toolMaterialCode = "1234"
+toolRfid = "105004100536_rfid"
+toolSpecificationType = "24"
+
+[[TOOLS]]
+toolName = "105004100548"
+toolClassificationCode = "105004100548"
+toolFixedInspectionCode = "105004100548"
+toolMaterialCode = "1234"
+toolRfid = "105004100548_rfid"
+toolSpecificationType = "24"
+
+[[TOOLS]]
+toolName = "105004100508"
+toolClassificationCode = "105004100508"
+toolFixedInspectionCode = "105004100508"
+toolMaterialCode = "1234"
+toolRfid = "105004100508_rfid"
+toolSpecificationType = "24"
+
+[[TOOLS]]
+toolName = "105004100498"
+toolClassificationCode = "105004100498"
+toolFixedInspectionCode = "105004100498"
+toolMaterialCode = "1234"
+toolRfid = "105004100498_rfid"
+toolSpecificationType = "24"
+
+[[TOOLS]]
+toolName = "105004100504"
+toolClassificationCode = "105004100504"
+toolFixedInspectionCode = "105004100504"
+toolMaterialCode = "1234"
+toolRfid = "105004100504_rfid"
+toolSpecificationType = "24"
+
+[[TOOLS]]
+toolName = "105004100496"
+toolClassificationCode = "105004100496"
+toolFixedInspectionCode = "105004100496"
+toolMaterialCode = "1234"
+toolRfid = "105004100496_rfid"
+toolSpecificationType = "24"
+
+[[TOOLS]]
+toolName = "105004100556"
+toolClassificationCode = "105004100556"
+toolFixedInspectionCode = "105004100556"
+toolMaterialCode = "1234"
+toolRfid = "105004100556_rfid"
 toolSpecificationType = "24"
 

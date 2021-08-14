@@ -1,4 +1,5 @@
 # -*- coding:utf-8 -*-
+import copy
 
 from PyQt5 import QtWidgets  # import PyQt5 widgets
 import sys
@@ -97,7 +98,8 @@ class AppController:
             )
 
             selected_torque = ToolsModel().selected_torque
-            selected_orders = OrdersModel().selected_orders
+            # store\types.py 中dict函数ret.pop('toolTorqueInfo') 会将对象改变，需要先深度拷贝
+            selected_orders = copy.deepcopy(OrdersModel().selected_orders)
             if selected_torque is None:
                 raise Exception('无法提交：未选中工具')
             if selected_orders is None or len(selected_orders) == 0:
