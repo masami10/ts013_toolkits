@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '.\ui\toolkit.ui'
+# Form implementation generated from reading ui file './ui/toolkit.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.4
 #
@@ -548,19 +548,19 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "唐山转向架动检车间标定程序"))
-        self.groupBox_11.setTitle(_translate("MainWindow", " 查询订单"))
-        self.QueryOrderCodeLabel.setText(_translate("MainWindow", "订单号"))
-        self.workcenterCheckBox.setText(_translate("MainWindow", "本工位订单"))
-        self.todayCheckBox.setText(_translate("MainWindow", "当日订单"))
+        self.groupBox_11.setTitle(_translate("MainWindow", " 查寻检验单"))
+        self.QueryOrderCodeLabel.setText(_translate("MainWindow", "检验单号"))
+        self.workcenterCheckBox.setText(_translate("MainWindow", "本工位检验单"))
+        self.todayCheckBox.setText(_translate("MainWindow", "当日检验单"))
         self.QueryOrderButton.setText(_translate("MainWindow", "查询"))
-        self.CancelQueryButton.setText(_translate("MainWindow", "所有订单"))
-        self.groupBox.setTitle(_translate("MainWindow", " 订单"))
+        self.CancelQueryButton.setText(_translate("MainWindow", "所有检验单"))
+        self.groupBox.setTitle(_translate("MainWindow", "检验单"))
         self.OrderTable.setSortingEnabled(True)
         item = self.OrderTable.horizontalHeaderItem(0)
         item.setText(_translate("MainWindow", "订单号"))
         item = self.OrderTable.horizontalHeaderItem(1)
         item.setText(_translate("MainWindow", "已选择"))
-        self.load_server_order_btn.setText(_translate("MainWindow", "同步MES服务器订单"))
+        self.load_server_order_btn.setText(_translate("MainWindow", "同步工位当日检验单"))
         self.HomeDeviceConnStatusLabel.setText(_translate("MainWindow", " 标定设备连接状态"))
         self.HomeDeviceConnStatusButton.setText(_translate("MainWindow", "已连接"))
         self.groupBox_3.setTitle(_translate("MainWindow", "选择工具"))
@@ -573,7 +573,7 @@ class Ui_MainWindow(object):
         item = self.ToolsTable.horizontalHeaderItem(3)
         item.setText(_translate("MainWindow", "已选择"))
         self.timeLabel.setText(_translate("MainWindow", "00-00-00 00:00:00"))
-        self.OrderCodeLabel.setText(_translate("MainWindow", "订单号    "))
+        self.OrderCodeLabel.setText(_translate("MainWindow", "检验单号  "))
         self.minTorqueLabel.setText(_translate("MainWindow", "最小扭矩"))
         self.TargetTorqueLabel.setText(_translate("MainWindow", "标准扭矩值"))
         self.MaxTorqueLabel.setText(_translate("MainWindow", "最大扭矩"))
@@ -602,9 +602,9 @@ class Ui_MainWindow(object):
         self.submit_btn.setText(_translate("MainWindow", "提交"))
         self.tabWidget_2.setTabText(self.tabWidget_2.indexOf(self.operation_tab), _translate("MainWindow", "标定"))
         self.groupBox_9.setTitle(_translate("MainWindow", "连接"))
-        self.OrderUrlLabel.setText(_translate("MainWindow", "获取订单地址"))
-        self.MOMUrlLabel.setText(_translate("MainWindow", "MOM上送地址"))
-        self.OperationUrlLabel.setText(_translate("MainWindow", "工艺获取地址"))
+        self.OrderUrlLabel.setText(_translate("MainWindow", "获取检验单地址"))
+        self.MOMUrlLabel.setText(_translate("MainWindow", "检验结果上传"))
+        self.OperationUrlLabel.setText(_translate("MainWindow", "检验单详情获取"))
         self.workCenterLabel.setText(_translate("MainWindow", "工位号"))
         self.groupBox_10.setTitle(_translate("MainWindow", "工具"))
         self.ToolsConfigAddButton.setText(_translate("MainWindow", "添加工具"))

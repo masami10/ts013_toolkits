@@ -18,7 +18,7 @@ class ToolkitNotify:
         if not self.qt_instances or len(self.qt_instances) == 0:
             return
         data = f'时间:{now()}, 内容: {content}'
-        ss = "<span style=\" font-size:16pt; font-weight:600; color:#{};\" > {} </span>".format(color, data)
+        ss = "<span style=\" font-size:10pt; font-weight:600; color:#{};\" > {} </span>".format(color, data)
         for instance in self.qt_instances:
             instance.append(ss)
             instance.verticalScrollBar().setValue(instance.verticalScrollBar().maximum())

@@ -21,3 +21,7 @@ pip install pyinstaller -i https://pypi.douban.com/simple
 ``` bash
 pyinstaller toolkit.spec
 ```
+
+```shell
+pyuic5 ./ui/toolkit.ui -o ./ui/toolkit.py
+```
