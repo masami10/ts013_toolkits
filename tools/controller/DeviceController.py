@@ -113,7 +113,8 @@ class DeviceController:
         self.render(status)
 
     def _stop_client(self):
-        self._client.stop()
+        if self._client:
+            self._client.stop()
         self._client = None
 
     def device_connect(self):

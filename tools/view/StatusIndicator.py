@@ -6,6 +6,7 @@ from PyQt5 import QtCore
 
 class StatusIndicator(ToolKitMixin, QWidget):
     successChanged = QtCore.pyqtSignal(str, bool)
+    render_status_signal = QtCore.pyqtSignal(bool)
     _success: bool
     _key: str
 
@@ -20,9 +21,13 @@ class StatusIndicator(ToolKitMixin, QWidget):
         self.qt_instance.setStyleSheet("")
         self.set_success()
         self.qt_instance.clicked.connect(self.on_clicked)
+        self.render_status_signal.connect(self.render_status)
 
     def set_success(self, success=True):
         self._success = success
+        self.render_status_signal.emit(self._success)
+
+    def render_status(self, success: bool):
         text = self._success_text if success else self._fail_test
         self.qt_instance.setProperty('text', text)
         class_name = 'resultButton resultButtonSuccess' if success else 'resultButton resultButtonFailed'
