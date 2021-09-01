@@ -86,6 +86,13 @@ class ToolKitWindow(ToolKitMixin, QtWidgets.QWidget):
             'port': self.ui.DevicePortEdit,
         })
 
+        self._person_config_group = InputGroup.InputGroup({
+            'originPersonCode': self.ui.FirstCheckCardEdit,
+            'originPersonName': self.ui.FirstCheckNameEdit,
+            'recheckPersonCode': self.ui.RecheckCardEdit,
+            'recheckPersonName': self.ui.RecheckNameEdit,
+        })
+
         self._HomeDeviceConnStatusIndicator = StatusIndicator.StatusIndicator(
             self.ui.HomeDeviceConnStatusButton,
             'DeviceConnStatus',
@@ -140,6 +147,11 @@ class ToolKitWindow(ToolKitMixin, QtWidgets.QWidget):
     @property
     def device_config_group(self):
         return self._device_config_group
+
+    @property
+    def person_config_group(self):
+        return self._person_config_group
+
 
     @property
     def DeviceConnStatusIndicator(self):
