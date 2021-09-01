@@ -137,6 +137,8 @@ class ToolsController:
         minTorque = round(fTorque * 0.975, 2)
         maxTorque = round(fTorque * 1.025, 2)
         tool_selected = dict(tools.loc[tool])
+        # 删除界面上没有的字段
+        del tool_selected['torque']
         self.window.input_group.set_texts({
             **tool_selected,
             "targetTorque": torque,

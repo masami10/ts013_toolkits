@@ -553,7 +553,7 @@ class Ui_MainWindow(object):
         self.workcenterCheckBox.setText(_translate("MainWindow", "本工位检验单"))
         self.todayCheckBox.setText(_translate("MainWindow", "当日检验单"))
         self.QueryOrderButton.setText(_translate("MainWindow", "查询"))
-        self.CancelQueryButton.setText(_translate("MainWindow", "所有检验单"))
+        self.CancelQueryButton.setText(_translate("MainWindow", "清空检验单"))
         self.groupBox.setTitle(_translate("MainWindow", "检验单"))
         self.OrderTable.setSortingEnabled(True)
         item = self.OrderTable.horizontalHeaderItem(0)

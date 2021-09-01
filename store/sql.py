@@ -68,7 +68,7 @@ def query_ts013_orders(order_no: str = '', is_today=True, is_current_workcenter:
     if is_current_workcenter:
         workcenters = list(map(lambda w: f"'{w}'", glb_config.workCenters))
         filter_strs.append(f'workcenter in ({", ".join(workcenters)})')
-    query = f'''SELECT * FROM ts013_orders WHERE order_no LIKE '%{order_no}%' {(' and ' + ' and '.join(filter_strs)) if len(filter_strs) else ''};'''
+    query = f'''SELECT * FROM ts013_orders WHERE order_no LIKE '%{order_no}%' {(' and ' + ' and '.join(filter_strs)) if len(filter_strs) else ''} order by order_no desc;'''
     cr = conn.cursor()
     cr.execute(query)
     ret = ts013_model_2_order_obj(cr)
@@ -120,17 +120,25 @@ def query_ts013_order_via_fuzzy_code(conn: Connection, order_no: str = '') -> Li
         nn = local_datetime_to_utc(tomorrow())
         ret = query_ts013_order_via_schedule_date(conn, prev, nn)
     else:
-        query = f'''SELECT * FROM ts013_orders WHERE order_no LIKE '%{order_no}%' '''
+        query = f'''SELECT * FROM ts013_orders WHERE order_no LIKE '%{order_no}%' order by order_no desc'''
         cr.execute(query)
         ret = ts013_model_2_order_obj(cr)
         cr.close()
     return ret
 
 
+def query_ts013_order_clear(conn: Connection):
+    cr = conn.cursor()
+    query = f'''DELETE FROM ts013_orders WHERE TRUE '''
+    cr.execute(query)
+    results = cr.fetchall()
+    cr.close()
+
+
 @with_connection
 def query_ts013_order_via_codes(orders: List[str], conn: Connection = None) -> List[MOMOrder]:
     cr = conn.cursor()
-    query = f"SELECT * FROM ts013_orders WHERE order_no in ({','.join(['?'] * len(orders))})"
+    query = f"SELECT * FROM ts013_orders WHERE order_no in ({','.join(['?'] * len(orders))})  order by order_no desc"
     cr.execute(query, orders)
     ret = ts013_model_2_order_obj(cr)
     cr.close()
@@ -139,7 +147,7 @@ def query_ts013_order_via_codes(orders: List[str], conn: Connection = None) -> L
 
 def query_ts013_order_via_schedule_date(conn: Connection, prev: datetime, next: datetime) -> List[MOMOrder]:
     cr = conn.cursor()
-    cr.execute("select * from ts013_orders where schedule_date between ? AND ?", (prev, next), )
+    cr.execute("select * from ts013_orders where schedule_date between ? AND ?  order by order_no desc", (prev, next), )
     ret = ts013_model_2_order_obj(cr)
     cr.close()
     return ret

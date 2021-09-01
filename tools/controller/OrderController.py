@@ -5,7 +5,7 @@ from ui.toolkit import Ui_MainWindow
 from PyQt5.QtWidgets import QRadioButton
 from sqlite3 import Connection
 from store.sql import query_ts013_today_orders, query_ts013_order_via_fuzzy_code, \
-    query_ts013_local_workcenter_today_orders, insert_ts013_order_item, query_ts013_orders
+    query_ts013_local_workcenter_today_orders, insert_ts013_order_item, query_ts013_orders,query_ts013_order_clear
 from store.store import StorageData
 from store.config import Config
 from api.restful_api import request_get_last_one_week_orders
@@ -44,7 +44,9 @@ class OrderController(QtCore.QObject):
         ui.QueryOrderButton.clicked.connect(self.query_orders)
         ui.todayCheckBox.clicked.connect(self.query_orders)
         ui.workcenterCheckBox.clicked.connect(self.query_orders)
-        ui.CancelQueryButton.clicked.connect(self.load_all_orders)
+        # ui.CancelQueryButton.clicked.connect(self.load_all_orders)
+        # 更改以前的查询所有按钮改为清空按钮
+        ui.CancelQueryButton.clicked.connect(self.clear_all_orders)
         self.render()
 
     def query_orders(self):
@@ -64,6 +66,14 @@ class OrderController(QtCore.QObject):
         orders = query_ts013_order_via_fuzzy_code(self._db_connect, '')
         orders_model.set_orders(orders)
         self.render()
+
+    def clear_all_orders(self):
+        # self.window.ui.todayCheckBox.setChecked(False)
+        # self.window.ui.workcenterCheckBox.setChecked(False)
+        query_ts013_order_clear(self._db_connect)
+        orders_model.set_orders([])
+        self.render()
+
 
     def load_local_today_orders(self):
         orders = query_ts013_local_workcenter_today_orders(self._db_connect)

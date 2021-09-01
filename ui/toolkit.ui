@@ -203,7 +203,7 @@
                      <item>
                       <widget class="QPushButton" name="CancelQueryButton">
                        <property name="text">
-                        <string>所有检验单</string>
+                        <string>清空检验单</string>
                        </property>
                       </widget>
                      </item>
