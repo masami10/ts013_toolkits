@@ -114,6 +114,29 @@ class checkValue(object):
         self.checkPerson = Person()
         self.recheckPerson = Person()
 
+    def get_dict(self) -> dict:
+        return {
+            "checkPerson": {"name": self.checkPerson.name,
+                            "code": self.checkPerson.number,
+                            },
+            "checkResult": self.checkResult,
+            "checkValue1": self.checkValue1,
+            "checkValue2": self.checkValue2,
+            "checkValue3": self.checkValue3,
+            "maxCheckValue": self.maxCheckValue,
+            "maxRecheckValue": self.maxRecheckValue,
+            "measure_torque_values": self.measure_torque_values,
+            "minCheckValue": self.minCheckValue,
+            "minRecheckValue": self.minReCheckValue,
+            "recheckPerson": {"name": self.recheckPerson.name,
+                              "code": self.recheckPerson.number,
+                              },
+            "recheckResult": self.recheckResult,
+            "remeasure_torque_values": self.remeasure_torque_values,
+            "targetValue": self.targetValue,
+
+        }
+
     def update_measure(self, val: float, opt: str = 'measure_torque_values'):
         entry: List[float] = getattr(self, opt)
         ll = len(entry)

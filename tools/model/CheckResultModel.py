@@ -2,6 +2,7 @@ from pandas import DataFrame
 
 from py_singleton import singleton
 
+
 @singleton
 class CheckResultModel:
     _results: DataFrame
@@ -44,7 +45,11 @@ class CheckResultModel:
 
     def results_all_ok(self, max_torque, min_torque):
         torques = list(self._results['torque'])
-        return all(map(lambda t: not self.is_result_nok(t, max_torque, min_torque), torques))
+        return all(map(lambda t: not self.is_result_nok(t, max_torque, min_torque), torques)) if len(torques) > 0 else False
+
+    def results_last_ok(self, max_torque, min_torque):
+        torques = list(self._results['torque'])
+        return not self.is_result_nok(torques[-1], max_torque, min_torque) if len(torques) > 0 else False
 
     @staticmethod
     def is_result_nok(torque, max_torque, min_torque) -> bool:

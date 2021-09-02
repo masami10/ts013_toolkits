@@ -1,5 +1,6 @@
 # -*- coding:utf-8 -*-
 import copy
+import json
 
 from PyQt5 import QtWidgets  # import PyQt5 widgets
 import sys
@@ -20,6 +21,7 @@ from typing import Any, List
 from transport.wsdl import WSDLClient
 from pprint import pformat
 from api.wsdl import publish_calibration_value_2_mom_wsdl
+from api.mes import publish_calibration_value_2_mes_wsdl
 from api.restful_api import request_mom_data
 from tools.model.InputModel import input_model_instance
 from tools.model.CheckTypeModel import check_type_model_instance
@@ -29,7 +31,7 @@ from store.sql import DEFAULT_CONNECTION, create_torque_check_status_table
 from tools.model.OrdersModel import OrdersModel
 from tools.model.ToolsModel import ToolsModel
 from store.sql import save_torque_check_status
-
+from transport.constants import now
 
 TRANSLATION_MAP = {
     'recheckResult': '复检结果',
@@ -81,6 +83,82 @@ class AppController:
         self.apply_material_theme()
 
     def on_result_submit(self):
+        try:
+            if not check_type_model_instance.did_set:
+                raise Exception('请选择标定类型！')
+            self.notify.info("提交标定数据")
+            A = check_type_model_instance
+            for key, val in input_model_instance.inputs.items():
+                self.glb_storage.update_inputs_data(key, val)
+            self.glb_storage.update_inputs_data('firstCheckCard', self.glb_config.get_config('originPersonCode'))
+            self.glb_storage.update_inputs_data('FirstCheckName', self.glb_config.get_config('originPersonName'))
+            self.glb_storage.update_inputs_data('recheckCard', self.glb_config.get_config('recheckPersonCode'))
+            self.glb_storage.update_inputs_data('recheckName', self.glb_config.get_config('recheckPersonName'))
+
+            selected_torque = ToolsModel().selected_torque
+            # store\types.py 中dict函数ret.pop('toolTorqueInfo') 会将对象改变，需要先深度拷贝
+            selected_orders = copy.deepcopy(OrdersModel().selected_orders)
+            if selected_torque is None:
+                raise Exception('无法提交：未选中工具')
+            if selected_orders is None or len(selected_orders) == 0:
+                raise Exception('无法提交：未选中工单')
+
+            if check_type_model_instance.is_first_check:
+                result = result_model.results_all_ok(
+                    input_model_instance.get_input("maxTorque"),
+                    input_model_instance.get_input("minTorque"),
+                )
+                if not result:
+                    raise Exception('无法提交：初检必须满足连续三次成功方可提交')
+                self.glb_storage.update_check_result_data(
+                    check_type_model_instance.is_first_check,
+                    result
+                )
+            else:
+                result = result_model.results_last_ok(
+                    input_model_instance.get_input("maxTorque"),
+                    input_model_instance.get_input("minTorque"),
+                )
+                if not result:
+                    raise Exception('无法提交：复检必须满足最新一次成功方可提交')
+                self.glb_storage.update_check_result_data(
+                    check_type_model_instance.is_first_check,
+                    result
+                )
+
+            check = self.glb_storage.checkResult
+            payload = publish_calibration_value_2_mes_wsdl(
+                self._db_connect,
+                selected_torque.toolFixedInspectionCode,
+                selected_orders,
+                selected_torque,
+                check,
+                False
+            )
+            resultUp = {
+                "firstCheck": check_type_model_instance.is_first_check,
+                "checkTime": now(),
+                "result": check.get_dict(),
+                "payload": payload,
+            }
+            # self.notify.info(json.dumps(resultUp))
+            full_url = self.glb_config.wsdl_base_url.split('?')[0]
+            success, text = request_mom_data(full_url, data=resultUp)
+            if not success:
+                raise Exception(text)
+            self.notify.info(text)
+            save_torque_check_status(
+                selected_torque.toolFixedInspectionCode,
+                selected_torque.torque,
+                check_type_model_instance.is_first_check
+            )
+            self._order_controller.render()
+            self._tools_controller.render_tools_pick_table()
+        except Exception as e:
+            self.notify.error(e)
+
+    # 弃用调的提交接口
+    def on_result_submit1(self):
         try:
             if not check_type_model_instance.did_set:
                 raise Exception('请选择标定类型！')
