@@ -22,7 +22,7 @@ from transport.wsdl import WSDLClient
 from pprint import pformat
 from api.wsdl import publish_calibration_value_2_mom_wsdl
 from api.mes import publish_calibration_value_2_mes_wsdl
-from api.restful_api import request_mom_data
+from api.restful_api import request_mom_data, request_mes_data
 from tools.model.InputModel import input_model_instance
 from tools.model.CheckTypeModel import check_type_model_instance
 from tools.model.CheckResultModel import check_result_model_instance as result_model
@@ -143,7 +143,7 @@ class AppController:
             }
             # self.notify.info(json.dumps(resultUp))
             full_url = self.glb_config.wsdl_base_url.split('?')[0]
-            success, text = request_mom_data(full_url, data=resultUp)
+            success, text = request_mes_data(full_url, data=json.dumps(resultUp))
             if not success:
                 raise Exception(text)
             self.notify.info(text)

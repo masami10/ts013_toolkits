@@ -29,6 +29,20 @@ def fetch_workorder_request(ordernumber, orderType, operationCode, system_type=N
 
 @retry(stop=my_stop, wait=wait_random_exponential(multiplier=1, min=2, max=60), reraise=True,
        after=after_log(_logger, logging.INFO))
+def request_mes_data(full_url, data: str) -> Tuple[bool, str]:
+    headers = {'Content-Type': 'application/json; charset=utf-8'}
+    if not data:
+        _logger.error("数据为空")
+        return
+    resp = requests.post(url=full_url, data=data, headers=headers, timeout=5)
+    if resp.status_code != HTTPStatus.OK:
+        return False, "request_mom_data 调用接口失败: {}".format(resp.text)
+    else:
+        return True, "调用接口成功: {}".format(resp.text)
+
+
+@retry(stop=my_stop, wait=wait_random_exponential(multiplier=1, min=2, max=60), reraise=True,
+       after=after_log(_logger, logging.INFO))
 def request_mom_data(full_url, data: str) -> Tuple[bool, str]:
     headers = {'Content-Type': 'application/soap+xml; charset=utf-8'}
     if not data:
