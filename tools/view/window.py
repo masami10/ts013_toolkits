@@ -34,6 +34,10 @@ class ToolKitWindow(ToolKitMixin, QtWidgets.QWidget):
         QtWidgets.QWidget.__init__(self)
         self.ui: Ui_MainWindow = Ui_MainWindow()
         self.ui.setupUi(self.qt_instance)
+        self.ui.OrderTable.verticalScrollBar().setStyleSheet(
+            "QScrollBar:vertical{"
+            "width:40px;}"
+        )
         self.tools_append_window = ToolsAppendWindow()
         # main_window.resize(1920, 1080)  # 重新设定为1920 * 1080
         self._http_server: HttpServer = http_server
