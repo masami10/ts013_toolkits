@@ -51,7 +51,7 @@ class TcpClient(object):
 
 
     def disconnect(self):
-        if not self._client:
+        if not self.connected:
             return
         self._client.shutdown(socket.SHUT_RDWR)
         self.connected = False
